@@ -10,4 +10,5 @@ public interface EmployeesRepository extends CrudRepository<Employees, Integer> 
     Employees findByEmail(String email);
 
     Employees findByEmailAndPassword(String email, String password);
+
 }
