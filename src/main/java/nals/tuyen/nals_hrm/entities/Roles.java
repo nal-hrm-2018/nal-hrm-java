@@ -1,12 +1,9 @@
 package nals.tuyen.nals_hrm.entities;
 
 import java.io.Serializable;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
@@ -18,7 +15,7 @@ public class Roles implements Serializable {
   @Column(name = "id", nullable = false)
   int idRole;
 
-  @Column(name = "name", length = 45, nullable = false)
+  @Column(name = "name", nullable = false)
   String nameRole;
 
   @Column(name = "description")
@@ -27,29 +24,86 @@ public class Roles implements Serializable {
   @Column(name = "updated_at")
   String updatedAtRole;
 
-  @Column(name = "updated_by_employee")
-  int updatedByEmployeeRole;
 
   @Column(name = "created_at")
   String createdAtRole;
 
-  @Column(name = "created_by_employee")
-  int createdByEmployeeRole;
 
   @Column(name = "delete_flag")
   int deleteFlagRole;
 
+  @ManyToMany(mappedBy = "roles")
+  private Set<Employees> employees;
+
   public Roles() {
   }
 
-  public Roles(int idRole, String nameRole, String descriptionRole, String updatedAtRole, int updatedByEmployeeRole, String createdAtRole, int createdByEmployeeRole, int deleteFlagRole) {
+  public Roles(int idRole, String nameRole, String descriptionRole, String updatedAtRole, String createdAtRole, int deleteFlagRole) {
     this.idRole = idRole;
     this.nameRole = nameRole;
     this.descriptionRole = descriptionRole;
     this.updatedAtRole = updatedAtRole;
-    this.updatedByEmployeeRole = updatedByEmployeeRole;
     this.createdAtRole = createdAtRole;
-    this.createdByEmployeeRole = createdByEmployeeRole;
     this.deleteFlagRole = deleteFlagRole;
+  }
+
+  public int getIdRole() {
+    return idRole;
+  }
+
+  public void setIdRole(int idRole) {
+    this.idRole = idRole;
+  }
+
+  public String getNameRole() {
+    return nameRole;
+  }
+
+  public void setNameRole(String nameRole) {
+    this.nameRole = nameRole;
+  }
+
+  public String getDescriptionRole() {
+    return descriptionRole;
+  }
+
+  public void setDescriptionRole(String descriptionRole) {
+    this.descriptionRole = descriptionRole;
+  }
+
+  public String getUpdatedAtRole() {
+    return updatedAtRole;
+  }
+
+  public void setUpdatedAtRole(String updatedAtRole) {
+    this.updatedAtRole = updatedAtRole;
+  }
+
+
+
+  public String getCreatedAtRole() {
+    return createdAtRole;
+  }
+
+  public void setCreatedAtRole(String createdAtRole) {
+    this.createdAtRole = createdAtRole;
+  }
+
+
+
+  public int getDeleteFlagRole() {
+    return deleteFlagRole;
+  }
+
+  public void setDeleteFlagRole(int deleteFlagRole) {
+    this.deleteFlagRole = deleteFlagRole;
+  }
+
+  public Set<Employees> getEmployees() {
+    return employees;
+  }
+
+  public void setEmployees(Set<Employees> employees) {
+    this.employees = employees;
   }
 }

@@ -1,6 +1,7 @@
 package nals.tuyen.nals_hrm.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+  //@Qualifier("inMemoryUserDetailsManager")
   @Autowired
   private UserDetailsService userDetailsService;
 
@@ -31,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity https) throws Exception {
+    https.rememberMe().key("uniqueAndSecret").tokenValiditySeconds(1296000);
     https
             .authorizeRequests()
               .antMatchers("/show-login","/resources/**").permitAll()
@@ -39,8 +42,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
               .and()
             .formLogin()
               .loginPage("/show-login")
-              .usernameParameter("username")
+              .usernameParameter("email")
               .passwordParameter("password")
+              .loginProcessingUrl("/login")
               .defaultSuccessUrl("/")
               .failureUrl("/show-login?error")
               .and()
