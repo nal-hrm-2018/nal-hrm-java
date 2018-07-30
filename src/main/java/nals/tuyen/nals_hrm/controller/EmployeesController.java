@@ -1,4 +1,4 @@
 package nals.tuyen.nals_hrm.controller;
 
-public class EmployeeController {
+public class EmployeesController {
 }
