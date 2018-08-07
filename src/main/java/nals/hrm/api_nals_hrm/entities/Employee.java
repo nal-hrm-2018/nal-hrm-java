@@ -69,8 +69,8 @@ public class Employee implements Serializable {
   }
 
   public String getPassword() {
-    this.password = password.replace("$2y$","$2a$");
-    return password;
+//    this.password = password.replace("$2y$","$2a$");
+    return password.replace("$2y$","$2a$");
   }
 
   public void setPassword(String password) {
