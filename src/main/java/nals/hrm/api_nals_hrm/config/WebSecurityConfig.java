@@ -22,35 +22,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity https) throws Exception {
+//        https.rememberMe().key("uniqueAndSecret").tokenValiditySeconds(1296000);
+        https.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
+        https.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        https.csrf().disable();
+        https
+                .authorizeRequests()
+                .antMatchers("/show-login","/resources/**","/api/login").permitAll()
+                .antMatchers("/","/api/profile","/api/**").access("hasAuthority('DEV') or hasAuthority('HR') or hasAuthority('PO') or hasAuthority('ACCOUNTANT') or hasAuthority('SM')")
 
-        // Disable CSRF (cross site request forgery)
-        http.csrf().disable();
+                .antMatchers("/hr").access("hasAuthority('DEV')")
+                .and()
+                .formLogin()
+                .loginPage("/show-login")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/")
+                .failureUrl("/show-login?error")
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/403")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/show-login?logout");
 
-        // No session will be created or used by spring security
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        // Entry points
-        http.authorizeRequests()//
-                .antMatchers("/api/login","/api/me").permitAll()//
-                // Disallow everything else..
-                .anyRequest().authenticated();
-
-        // If a user try to access a resource without having enough permissions
-        http.exceptionHandling().accessDeniedPage("/error");
-
-        // Apply JWT
-        http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
-
-        // Optional, if you want to test the API from a browser
-        // http.httpBasic();
     }
 
 
     @Bean(name="passwordEncoder")
     public PasswordEncoder passwordencoder(){
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)

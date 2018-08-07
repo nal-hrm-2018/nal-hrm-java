@@ -1,5 +1,7 @@
 package nals.hrm.api_nals_hrm.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -16,17 +18,19 @@ public class Role implements Serializable {
   @Column(name = "name", nullable = false)
   String nameRole;
 
+  @JsonIgnore
   @Column(name = "description")
   String descriptionRole;
 
+  @JsonIgnore
   @Column(name = "updated_at")
   String updatedAtRole;
 
-
+  @JsonIgnore
   @Column(name = "created_at")
   String createdAtRole;
 
-
+  @JsonIgnore
   @Column(name = "delete_flag")
   int deleteFlagRole;
 

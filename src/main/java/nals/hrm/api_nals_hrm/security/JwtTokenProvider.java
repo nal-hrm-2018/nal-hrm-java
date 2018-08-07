@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import nals.hrm.api_nals_hrm.define.Define;
+import nals.hrm.api_nals_hrm.dto.EmployeeDTO;
 import nals.hrm.api_nals_hrm.entities.Employee;
 import nals.hrm.api_nals_hrm.entities.Role;
 import nals.hrm.api_nals_hrm.exception.CustomException;
@@ -21,6 +23,8 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class JwtTokenProvider {
@@ -29,8 +33,8 @@ public class JwtTokenProvider {
   @Value("${security.jwt.token.secret-key:secret-key}")
   private String secretKey;
 
-  @Value("${security.jwt.token.expire-length:3600000}")
-  private long validityInMilliseconds = 3600000; // 1h
+  @Value("${security.jwt.token.expire-length:864000000}")
+  private long validityInMilliseconds = Define.tokenExpireLength; // 10 day
 
   @Autowired
   private MyUserDetails myUserDetails;
@@ -47,10 +51,12 @@ public class JwtTokenProvider {
   }
 
   public String createToken(String username) {
+    System.out.println("emp3: "+employeeService.findByEmail("hr1@nal.com").toString());
     Claims claims = Jwts.claims().setSubject("Login");
     Employee employee = employeeService.findByEmail(username);
     employee.setRole(roleService.findByIdRole(employee.getIdRole()));
-    claims.put("data",employee);
+    EmployeeDTO employeeDTO = new EmployeeDTO(employee.getIdEmployee(),employee.getEmail(),employee.getRole());
+    claims.put("data",employeeDTO);
     Date now = new Date();
     Date validity = new Date(now.getTime() + validityInMilliseconds);
     return Jwts.builder()//
@@ -67,13 +73,20 @@ public class JwtTokenProvider {
   }
 
   public String getUsername(String token) {
-    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+//    System.out.println("token: "+token);
+//    System.out.println("username "+((LinkedHashMap) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("data")).get("email"));
+    String username = String.valueOf(((LinkedHashMap) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("data")).get("email"));
+//    System.out.println("role: "+((LinkedHashMap) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("data")).get("role"));
+//    String name = String.valueOf(((LinkedHashMap) ((LinkedHashMap) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("data")).get("role")).get("nameRole"));
+//    System.out.println("nameRole:"+name);
+    return username;
   }
 
   public String resolveToken(HttpServletRequest req) {
     String bearerToken = req.getHeader("Authorization");
-    if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7, bearerToken.length());
+    System.out.println("bearken Token: "+bearerToken);
+    if (bearerToken != null) {
+      return bearerToken;
     }
     return null;
   }

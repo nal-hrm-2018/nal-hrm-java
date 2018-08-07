@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 @Transactional
@@ -30,9 +31,13 @@ public class EmployeeService {
     private AuthenticationManager authenticationManager;
 
     public String login(String username, String password) {
+        System.out.println("emp: "+employeeRepository.findByEmail("hr1@nal.com").toString());
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            System.out.println("emp2: "+employeeRepository.findByEmail("hr1@nal.com").toString());
+
            return jwtTokenProvider.createToken(username);
+
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -43,7 +48,15 @@ public class EmployeeService {
     }
 
 
-    public Employee getMeByToken(HttpServletRequest req) {
+    public Employee getProfile(HttpServletRequest req) {
         return employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+    }
+
+    public Employee findByIdEmployee(int idEmployee) {
+        return employeeRepository.findByIdEmployee(idEmployee);
+    }
+
+    public List<Employee> findByDeleteFlag(int deleteFlag) {
+        return employeeRepository.findByDeleteFlag(deleteFlag);
     }
 }
