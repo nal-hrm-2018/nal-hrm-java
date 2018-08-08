@@ -20,9 +20,9 @@ public class Permission implements Serializable {
     @Column(name = "name", nullable = false)
     String namePermission;
 
-
-    @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
-    private List<Employee> employee;
+//    @JsonIgnore
+//    @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
+//    private List<Employee> employee;
 
     public Permission() {
     }
@@ -52,13 +52,13 @@ public class Permission implements Serializable {
 
 
 
-    public List<Employee> getEmployees() {
-        return employee;
-    }
-
-    public void setEmployees(List<Employee> employee) {
-        this.employee = employee;
-    }
+//    public List<Employee> getEmployees() {
+//        return employee;
+//    }
+//
+//    public void setEmployees(List<Employee> employee) {
+//        this.employee = employee;
+//    }
 
     @Override
     public String toString() {

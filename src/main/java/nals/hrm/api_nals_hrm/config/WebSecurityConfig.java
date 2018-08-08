@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
@@ -32,9 +33,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         https
                 .authorizeRequests()
                 .antMatchers("/show-login","/resources/**","/api/login").permitAll()
-                .antMatchers("/","/api/profile","/api/**").access("hasAuthority('DEV') or hasAuthority('HR') or hasAuthority('PO') or hasAuthority('ACCOUNTANT') or hasAuthority('SM')")
+                .antMatchers("/","/api/profile","/api/**").access("hasAuthority('Dev') or hasAuthority('HR') or hasAuthority('PO') or hasAuthority('ACCOUNTANT') or hasAuthority('SM')")
 
-                .antMatchers("/hr").access("hasAuthority('DEV')")
+                .antMatchers("/hr").access("hasAuthority('HR')")
                 .and()
                 .formLogin()
                 .loginPage("/show-login")
