@@ -5,6 +5,7 @@ import nals.hrm.api_nals_hrm.dto.GenderDTO;
 import nals.hrm.api_nals_hrm.dto.MaritalStatusDTO;
 import nals.hrm.api_nals_hrm.dto.ProfileDTO;
 import nals.hrm.api_nals_hrm.entities.Employee;
+import nals.hrm.api_nals_hrm.entities.Permission;
 import nals.hrm.api_nals_hrm.exception.CustomException;
 import nals.hrm.api_nals_hrm.respository.EmployeeRepository;
 import nals.hrm.api_nals_hrm.respository.EmployeeTypeRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,6 +57,7 @@ public class EmployeeService {
         }
     }
 
+
     public Employee findByEmail(String email) {
         return employeeRepository.findByEmail(email);
     }
@@ -82,11 +85,48 @@ public class EmployeeService {
         return profileDTO;
     }
 
-    public Employee findByIdEmployee(int idEmployee) {
-        return employeeRepository.findByIdEmployee(idEmployee);
-    }
+    public ArrayList<ProfileDTO> getListEmployees(HttpServletRequest req) {
+        List<Employee> listEmployees = null;
+//        List<ProfileDTO> listProfiles = null;
+        ArrayList<ProfileDTO> listProfiles = new ArrayList<ProfileDTO>();
 
-    public List<Employee> findByDeleteFlag(int deleteFlag) {
-        return employeeRepository.findByDeleteFlag(deleteFlag);
+        ProfileDTO profileDTO;
+        if (employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req))) != null) {
+            Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+            List<Permission> permissions = employee.getPermissions();
+            for (Permission permission : permissions) {
+                if (permission.getNamePermission().equals("view_list_employee") == true) {
+                    listEmployees = employeeRepository.findByIsEmployeeAndDeleteFlag(1, 0);
+                    break;
+                }
+            }
+            System.out.println("listEmp: "+listEmployees.size());
+
+            for (Employee objEmp : listEmployees) {
+                profileDTO = new ProfileDTO();
+                profileDTO = modelMapper.map(objEmp, profileDTO.getClass());
+                profileDTO.setEmployeeType(employeeTypeRepository.findByIdEmployeeType(objEmp.getEmployeeTypeId()));
+
+                //config gender
+                GenderDTO gender = new GenderDTO();
+                gender.setGender(objEmp.getGender()); //gender 1->female, 2->male, 3->others
+                profileDTO.setGenderDTO(gender);
+
+                //config marital status
+                MaritalStatusDTO maritalStatus = new MaritalStatusDTO();
+                maritalStatus.setMaritalStatus(objEmp.getMaritalStatus());
+                profileDTO.setMaritalStatusDTO(maritalStatus);
+                profileDTO.setPermission(objEmp.getPermissions());
+                profileDTO.setRole(roleRepository.findByIdRole(objEmp.getIdRole()));
+                profileDTO.setTeams(objEmp.getTeams());
+                System.out.println("list: "+profileDTO.toString());
+                listProfiles.add(profileDTO);
+            }
+
+            return listProfiles;
+
+        } else {
+            return null;
+        }
     }
 }

@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/api")
 public class ProfileController {
+
     @Autowired
     EmployeeService employeeService;
 
@@ -35,12 +36,9 @@ public class ProfileController {
     @Autowired
     TeamService teamService;
 
-    @Autowired
-    private ModelMapper modelMapper;
 
     @GetMapping(value = "/profile")
     @PreAuthorize("hasAuthority('Dev') or hasAuthority('HR') or hasAuthority('PO') or hasAuthority('ACCOUNTANT') or hasAuthority('SM')")
-    @ApiOperation(value = "${EmployeeController.profile}", response = EmployeeDTO.class)
     @ApiResponses(value = {//
             @ApiResponse(code = 400, message = "Something went wrong"), //
             @ApiResponse(code = 403, message = "Access denied"), //

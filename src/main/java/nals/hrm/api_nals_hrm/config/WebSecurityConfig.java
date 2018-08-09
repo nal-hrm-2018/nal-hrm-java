@@ -36,22 +36,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/","/api/profile")
                     .access("hasAuthority('Dev') or hasAuthority('HR') or hasAuthority('PO') or hasAuthority('ACCOUNTANT') or hasAuthority('SM')")
                 .antMatchers("/api/list/employees")
-                    .access("hasAuthority('HR') or hasAuthority('PO') or hasAuthority('SM')")
+                    .access("hasAuthority('HR')")
                 .and()
                 .formLogin()
                 .loginPage("/show-login")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/show-login?error")
+                    .usernameParameter("email")
+                    .passwordParameter("password")
+                    .loginProcessingUrl("/login")
+                    .defaultSuccessUrl("/")
+                    .failureUrl("/show-login?error")
                 .and()
                 .exceptionHandling()
-                .accessDeniedPage("/403")
+                    .accessDeniedPage("/403")
                 .and()
                 .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/show-login?logout");
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/show-login?logout");
 
     }
 

@@ -42,14 +42,12 @@ public class ListEmployeesController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/list/employees")
-    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO') or hasAuthority('SM')")
-    @ApiOperation(value = "${EmployeeController.profile}", response = EmployeeDTO.class)
     @ApiResponses(value = {//
             @ApiResponse(code = 400, message = "Something went wrong"), //
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public APIResponseDTO getProfile(HttpServletRequest req) {
-        return new APIResponseDTO(200,"Success!",employeeService.getProfile(req));
+    public APIResponseDTO getListEmployees(HttpServletRequest req) {
+        return new APIResponseDTO(200,"Success!",employeeService.getListEmployees(req));
     }
 
 }

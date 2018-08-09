@@ -15,4 +15,5 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
 
     List<Employee> findByDeleteFlag(int deleteFlag);
 
+    List<Employee> findByIsEmployeeAndDeleteFlag(int isEmployee, int deleteFlag);
 }

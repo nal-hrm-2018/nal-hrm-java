@@ -55,7 +55,7 @@ public class Employee implements Serializable {
 
   @JsonIgnore
   @Column(name = "is_employee")
-  boolean isEmployee;
+  int isEmployee;
 
   @Column(name = "company")
   String company;
@@ -249,11 +249,11 @@ public class Employee implements Serializable {
     this.curriculum_vitae = curriculum_vitae;
   }
 
-  public boolean isEmployee() {
+  public int isEmployee() {
     return isEmployee;
   }
 
-  public void setEmployee(boolean employee) {
+  public void setEmployee(int employee) {
     isEmployee = employee;
   }
 
