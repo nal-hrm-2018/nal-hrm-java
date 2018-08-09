@@ -1,6 +1,7 @@
 package nals.hrm.api_nals_hrm.service;
 
 
+import nals.hrm.api_nals_hrm.define.Define;
 import nals.hrm.api_nals_hrm.dto.GenderDTO;
 import nals.hrm.api_nals_hrm.dto.MaritalStatusDTO;
 import nals.hrm.api_nals_hrm.dto.ProfileDTO;
@@ -13,6 +14,7 @@ import nals.hrm.api_nals_hrm.respository.RoleRepository;
 import nals.hrm.api_nals_hrm.security.JwtTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -85,22 +88,25 @@ public class EmployeeService {
         return profileDTO;
     }
 
-    public ArrayList<ProfileDTO> getListEmployees(HttpServletRequest req) {
+    public ArrayList<ProfileDTO> getListEmployees(HttpServletRequest req, Optional<Integer> page,Optional<Integer> pageSize) {
         List<Employee> listEmployees = null;
-//        List<ProfileDTO> listProfiles = null;
         ArrayList<ProfileDTO> listProfiles = new ArrayList<ProfileDTO>();
-
         ProfileDTO profileDTO;
         if (employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req))) != null) {
             Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
             List<Permission> permissions = employee.getPermissions();
             for (Permission permission : permissions) {
                 if (permission.getNamePermission().equals("view_list_employee") == true) {
-                    listEmployees = employeeRepository.findByIsEmployeeAndDeleteFlag(1, 0);
+                    System.out.println("page: "+page);
+                    System.out.println("pageSize: "+pageSize);
+                    int evalPageSize = pageSize.orElse(Define.initialPageSize);
+                    int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
+                    System.out.println("evalPageSize "+evalPageSize);
+                    System.out.println("evalPage: "+evalPage);
+                    listEmployees =  employeeRepository.findByIsEmployeeAndDeleteFlag(1,0, PageRequest.of(evalPage, evalPageSize));
                     break;
                 }
             }
-            System.out.println("listEmp: "+listEmployees.size());
 
             for (Employee objEmp : listEmployees) {
                 profileDTO = new ProfileDTO();
@@ -122,6 +128,7 @@ public class EmployeeService {
                 System.out.println("list: "+profileDTO.toString());
                 listProfiles.add(profileDTO);
             }
+
 
             return listProfiles;
 

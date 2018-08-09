@@ -46,8 +46,11 @@ public class MyUserDetails implements UserDetailsService {
     Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
     Role role = roleRepository.findByIdRole(employee.getIdRole());
 
+    //add permission of employee
     System.out.println("role: "+role.toString());
     grantedAuthorities.add(new SimpleGrantedAuthority(role.getNameRole()));
+
+
 
     return new org.springframework.security.core.userdetails.User(
             employee.getEmail(), employee.getPassword(), grantedAuthorities);
