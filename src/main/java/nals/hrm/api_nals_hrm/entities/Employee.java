@@ -138,6 +138,11 @@ public class Employee implements Serializable {
     this.email = email;
   }
 
+  public Employee(String email, String password) {
+    this.email = email;
+    this.password = password;
+  }
+
   public Employee(String email, int idRole,Permission permission) {
     this.email = email;
     this.idRole = idRole;
@@ -386,5 +391,13 @@ public class Employee implements Serializable {
             ", permissions=" + permissions +
             ", employeeType=" + employeeType +
             '}';
+  }
+
+  public boolean checkNullEmail(){
+    return this.email.length()<0;
+  }
+
+  public boolean checkNullPassword() {
+    return this.password.length() < 0;
   }
 }

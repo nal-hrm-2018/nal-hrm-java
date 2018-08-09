@@ -41,9 +41,9 @@ public class EmployeeController {
     @PostMapping("/login")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Something went wrong"), @ApiResponse(code = 422, message = "Invalid username/password supplied")})
     public APIResponseDTO login(@ApiParam("username") @RequestParam String username, @ApiParam("password") @RequestParam String password) {
-        if(employeeService.findByEmail(username)!= null && BCrypt.checkpw(password, employeeService.findByEmail(username).getPassword().replace("$2y$","$2a$")) == true)
+//        if(employeeService.findByEmail(username)!= null && BCrypt.checkpw(password, employeeService.findByEmail(username).getPassword().replace("$2y$","$2a$")) == true)
             return new APIResponseDTO(200, "Login success!", employeeService.login(username, password));
-      else return new APIResponseDTO(500,"Invalid username/password supplied",null);
+//      else return new APIResponseDTO(500,"Invalid username/password supplied",null);
     }
 
 
