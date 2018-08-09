@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "employee_types")
@@ -34,9 +35,9 @@ public class EmployeeType implements Serializable {
     @Column(name = "delete_flag")
     private int deleteFlagEmployeeType;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "employeeType", fetch = FetchType.LAZY)
-    Employee employee;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "employeeType", fetch = FetchType.LAZY)
+//    List<Employee> employees;
 
     public EmployeeType() {
     }

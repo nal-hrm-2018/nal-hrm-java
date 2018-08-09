@@ -116,10 +116,8 @@ public class Employee implements Serializable {
   private List<Permission> permissions;
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinTable(name = "employee_types",
-          joinColumns = @JoinColumn(name = "employee_type_id"),
-          inverseJoinColumns = @JoinColumn(name = "id"))
+  @ManyToOne
+  @JoinColumn(name="employee_type_id",insertable=false, updatable=false)
   private EmployeeType employeeType;
 
   @JsonIgnore

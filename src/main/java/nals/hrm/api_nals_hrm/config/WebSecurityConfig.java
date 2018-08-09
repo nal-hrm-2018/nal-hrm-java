@@ -33,9 +33,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         https
                 .authorizeRequests()
                 .antMatchers("/show-login","/resources/**","/api/login").permitAll()
-                .antMatchers("/","/api/profile","/api/**").access("hasAuthority('Dev') or hasAuthority('HR') or hasAuthority('PO') or hasAuthority('ACCOUNTANT') or hasAuthority('SM')")
-
-                .antMatchers("/hr").access("hasAuthority('HR')")
+                .antMatchers("/","/api/profile")
+                    .access("hasAuthority('Dev') or hasAuthority('HR') or hasAuthority('PO') or hasAuthority('ACCOUNTANT') or hasAuthority('SM')")
+                .antMatchers("/api/list/employees")
+                    .access("hasAuthority('HR') or hasAuthority('PO') or hasAuthority('SM')")
                 .and()
                 .formLogin()
                 .loginPage("/show-login")

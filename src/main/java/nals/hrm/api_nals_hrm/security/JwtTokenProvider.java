@@ -72,18 +72,13 @@ public class JwtTokenProvider {
   }
 
   public String getUsername(String token) {
-//    System.out.println("token: "+token);
-//    System.out.println("username "+((LinkedHashMap) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("data")).get("email"));
     String username = String.valueOf(((LinkedHashMap) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("data")).get("email"));
-//    System.out.println("role: "+((LinkedHashMap) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("data")).get("role"));
-//    String name = String.valueOf(((LinkedHashMap) ((LinkedHashMap) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("data")).get("role")).get("nameRole"));
-//    System.out.println("nameRole:"+name);
     return username;
   }
 
   public String resolveToken(HttpServletRequest req) {
     String bearerToken = req.getHeader("Authorization");
-    System.out.println("bearken Token: "+bearerToken);
+    System.out.println("Token: "+bearerToken);
     if (bearerToken != null) {
       return bearerToken;
     }
