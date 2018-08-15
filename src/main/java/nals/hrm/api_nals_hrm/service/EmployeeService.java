@@ -1,12 +1,12 @@
 package nals.hrm.api_nals_hrm.service;
 
 
+import com.sun.xml.internal.ws.handler.HandlerException;
 import nals.hrm.api_nals_hrm.define.Define;
 import nals.hrm.api_nals_hrm.dto.GenderDTO;
 import nals.hrm.api_nals_hrm.dto.MaritalStatusDTO;
 import nals.hrm.api_nals_hrm.dto.ProfileDTO;
 import nals.hrm.api_nals_hrm.entities.Employee;
-import nals.hrm.api_nals_hrm.entities.Permission;
 import nals.hrm.api_nals_hrm.exception.CustomException;
 import nals.hrm.api_nals_hrm.respository.EmployeeRepository;
 import nals.hrm.api_nals_hrm.respository.EmployeeTypeRepository;
@@ -54,9 +54,8 @@ public class EmployeeService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             return jwtTokenProvider.createToken(username);
-
         } catch (AuthenticationException e) {
-            throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new CustomException("Invalid username/password supplied", 422);
         }
     }
 
@@ -88,52 +87,55 @@ public class EmployeeService {
         return profileDTO;
     }
 
-    public ArrayList<ProfileDTO> getListEmployees(HttpServletRequest req, Optional<Integer> page,Optional<Integer> pageSize) {
+    public ArrayList<ProfileDTO> getListEmployees(Optional<Integer> page, Optional<Integer> pageSize) {
         List<Employee> listEmployees = null;
         ArrayList<ProfileDTO> listProfiles = new ArrayList<ProfileDTO>();
         ProfileDTO profileDTO;
-        if (employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req))) != null) {
-            Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
-            List<Permission> permissions = employee.getPermissions();
-            for (Permission permission : permissions) {
-                if (permission.getNamePermission().equals("view_list_employee") == true) {
-                    System.out.println("page: "+page);
-                    System.out.println("pageSize: "+pageSize);
-                    int evalPageSize = pageSize.orElse(Define.initialPageSize);
-                    int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
-                    System.out.println("evalPageSize "+evalPageSize);
-                    System.out.println("evalPage: "+evalPage);
-                    listEmployees =  employeeRepository.findByIsEmployeeAndDeleteFlag(1,0, PageRequest.of(evalPage, evalPageSize));
-                    break;
-                }
-            }
-
-            for (Employee objEmp : listEmployees) {
-                profileDTO = new ProfileDTO();
-                profileDTO = modelMapper.map(objEmp, profileDTO.getClass());
-                profileDTO.setEmployeeType(employeeTypeRepository.findByIdEmployeeType(objEmp.getEmployeeTypeId()));
-
-                //config gender
-                GenderDTO gender = new GenderDTO();
-                gender.setGender(objEmp.getGender()); //gender 1->female, 2->male, 3->others
-                profileDTO.setGenderDTO(gender);
-
-                //config marital status
-                MaritalStatusDTO maritalStatus = new MaritalStatusDTO();
-                maritalStatus.setMaritalStatus(objEmp.getMaritalStatus());
-                profileDTO.setMaritalStatusDTO(maritalStatus);
-                profileDTO.setPermission(objEmp.getPermissions());
-                profileDTO.setRole(roleRepository.findByIdRole(objEmp.getIdRole()));
-                profileDTO.setTeams(objEmp.getTeams());
-                System.out.println("list: "+profileDTO.toString());
-                listProfiles.add(profileDTO);
-            }
-
-
-            return listProfiles;
-
-        } else {
-            return null;
+        int evalPageSize = pageSize.orElse(Define.initialPageSize);
+        int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
+        listEmployees = employeeRepository.findByIsEmployeeAndDeleteFlag(1, 0, PageRequest.of(evalPage, evalPageSize));
+        for (Employee objEmp : listEmployees) {
+            profileDTO = new ProfileDTO();
+            profileDTO = modelMapper.map(objEmp, profileDTO.getClass());
+            profileDTO.setEmployeeType(employeeTypeRepository.findByIdEmployeeType(objEmp.getEmployeeTypeId()));
+            //config gender
+            GenderDTO gender = new GenderDTO();
+            gender.setGender(objEmp.getGender()); //gender 1->female, 2->male, 3->others
+            profileDTO.setGenderDTO(gender);
+            //config marital status
+            MaritalStatusDTO maritalStatus = new MaritalStatusDTO();
+            maritalStatus.setMaritalStatus(objEmp.getMaritalStatus());
+            profileDTO.setMaritalStatusDTO(maritalStatus);
+            profileDTO.setPermission(objEmp.getPermissions());
+            profileDTO.setRole(roleRepository.findByIdRole(objEmp.getIdRole()));
+            profileDTO.setTeams(objEmp.getTeams());
+            listProfiles.add(profileDTO);
         }
+        return listProfiles;
+
+    }
+
+    public ProfileDTO findByIdEmployeeAndIsEmployeeAndDeleteFlag(int id, int isEmployee, int deleteFlag) {
+        Employee employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(id,isEmployee,deleteFlag);
+        ProfileDTO profileDTO = new ProfileDTO();
+        profileDTO = modelMapper.map(employee, profileDTO.getClass());
+        profileDTO.setEmployeeType(employeeTypeRepository.findByIdEmployeeType(employee.getEmployeeTypeId()));
+
+        //config gender
+        GenderDTO gender = new GenderDTO();
+        gender.setGender(employee.getGender()); //gender 1->female, 2->male, 3->others
+        profileDTO.setGenderDTO(gender);
+
+        //config marital status
+        MaritalStatusDTO maritalStatus = new MaritalStatusDTO();
+        maritalStatus.setMaritalStatus(employee.getMaritalStatus());
+        profileDTO.setMaritalStatusDTO(maritalStatus);
+        profileDTO.setPermission(employee.getPermissions());
+        profileDTO.setRole(roleRepository.findByIdRole(employee.getIdRole()));
+        profileDTO.setTeams(employee.getTeams());
+
+        return profileDTO;
     }
 }
+
+

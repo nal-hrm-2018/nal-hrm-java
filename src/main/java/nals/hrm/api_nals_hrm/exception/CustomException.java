@@ -1,15 +1,13 @@
 package nals.hrm.api_nals_hrm.exception;
 
-import org.springframework.http.HttpStatus;
-
 public class CustomException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;
 
   private final String message;
-  private final HttpStatus httpStatus;
+  private final int httpStatus;
 
-  public CustomException(String message, HttpStatus httpStatus) {
+  public CustomException(String message, int httpStatus) {
     this.message = message;
     this.httpStatus = httpStatus;
   }
@@ -19,7 +17,7 @@ public class CustomException extends RuntimeException {
     return message;
   }
 
-  public HttpStatus getHttpStatus() {
+  public int getHttpStatus() {
     return httpStatus;
   }
 

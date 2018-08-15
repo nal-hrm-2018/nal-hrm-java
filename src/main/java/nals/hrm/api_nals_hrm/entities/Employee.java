@@ -109,7 +109,7 @@ public class Employee implements Serializable {
 
 
   @JsonIgnore
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "permission_employee",
           joinColumns = @JoinColumn(name = "employee_id"),
           inverseJoinColumns = @JoinColumn(name = "permission_id"))

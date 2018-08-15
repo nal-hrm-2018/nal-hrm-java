@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,6 +15,10 @@ import java.util.List;
 public interface EmployeeRepository extends PagingAndSortingRepository<Employee, Integer> {
     Employee findByEmail(String email);
 
+    @PreAuthorize("hasAuthority('view_list_employee')")
     List<Employee> findByIsEmployeeAndDeleteFlag(int isEmployee, int deleteFlag, Pageable pageable);
 
+    Employee findByIdEmployeeAndIsEmployeeAndDeleteFlag(int id, int isEmployee, int deleteFlag);
+
+    List<Employee> findByIsEmployeeAndDeleteFlag(int isEmployee, int deleteFlag);
 }

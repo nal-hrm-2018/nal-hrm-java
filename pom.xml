@@ -25,6 +25,7 @@
         <jjwt.version>0.9.0</jjwt.version>
     </properties>
 
+
     <dependencies>
         <dependency>
             <!-- Setup Spring Boot -->
