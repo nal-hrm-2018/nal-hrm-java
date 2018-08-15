@@ -316,5 +316,31 @@ public class ProfileDTO {
         this.teams = teams;
     }
 
-
+    @Override
+    public String toString() {
+        return "ProfileDTO{" +
+                "idEmployee=" + idEmployee +
+                ", email='" + email + '\'' +
+                ", nameEmployee='" + nameEmployee + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", genderDTO=" + genderDTO +
+                ", mobile='" + mobile + '\'' +
+                ", address='" + address + '\'' +
+                ", maritalStatusDTO=" + maritalStatusDTO +
+                ", startWorkDate='" + startWorkDate + '\'' +
+                ", endWorkDate='" + endWorkDate + '\'' +
+                ", curriculum_vitae='" + curriculum_vitae + '\'' +
+                ", isEmployee=" + isEmployee +
+                ", company='" + company + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", employeeType=" + employeeType +
+                ", role=" + role +
+                ", isManager=" + isManager +
+                ", salaryId=" + salaryId +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", permission=" + permission +
+                ", teams=" + teams +
+                '}';
+    }
 }

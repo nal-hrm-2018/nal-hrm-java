@@ -55,7 +55,7 @@ public class Employee implements Serializable {
 
   @JsonIgnore
   @Column(name = "is_employee")
-  boolean isEmployee;
+  int isEmployee;
 
   @Column(name = "company")
   String company;
@@ -109,17 +109,15 @@ public class Employee implements Serializable {
 
 
   @JsonIgnore
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "permission_employee",
           joinColumns = @JoinColumn(name = "employee_id"),
           inverseJoinColumns = @JoinColumn(name = "permission_id"))
   private List<Permission> permissions;
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinTable(name = "employee_types",
-          joinColumns = @JoinColumn(name = "employee_type_id"),
-          inverseJoinColumns = @JoinColumn(name = "id"))
+  @ManyToOne
+  @JoinColumn(name="employee_type_id",insertable=false, updatable=false)
   private EmployeeType employeeType;
 
   @JsonIgnore
@@ -251,11 +249,11 @@ public class Employee implements Serializable {
     this.curriculum_vitae = curriculum_vitae;
   }
 
-  public boolean isEmployee() {
+  public int isEmployee() {
     return isEmployee;
   }
 
-  public void setEmployee(boolean employee) {
+  public void setEmployee(int employee) {
     isEmployee = employee;
   }
 
