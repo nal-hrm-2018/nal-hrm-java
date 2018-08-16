@@ -9,6 +9,7 @@ import nals.hrm.api_nals_hrm.service.EmployeeTypeService;
 import nals.hrm.api_nals_hrm.service.PermissionService;
 import nals.hrm.api_nals_hrm.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ public class BasicController {
     EmployeeService employeeService;
 
     @RequestMapping( value = "/basic",params = { "id"}, method = RequestMethod.GET )
+    @PreAuthorize("hasAuthority('view_employee_basic')")
     public APIResponseDTO getBasic(@RequestParam("id")  int id) {
         return new APIResponseDTO(200,"Success!",employeeService.findByIdEmployeeAndIsEmployeeAndDeleteFlag(id,1,0));
     }

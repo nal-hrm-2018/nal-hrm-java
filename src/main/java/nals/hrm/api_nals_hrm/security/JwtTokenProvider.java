@@ -7,7 +7,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import nals.hrm.api_nals_hrm.define.Define;
 import nals.hrm.api_nals_hrm.dto.EmployeeDTO;
 import nals.hrm.api_nals_hrm.entities.Employee;
-import nals.hrm.api_nals_hrm.entities.Permission;
 import nals.hrm.api_nals_hrm.entities.Role;
 import nals.hrm.api_nals_hrm.exception.CustomException;
 import nals.hrm.api_nals_hrm.service.EmployeeService;
@@ -22,7 +21,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class JwtTokenProvider {
@@ -52,9 +54,8 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject("Login");
         Employee employee = employeeService.findByEmail(username);
         Role role = roleService.findByIdRole(employee.getIdRole());
-        List<Permission> permissions = employee.getPermissions();
-        EmployeeDTO employeeDTO = new EmployeeDTO(employee.getIdEmployee(), employee.getEmail(), role);
-        claims.put("data", employeeDTO);
+        EmployeeDTO employeeDTO = new EmployeeDTO(employee.getIdEmployee(),employee.getEmail(),role);
+        claims.put("data",employeeDTO);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
         return Jwts.builder()//
@@ -76,12 +77,12 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        try {
-            String bearerToken = req.getHeader("Authorization");
+        String bearerToken = req.getHeader("Authorization");
+        System.out.println("Token: "+bearerToken);
+        if (bearerToken != null) {
             return bearerToken;
-        } catch (Exception e) {
-            throw new CustomException("Bad request", 422);
         }
+        return null;
     }
 
     public boolean validateToken(String token) {
@@ -89,7 +90,8 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new CustomException("Expired or invalid JWT token", 500);
+      throw new CustomException("Expired or invalid JWT token", 500);
+//            return false;
         }
     }
 

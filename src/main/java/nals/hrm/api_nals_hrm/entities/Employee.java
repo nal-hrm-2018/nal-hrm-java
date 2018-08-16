@@ -359,10 +359,10 @@ public class Employee implements Serializable {
   @Override
   public String toString() {
     return "Employee{" +
-            "idEmployee=" + idEmployee +
+            "idProject=" + idEmployee +
             ", email='" + email + '\'' +
             ", password='" + password + '\'' +
-            ", nameEmployee='" + nameEmployee + '\'' +
+            ", nameProject='" + nameEmployee + '\'' +
             ", birthday='" + birthday + '\'' +
             ", gender=" + gender +
             ", mobile='" + mobile + '\'' +

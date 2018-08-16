@@ -4,6 +4,7 @@ package nals.hrm.api_nals_hrm.service;
 import com.sun.xml.internal.ws.handler.HandlerException;
 import nals.hrm.api_nals_hrm.define.Define;
 import nals.hrm.api_nals_hrm.dto.GenderDTO;
+import nals.hrm.api_nals_hrm.dto.ListEmployeeDTO;
 import nals.hrm.api_nals_hrm.dto.MaritalStatusDTO;
 import nals.hrm.api_nals_hrm.dto.ProfileDTO;
 import nals.hrm.api_nals_hrm.entities.Employee;
@@ -15,7 +16,6 @@ import nals.hrm.api_nals_hrm.security.JwtTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -87,7 +87,7 @@ public class EmployeeService {
         return profileDTO;
     }
 
-    public ArrayList<ProfileDTO> getListEmployees(Optional<Integer> page, Optional<Integer> pageSize) {
+    public ListEmployeeDTO getListEmployees(Optional<Integer> page, Optional<Integer> pageSize) {
         List<Employee> listEmployees = null;
         ArrayList<ProfileDTO> listProfiles = new ArrayList<ProfileDTO>();
         ProfileDTO profileDTO;
@@ -111,12 +111,14 @@ public class EmployeeService {
             profileDTO.setTeams(objEmp.getTeams());
             listProfiles.add(profileDTO);
         }
-        return listProfiles;
+        int total = employeeRepository.findByIsEmployeeAndDeleteFlag(1, 0).size();
+        return new ListEmployeeDTO(total, listProfiles);
 
     }
 
+
     public ProfileDTO findByIdEmployeeAndIsEmployeeAndDeleteFlag(int id, int isEmployee, int deleteFlag) {
-        Employee employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(id,isEmployee,deleteFlag);
+        Employee employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(id, isEmployee, deleteFlag);
         ProfileDTO profileDTO = new ProfileDTO();
         profileDTO = modelMapper.map(employee, profileDTO.getClass());
         profileDTO.setEmployeeType(employeeTypeRepository.findByIdEmployeeType(employee.getEmployeeTypeId()));

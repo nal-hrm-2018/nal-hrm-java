@@ -6,36 +6,34 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "projects")
-public class Project implements Serializable {
+@Table(name = "processes")
+public class Processes implements Serializable {
 
     @Id
+    @GeneratedValue
     @Column(name = "id", nullable = false)
-    String idProject;
+    int idProcesses;
 
-    @Column(name = "name")
-    String nameProject;
+    @Column(name = "title")
+    String title;
 
-    @Column(name = "income")
-    double income;
+    @Column(name = "employee_id")
+    int employeeId;
 
-    @Column(name = "real_cost")
-    double realCost;
+    @Column(name = "project_id")
+    String projectId;
 
-    @Column(name = "description")
-    String description;
+    @Column(name = "role_id")
+    int roleId;
 
-    @Column(name = "status_id")
-    int statusId;
+    @Column(name = "check_project_exit")
+    int checkProjectExit;
 
-    @Column(name = "estimate_start_date")
-    String estimateStartDate;
+    @Column(name = "man_power")
+    double man_power;
 
     @Column(name = "start_date")
     String startDate;
-
-    @Column(name = "estimate_end_date")
-    String estimateEndDate;
 
     @Column(name = "end_date")
     String endDate;
@@ -61,13 +59,13 @@ public class Project implements Serializable {
     int deleteFlag;
 
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="status_id",insertable=false, updatable=false)
-    Status status;
+
+
+
+
+
 
 
 
 
 }
-
