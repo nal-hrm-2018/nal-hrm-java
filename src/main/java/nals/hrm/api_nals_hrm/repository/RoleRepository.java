@@ -1,4 +1,4 @@
-package nals.hrm.api_nals_hrm.respository;
+package nals.hrm.api_nals_hrm.repository;
 
 
 import nals.hrm.api_nals_hrm.entities.Role;

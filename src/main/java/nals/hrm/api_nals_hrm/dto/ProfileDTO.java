@@ -334,7 +334,7 @@ public class ProfileDTO {
                 ", company='" + company + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", employeeType=" + employeeType +
-                ", role=" + role +
+                ", roleId=" + role +
                 ", isManager=" + isManager +
                 ", salaryId=" + salaryId +
                 ", updatedAt='" + updatedAt + '\'' +

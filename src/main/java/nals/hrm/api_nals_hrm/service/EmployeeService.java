@@ -1,7 +1,6 @@
 package nals.hrm.api_nals_hrm.service;
 
 
-import com.sun.xml.internal.ws.handler.HandlerException;
 import nals.hrm.api_nals_hrm.define.Define;
 import nals.hrm.api_nals_hrm.dto.GenderDTO;
 import nals.hrm.api_nals_hrm.dto.ListEmployeeDTO;
@@ -9,9 +8,9 @@ import nals.hrm.api_nals_hrm.dto.MaritalStatusDTO;
 import nals.hrm.api_nals_hrm.dto.ProfileDTO;
 import nals.hrm.api_nals_hrm.entities.Employee;
 import nals.hrm.api_nals_hrm.exception.CustomException;
-import nals.hrm.api_nals_hrm.respository.EmployeeRepository;
-import nals.hrm.api_nals_hrm.respository.EmployeeTypeRepository;
-import nals.hrm.api_nals_hrm.respository.RoleRepository;
+import nals.hrm.api_nals_hrm.repository.EmployeeRepository;
+import nals.hrm.api_nals_hrm.repository.EmployeeTypeRepository;
+import nals.hrm.api_nals_hrm.repository.RoleRepository;
 import nals.hrm.api_nals_hrm.security.JwtTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +136,14 @@ public class EmployeeService {
         profileDTO.setTeams(employee.getTeams());
 
         return profileDTO;
+    }
+
+    public Employee findByIdEmployee(int idEmployee) {
+        return employeeRepository.findByIdEmployee(idEmployee);
+    }
+
+    public Employee findByIdEmployeeAndDeleteFlag(int idEmployee, int deleteFlag) {
+        return employeeRepository.findByIdEmployeeAndDeleteFlag(idEmployee,deleteFlag);
     }
 }
 
