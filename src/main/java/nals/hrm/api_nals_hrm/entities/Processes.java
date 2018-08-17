@@ -12,50 +12,52 @@ public class Processes implements Serializable {
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)
-    int idProcesses;
+    private int idProcesses;
 
     @Column(name = "employee_id")
     int employeeId;
 
     @Column(name = "project_id")
-    String projectId;
+    private String projectId;
 
     @Column(name = "role_id")
-    int roleId;
+    private int roleId;
 
     @Column(name = "check_project_exit")
     Integer checkProjectExit;
 
     @Column(name = "man_power")
-    double man_power;
+    private double man_power;
 
     @Column(name = "start_date")
-    String startDate;
+    private String startDate;
 
     @Column(name = "end_date")
-    String endDate;
+    private String endDate;
 
     @JsonIgnore
     @Column(name = "updated_at")
-    String updatedAt;
+    private String updatedAt;
 
     @JsonIgnore
     @Column(name = "updated_by_employee")
-    Integer updatedByEmployee;
+    private Integer updatedByEmployee;
 
     @JsonIgnore
     @Column(name = "created_at")
-    String createdAt;
+    private String createdAt;
 
     @JsonIgnore
     @Column(name = "created_by_employee")
-    Integer createdByEmployee;
+    private Integer createdByEmployee;
 
     @JsonIgnore
     @Column(name = "delete_flag")
-    int deleteFlag;
+    private int deleteFlag;
 
-
+    @ManyToOne
+    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    Role role;
 
     public Processes() {
     }
@@ -63,7 +65,7 @@ public class Processes implements Serializable {
     public Processes(int idProcesses, int employeeId, String projectId, int roleId, Integer checkProjectExit,
                      double man_power, String startDate, String endDate, String updatedAt,
                      int updatedByEmployee, String createdAt,
-                     int createdByEmployee, int deleteFlag) {
+                     int createdByEmployee, int deleteFlag, Role role) {
         this.idProcesses = idProcesses;
         this.employeeId = employeeId;
         this.projectId = projectId;
@@ -77,6 +79,7 @@ public class Processes implements Serializable {
         this.createdAt = createdAt;
         this.createdByEmployee = createdByEmployee;
         this.deleteFlag = deleteFlag;
+        this.role = role;
     }
 
     public int getIdProcesses() {
@@ -183,5 +186,11 @@ public class Processes implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
+    public Role getRole() {
+        return role;
+    }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

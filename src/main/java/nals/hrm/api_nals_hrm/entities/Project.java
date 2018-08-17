@@ -25,6 +25,7 @@ public class Project implements Serializable {
     @Column(name = "description")
     String description;
 
+    @JsonIgnore
     @Column(name = "status_id")
     int statusId;
 
@@ -61,7 +62,7 @@ public class Project implements Serializable {
     int deleteFlag;
 
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name="status_id",insertable=false, updatable=false)
     Status status;
