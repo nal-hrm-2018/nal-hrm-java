@@ -48,6 +48,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         switch (cx.getHttpStatus()){
             case 422:
                 return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+             case 404:
+                return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
             default:
                 return new ResponseEntity<>(new APIResponseDTO(400,"Something error!!!!!",null), HttpStatus.BAD_REQUEST);
         }
