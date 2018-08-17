@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ListEmployeeDTO {
     private int total;
-    private ArrayList<ProfileDTO> list;
+    private ArrayList<O> list;
 
     public ListEmployeeDTO() {
     }
