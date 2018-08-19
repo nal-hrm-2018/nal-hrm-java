@@ -3,7 +3,7 @@ package nals.hrm.api_nals_hrm.service;
 
 import nals.hrm.api_nals_hrm.define.Define;
 import nals.hrm.api_nals_hrm.dto.GenderDTO;
-import nals.hrm.api_nals_hrm.dto.ListEmployeeDTO;
+import nals.hrm.api_nals_hrm.dto.ListDTO;
 import nals.hrm.api_nals_hrm.dto.MaritalStatusDTO;
 import nals.hrm.api_nals_hrm.dto.ProfileDTO;
 import nals.hrm.api_nals_hrm.entities.Employee;
@@ -86,9 +86,9 @@ public class EmployeeService {
         return profileDTO;
     }
 
-    public ListEmployeeDTO getListEmployees(Optional<Integer> page, Optional<Integer> pageSize) {
+    public ListDTO getListEmployees(Optional<Integer> page, Optional<Integer> pageSize) {
         List<Employee> listEmployees = null;
-        ArrayList<ProfileDTO> listProfiles = new ArrayList<ProfileDTO>();
+        ArrayList<Object> listProfiles = new ArrayList<>();
         ProfileDTO profileDTO;
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
@@ -111,7 +111,7 @@ public class EmployeeService {
             listProfiles.add(profileDTO);
         }
         int total = employeeRepository.findByIsEmployeeAndDeleteFlag(1, 0).size();
-        return new ListEmployeeDTO(total, listProfiles);
+        return  new ListDTO(total, listProfiles);
 
     }
 
@@ -138,13 +138,6 @@ public class EmployeeService {
         return profileDTO;
     }
 
-    public Employee findByIdEmployee(int idEmployee) {
-        return employeeRepository.findByIdEmployee(idEmployee);
-    }
-
-    public Employee findByIdEmployeeAndDeleteFlag(int idEmployee, int deleteFlag) {
-        return employeeRepository.findByIdEmployeeAndDeleteFlag(idEmployee,deleteFlag);
-    }
 }
 
 
