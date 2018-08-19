@@ -14,7 +14,4 @@ public class ProcessesService {
     @Autowired
     ProcessesRepository processesRepository;
 
-    public List<Processes> findByEmployeeId(int idEmployee) {
-        return processesRepository.findByEmployeeId(idEmployee);
-    }
 }

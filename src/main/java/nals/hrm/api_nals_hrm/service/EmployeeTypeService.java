@@ -12,7 +12,4 @@ public class EmployeeTypeService {
 
     @Autowired
     EmployeeTypeRepository employeeTypeRepository;
-    public EmployeeType findByIdEmployeeType(int employeeTypeId) {
-        return employeeTypeRepository.findByIdEmployeeType(employeeTypeId);
-    }
 }

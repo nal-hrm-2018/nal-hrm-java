@@ -32,7 +32,7 @@ public class Employee implements Serializable {
 
     @JsonIgnore
     @Column(name = "gender")
-    int gender;
+    Integer gender;
 
     @Column(name = "mobile")
     String mobile;
@@ -65,7 +65,7 @@ public class Employee implements Serializable {
 
     @JsonIgnore
     @Column(name = "employee_type_id")
-    int employeeTypeId;
+    Integer employeeTypeId;
 
 //  @JsonIgnore
 //  @Column(name = "teamId")
@@ -199,11 +199,11 @@ public class Employee implements Serializable {
         this.birthday = birthday;
     }
 
-    public int getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
@@ -279,11 +279,11 @@ public class Employee implements Serializable {
         this.avatar = avatar;
     }
 
-    public int getEmployeeTypeId() {
+    public Integer getEmployeeTypeId() {
         return employeeTypeId;
     }
 
-    public void setEmployeeTypeId(int employeeTypeId) {
+    public void setEmployeeTypeId(Integer employeeTypeId) {
         this.employeeTypeId = employeeTypeId;
     }
 
@@ -370,6 +370,8 @@ public class Employee implements Serializable {
     public void setProjects(List<Project> projects) {
         this.projects = projects;
     }
+
+
 
     @Override
     public String toString() {

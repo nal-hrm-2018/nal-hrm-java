@@ -29,22 +29,9 @@ public class ProjectService {
     ProcessesRepository processesRepository;
 
 
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public Project findByIdProject(String idProject) {
-        return projectRepository.findByIdProject(idProject);
-    }
-
-    public List<EmployeeProjectDTO> getListProjectByIdEmployee(int id) {
-        int idEmployee = 0;
-        try{
-           idEmployee = id;
-        }catch (NumberFormatException e){
-            throw new CustomException("No find employee", 404);
-        }
+    public List<EmployeeProjectDTO> getListProjectByIdEmployee(int idEmployee) {
         try {
-
             ArrayList<EmployeeProjectDTO> result = new ArrayList<>();//all information of project
             //find employee by id
             Employee employee = employeeRepository.findByIdEmployee(idEmployee);
