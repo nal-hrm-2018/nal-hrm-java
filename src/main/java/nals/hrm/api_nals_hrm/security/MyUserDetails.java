@@ -28,9 +28,6 @@ public class MyUserDetails implements UserDetailsService {
   @Autowired
   private RoleRepository roleRepository;
 
-  @Autowired
-  private PermissionRepository permissionRepository;
-
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     final Employee employee = employeeRepository.findByEmail(username);
@@ -39,15 +36,6 @@ public class MyUserDetails implements UserDetailsService {
       throw new UsernameNotFoundException("User '" + username + "' not found");
     }
 
-//    return org.springframework.security.core.userdetails.User//
-//        .withUsername(username)//
-//        .password(employee.getPassword())//
-//        .authorities(employee.getRoles())//
-//        .accountExpired(false)//
-//        .accountLocked(false)//
-//        .credentialsExpired(false)//
-//        .disabled(false)//
-//        .build();
 
     Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
     Role role = roleRepository.findByIdRole(employee.getIdRole());
@@ -55,13 +43,11 @@ public class MyUserDetails implements UserDetailsService {
     grantedAuthorities.add(new SimpleGrantedAuthority(role.getNameRole()));
 
     List<Permission> listPermissions = employee.getPermissions();
-    System.out.println("listPermissions: "+listPermissions.toString());//logger
 //    Log
     for (Permission objPermission: listPermissions) {
       grantedAuthorities.add(new SimpleGrantedAuthority(objPermission.getNamePermission()));
     }
 
-    System.out.println("grantedAuthorities"+grantedAuthorities);
 //    return new org.springframework.security.core.userdetails.User(
 //            employee.getEmail(), employee.getPassword(), grantedAuthorities);
 

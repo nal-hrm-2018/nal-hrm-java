@@ -35,9 +35,6 @@ public class EmployeeType implements Serializable {
     @Column(name = "delete_flag")
     private int deleteFlagEmployeeType;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "employeeType", fetch = FetchType.LAZY)
-//    List<Employee> employees;
 
     public EmployeeType() {
     }

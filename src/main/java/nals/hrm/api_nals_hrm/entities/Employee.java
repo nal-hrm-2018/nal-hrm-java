@@ -67,10 +67,6 @@ public class Employee implements Serializable {
     @Column(name = "employee_type_id")
     Integer employeeTypeId;
 
-//  @JsonIgnore
-//  @Column(name = "teamId")
-//  int teamId;
-
     @JsonIgnore
     @Column(name = "role_id")
     int idRole;
@@ -79,9 +75,9 @@ public class Employee implements Serializable {
     @Column(name = "is_manager")
     int isManager;
 
-//  @JsonIgnore
-//  @Column(name = "salary_id")
-//  int salaryId;
+    @JsonIgnore
+    @Column(name = "salary_id")
+    Integer salaryId;
 
     @JsonIgnore
     @Column(name = "work_status")
@@ -91,17 +87,17 @@ public class Employee implements Serializable {
     @Column(name = "updated_at")
     String updatedAt;
 
-//  @JsonIgnore
-//  @Column(name = "updated_by_employee")
-//  int updatedByEmployee;
+    @JsonIgnore
+    @Column(name = "updated_by_employee")
+    Integer updatedByEmployee;
 
     @JsonIgnore
     @Column(name = "created_at")
     String createdAt;
 
-//  @JsonIgnore
-//  @Column(name = "created_by_employee")
-//  int createdByEmployee;
+    @JsonIgnore
+    @Column(name = "created_by_employee")
+    Integer createdByEmployee;
 
     @JsonIgnore
     @Column(name = "delete_flag")
@@ -134,20 +130,14 @@ public class Employee implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "project_id"))
     private List<Project> projects;
 
+//    @JsonIgnore
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+//    private Role role;
+
     public Employee() {
-        super();
     }
 
-    public Employee(int idEmployee, String email) {
-        this.idEmployee = idEmployee;
-        this.email = email;
-    }
-
-    public Employee(String email, int idRole, Permission permission) {
-        this.email = email;
-        this.idRole = idRole;
-        this.permissions = permissions;
-    }
 
 
     public int getIdEmployee() {
@@ -287,7 +277,6 @@ public class Employee implements Serializable {
         this.employeeTypeId = employeeTypeId;
     }
 
-
     public int getIsManager() {
         return isManager;
     }
@@ -295,7 +284,6 @@ public class Employee implements Serializable {
     public void setIsManager(int isManager) {
         this.isManager = isManager;
     }
-
 
     public boolean isWorkStatus() {
         return workStatus;
@@ -313,7 +301,6 @@ public class Employee implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-
     public String getCreatedAt() {
         return createdAt;
     }
@@ -321,7 +308,6 @@ public class Employee implements Serializable {
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
-
 
     public int getDeleteFlag() {
         return deleteFlag;
@@ -371,12 +357,29 @@ public class Employee implements Serializable {
         this.projects = projects;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "projects=" + projects +
-                '}';
+    public Integer getSalaryId() {
+        return salaryId;
     }
+
+    public void setSalaryId(Integer salaryId) {
+        this.salaryId = salaryId;
+    }
+
+    public Integer getUpdatedByEmployee() {
+        return updatedByEmployee;
+
+    }
+
+    public void setUpdatedByEmployee(Integer updatedByEmployee) {
+        this.updatedByEmployee = updatedByEmployee;
+    }
+
+    public Integer getCreatedByEmployee() {
+        return createdByEmployee;
+    }
+
+    public void setCreatedByEmployee(Integer createdByEmployee) {
+        this.createdByEmployee = createdByEmployee;
+    }
+
 }

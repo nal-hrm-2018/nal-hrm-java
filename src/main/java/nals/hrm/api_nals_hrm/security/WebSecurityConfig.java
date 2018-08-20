@@ -24,47 +24,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtTokenProvider jwtTokenProvider;
 
 
-//    @Override
-//    protected void configure(HttpSecurity https) throws Exception {
-////        https.rememberMe().key("uniqueAndSecret").tokenValiditySeconds(1296000);
-//        https.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
-//        https.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        https.csrf().disable();
-//        https
-//                .authorizeRequests()
-//                .antMatchers("/show-login","/resources/**","/api/login").permitAll()
-//                .antMatchers("/","/api/profile")
-//                    .access("hasAuthority('Dev') or hasAuthority('HR') or hasAuthority('PO') or hasAuthority('ACCOUNTANT') or hasAuthority('SM')")
-//                .antMatchers("/api/list/employees")
-//                    .access("hasAuthority('HR') or hasAuthority('PO')")
-//                .and()
-//                .formLogin()
-//                .loginPage("/show-login")
-//                    .usernameParameter("email")
-//                    .passwordParameter("password")
-//                    .loginProcessingUrl("/login")
-//                    .defaultSuccessUrl("/")
-//                    .failureUrl("/show-login?error")
-//                .and()
-//                .exceptionHandling()
-//                    .accessDeniedPage("/403")
-//                .and()
-//                .logout()
-//                    .logoutUrl("/logout")
-//                    .logoutSuccessUrl("/show-login?logout");
-//
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()//
-                .antMatchers("/api/login").permitAll()//
+                .antMatchers("/api/login").permitAll()
                 .anyRequest().authenticated();
 
-//        http.exceptionHandling().accessDeniedPage("/api/login");
 
     }
 
