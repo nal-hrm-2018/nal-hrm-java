@@ -33,7 +33,6 @@ public class ProjectService {
     @Autowired
     ProcessesRepository processesRepository;
 
-
     public ListDTO getListProjectByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize) {
         try {
             ArrayList<Object> result = new ArrayList<>();//arrayList save all information the project of employee

@@ -89,9 +89,9 @@ public class EmployeeService {
     }
 
     public ListDTO getListEmployees(Optional<Integer> page, Optional<Integer> pageSize) {
-
         //evaluate page size
         //return pageSize != null ? pageSize : Define.initialPageSize
+
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
 
         //evaluate page

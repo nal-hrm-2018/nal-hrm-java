@@ -367,6 +367,7 @@ public class Employee implements Serializable {
 
     public Integer getUpdatedByEmployee() {
         return updatedByEmployee;
+
     }
 
     public void setUpdatedByEmployee(Integer updatedByEmployee) {
