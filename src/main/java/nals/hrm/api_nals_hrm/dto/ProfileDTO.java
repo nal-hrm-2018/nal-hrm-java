@@ -38,7 +38,6 @@ public class ProfileDTO {
 
     EmployeeType employeeType;
 
-//    int teamId;
 
     Role role;
 
@@ -46,17 +45,12 @@ public class ProfileDTO {
 
     int salaryId;
 
-//    boolean workStatus;
 
     String updatedAt;
 
-//    int updatedByEmployee;
 
     String createdAt;
 
-//    int createdByEmployee;
-
-//    int deleteFlag;
 
     List<Permission> permission;
     List<Team> teams;
@@ -65,11 +59,11 @@ public class ProfileDTO {
     }
 
     public ProfileDTO(int idEmployee, String email, String nameEmployee, String birthday, GenderDTO genderDTO,
-              String mobile, String address, MaritalStatusDTO maritalStatusDTO, String startWorkDate,
-              String endWorkDate, String curriculum_vitae, boolean isEmployee, String company, String avatar,
-              EmployeeType employeeType, Role role, int isManager, int salaryId,
-              String updatedAt, String createdAt,
-              List<Permission> permission,List<Team> teams) {
+                      String mobile, String address, MaritalStatusDTO maritalStatusDTO, String startWorkDate,
+                      String endWorkDate, String curriculum_vitae, boolean isEmployee, String company, String avatar,
+                      EmployeeType employeeType, Role role, int isManager, int salaryId,
+                      String updatedAt, String createdAt,
+                      List<Permission> permission,List<Team> teams) {
         this.idEmployee = idEmployee;
         this.email = email;
         this.nameEmployee = nameEmployee;
@@ -85,16 +79,11 @@ public class ProfileDTO {
         this.company = company;
         this.avatar = avatar;
         this.employeeType = employeeType;
-//        this.teamId = teamId;
         this.role = role;
         this.isManager = isManager;
         this.salaryId = salaryId;
-//        this.workStatus = workStatus;
         this.updatedAt = updatedAt;
-//        this.updatedByEmployee = updatedByEmployee;
         this.createdAt = createdAt;
-//        this.createdByEmployee = createdByEmployee;
-//        this.deleteFlag = deleteFlag;
         this.permission = permission;
         this.teams = teams;
     }
@@ -220,13 +209,6 @@ public class ProfileDTO {
         this.employeeType = employeeType;
     }
 
-//    public int getTeamId() {
-//        return teamId;
-//    }
-//
-//    public void setTeamId(int teamId) {
-//        this.teamId = teamId;
-//    }
 
     public Role getRole() {
         return role;
@@ -252,13 +234,6 @@ public class ProfileDTO {
         this.salaryId = salaryId;
     }
 
-//    public boolean isWorkStatus() {
-//        return workStatus;
-//    }
-//
-//    public void setWorkStatus(boolean workStatus) {
-//        this.workStatus = workStatus;
-//    }
 
     public String getUpdatedAt() {
         return updatedAt;
@@ -268,13 +243,6 @@ public class ProfileDTO {
         this.updatedAt = updatedAt;
     }
 
-//    public int getUpdatedByEmployee() {
-//        return updatedByEmployee;
-//    }
-//
-//    public void setUpdatedByEmployee(int updatedByEmployee) {
-//        this.updatedByEmployee = updatedByEmployee;
-//    }
 
     public String getCreatedAt() {
         return createdAt;
@@ -284,21 +252,6 @@ public class ProfileDTO {
         this.createdAt = createdAt;
     }
 
-//    public int getCreatedByEmployee() {
-//        return createdByEmployee;
-//    }
-//
-//    public void setCreatedByEmployee(int createdByEmployee) {
-//        this.createdByEmployee = createdByEmployee;
-//    }
-//
-//    public int getDeleteFlag() {
-//        return deleteFlag;
-//    }
-//
-//    public void setDeleteFlag(int deleteFlag) {
-//        this.deleteFlag = deleteFlag;
-//    }
 
     public List<Permission> getPermission() {
         return permission;

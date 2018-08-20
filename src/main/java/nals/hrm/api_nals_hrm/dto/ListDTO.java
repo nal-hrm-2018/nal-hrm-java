@@ -2,14 +2,14 @@ package nals.hrm.api_nals_hrm.dto;
 
 import java.util.ArrayList;
 
-public class ListEmployeeDTO {
+public class ListDTO {
     private int total;
-    private ArrayList<O> list;
+    private ArrayList<Object> list;
 
-    public ListEmployeeDTO() {
+    public ListDTO() {
     }
 
-    public ListEmployeeDTO(int total, ArrayList<ProfileDTO> list) {
+    public ListDTO(int total, ArrayList<Object> list) {
         this.total = total;
         this.list = list;
     }
@@ -22,11 +22,11 @@ public class ListEmployeeDTO {
         this.total = total;
     }
 
-    public ArrayList<ProfileDTO> getList() {
+    public ArrayList<Object> getList() {
         return list;
     }
 
-    public void setList(ArrayList<ProfileDTO> list) {
+    public void setList(ArrayList<Object> list) {
         this.list = list;
     }
 }
