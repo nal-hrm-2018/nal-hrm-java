@@ -6,13 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class EmployeeTypeService {
 
     @Autowired
     EmployeeTypeRepository employeeTypeRepository;
-    public EmployeeType findByIdEmployeeType(int employeeTypeId) {
-        return employeeTypeRepository.findByIdEmployeeType(employeeTypeId);
+
+    public List<EmployeeType> findAll() {
+        return employeeTypeRepository.findAll();
     }
 }
