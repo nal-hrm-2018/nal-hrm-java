@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class RoleService {
@@ -14,5 +16,9 @@ public class RoleService {
 
     public Role findByIdRole(int idRole) {
         return roleRepository.findByIdRole(idRole);
+    }
+
+    public List<Role> findAll() {
+        return  roleRepository.findAll();
     }
 }

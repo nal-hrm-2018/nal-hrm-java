@@ -17,7 +17,6 @@ public class ProfileController {
     EmployeeService employeeService;
 
     @GetMapping(value = "/profile")
-//    @PreAuthorize("hasAuthority('view_profile')")
     public APIResponseDTO getProfile(HttpServletRequest req) {
         return new APIResponseDTO(200,"Success!",employeeService.getProfile(req));
     }
