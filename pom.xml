@@ -139,12 +139,20 @@
         </profile>
         <profile>
             <id>staging</id>
+            <!--<properties>-->
+                <!--<db.connectionURL>-->
+                    <!--jdbc:mysql://eu-cdbr-west-02.cleardb.net:3306/heroku_7eec86fe3e615e4?autoReconnect=true&amp;useSSL=false&amp;useUnicode=yes&amp;characterEncoding=UTF-8-->
+                <!--</db.connectionURL>-->
+                <!--<db.username>b9c7e30cbea604</db.username>-->
+                <!--<db.password>d4223919</db.password>-->
+            <!--</properties>-->
+
             <properties>
                 <db.connectionURL>
-                    jdbc:mysql://eu-cdbr-west-02.cleardb.net:3306/heroku_7eec86fe3e615e4?autoReconnect=true&amp;useSSL=false&amp;useUnicode=yes&amp;characterEncoding=UTF-8
+                    jdbc:mysql://nalstest.cojf3ywjf3so.us-east-2.rds.amazonaws.com:3306/nal_hrm?autoReconnect=true&amp;useSSL=false&amp;useUnicode=yes&amp;characterEncoding=UTF-8
                 </db.connectionURL>
-                <db.username>b9c7e30cbea604</db.username>
-                <db.password>d4223919</db.password>
+                <db.username>nalstest_user</db.username>
+                <db.password>nalstest_password</db.password>
             </properties>
             <build>
                 <plugins>
