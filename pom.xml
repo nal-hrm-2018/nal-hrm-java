@@ -131,7 +131,7 @@
             </activation>
             <properties>
                 <db.connectionURL>
-                    jdbc:mysql://nalstest.cojf3ywjf3so.us-east-2.rds.amazonaws.com:3306/nal_hrm?autoReconnect=true&amp;useSSL=false&amp;useUnicode=yes&amp;characterEncoding=UTF-8
+                    jdbc:mysql://localhost:3306/nal_hrm?autoReconnect=true&amp;useSSL=false&amp;useUnicode=yes&amp;characterEncoding=UTF-8
                 </db.connectionURL>
                 <db.username>nalstest_user</db.username>
                 <db.password>nalstest_password</db.password>

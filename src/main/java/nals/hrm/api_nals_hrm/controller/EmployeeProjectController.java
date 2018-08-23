@@ -28,7 +28,7 @@ public class EmployeeProjectController {
     @Autowired
     ProcessesService processesService;
 
-    @RequestMapping( value = "/project/employee",params = { "id","page", "pageSize" }, method = RequestMethod.GET )
+    @RequestMapping( value = "/employee/project",params = { "id","page", "pageSize" }, method = RequestMethod.GET )
     @PreAuthorize("hasAuthority('view_employee_project')")
     public APIResponseDTO getProjectEmployeeJoined(@RequestParam("id")  int id, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
         return new APIResponseDTO(200,"Success!",projectService.getListProjectByIdEmployee(id,page,pageSize));
