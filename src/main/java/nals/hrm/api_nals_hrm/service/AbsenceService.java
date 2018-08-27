@@ -113,4 +113,13 @@ public class AbsenceService {
         ListDTO result = new ListDTO(total, absenceList);
         return new AbsenceDTO(allowAbsence,remainingAbsenceDays, annualLeave, unpaidLeave,maternityLeave, marriageLeave,bereavementLeave,result);
     }
+
+
+    public String save(Absence absence, HttpServletRequest req) {
+        Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+        absence.setEmployeeId(employee.getIdEmployee());
+        Absence add = absenceRepository.save(absence);
+        return "Insert absence success!";
+    }
+
 }

@@ -3,10 +3,11 @@ package nals.hrm.api_nals_hrm.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "teams")
-public class Team {
+public class Team implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
