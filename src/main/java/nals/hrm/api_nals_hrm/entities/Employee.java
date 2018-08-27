@@ -15,94 +15,97 @@ public class Employee implements Serializable {
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)
-    int idEmployee;
+    private int idEmployee;
 
     @Column(name = "email")
-    String email;
+    private String email;
 
     @JsonIgnore
     @Column(name = "password")
-    String password;
+    private String password;
 
     @Column(name = "name")
-    String nameEmployee;
+    private String nameEmployee;
 
     @Column(name = "birthday")
-    String birthday;
+    private String birthday;
 
     @JsonIgnore
     @Column(name = "gender")
-    Integer gender;
+    private Integer gender;
 
     @Column(name = "mobile")
-    String mobile;
+    private String mobile;
 
     @Column(name = "address")
-    String address;
+    private String address;
 
     @JsonIgnore
     @Column(name = "marital_status")
-    int maritalStatus;
+    private int maritalStatus;
 
     @Column(name = "startwork_date")
-    String startWorkDate;
+    private String startWorkDate;
 
     @Column(name = "endwork_date")
-    String endWorkDate;
+    private String endWorkDate;
 
     @Column(name = "curriculum_vitae")
-    String curriculum_vitae;
+    private String curriculum_vitae;
 
     @JsonIgnore
     @Column(name = "is_employee")
-    int isEmployee;
+    private int isEmployee;
 
     @Column(name = "company")
-    String company;
+    private String company;
 
     @Column(name = "avatar")
-    String avatar;
+    private String avatar;
 
     @JsonIgnore
     @Column(name = "employee_type_id")
-    Integer employeeTypeId;
+    private Integer employeeTypeId;
 
     @JsonIgnore
     @Column(name = "role_id")
-    int idRole;
+    private int idRole;
 
     @JsonIgnore
     @Column(name = "is_manager")
-    int isManager;
+    private int isManager;
 
     @JsonIgnore
     @Column(name = "salary_id")
-    Integer salaryId;
+    private Integer salaryId;
 
     @JsonIgnore
     @Column(name = "work_status")
-    boolean workStatus;
+    private boolean workStatus;
 
     @JsonIgnore
     @Column(name = "updated_at")
-    String updatedAt;
+    private String updatedAt;
 
     @JsonIgnore
     @Column(name = "updated_by_employee")
-    Integer updatedByEmployee;
+    private Integer updatedByEmployee;
 
     @JsonIgnore
     @Column(name = "created_at")
-    String createdAt;
+    private String createdAt;
 
     @JsonIgnore
     @Column(name = "created_by_employee")
-    Integer createdByEmployee;
+    private Integer createdByEmployee;
 
     @JsonIgnore
     @Column(name = "delete_flag")
-    int deleteFlag;
+    private int deleteFlag;
 
+    @JsonIgnore
+    @Column(name = "remaining_absence_days")
+    private int remainingAbsenceDays;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
@@ -382,4 +385,11 @@ public class Employee implements Serializable {
         this.createdByEmployee = createdByEmployee;
     }
 
+    public int getRemainingAbsenceDays() {
+        return remainingAbsenceDays;
+    }
+
+    public void setRemainingAbsenceDays(int remainingAbsenceDays) {
+        this.remainingAbsenceDays = remainingAbsenceDays;
+    }
 }

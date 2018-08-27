@@ -18,7 +18,7 @@ public class ListEmployeesController {
     @Autowired
     EmployeeService employeeService;
 
-    @RequestMapping( value = "/list/employees",params = { "page", "pageSize" }, method = RequestMethod.GET )
+    @RequestMapping( value = "/employee/list",params = { "page", "pageSize" }, method = RequestMethod.GET )
     @PreAuthorize("hasAuthority('view_list_employee')")
     public APIResponseDTO getListEmployees( @RequestParam("page")  Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
         return new APIResponseDTO(200,"Success!",employeeService.getListEmployees(page,pageSize));

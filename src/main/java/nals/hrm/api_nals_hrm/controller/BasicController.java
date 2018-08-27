@@ -13,7 +13,7 @@ public class BasicController {
     @Autowired
     EmployeeService employeeService;
 
-    @RequestMapping( value = "/basic",params = { "id"}, method = RequestMethod.GET )
+    @RequestMapping( value = "/employee/basic",params = { "id"}, method = RequestMethod.GET )
     @PreAuthorize("hasAuthority('view_employee_basic')")
     public APIResponseDTO getBasic(@RequestParam("id")  int id) {
         return new APIResponseDTO(200,"Success!",employeeService.findByIdEmployeeAndIsEmployeeAndDeleteFlag(id,1,0));
