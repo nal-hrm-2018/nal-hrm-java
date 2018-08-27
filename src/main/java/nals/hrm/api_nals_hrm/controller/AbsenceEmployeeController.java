@@ -15,7 +15,7 @@ public class AbsenceEmployeeController {
     @Autowired
     AbsenceService absenceService;
 
-    @RequestMapping( value = "/list/absence",params = { "page", "pageSize" }, method = RequestMethod.GET )
+    @RequestMapping( value = "/employee/absence",params = { "page", "pageSize" }, method = RequestMethod.GET )
     public APIResponseDTO getProfile(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
         return new APIResponseDTO(200,"Success!",absenceService.findByIdEmployee(req,page,pageSize));
     }
