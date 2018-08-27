@@ -1,6 +1,7 @@
 package nals.hrm.api_nals_hrm.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -115,7 +116,7 @@ public class Employee implements Serializable {
     private List<Permission> permissions;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_type_id", insertable = false, updatable = false)
     private EmployeeType employeeType;
 
@@ -133,15 +134,14 @@ public class Employee implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "project_id"))
     private List<Project> projects;
 
-//    @JsonIgnore
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "role_id", insertable = false, updatable = false)
-//    private Role role;
+    @JsonIgnore
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    private Role role;
 
     public Employee() {
     }
-
-
 
     public int getIdEmployee() {
         return idEmployee;
@@ -392,4 +392,14 @@ public class Employee implements Serializable {
     public void setRemainingAbsenceDays(int remainingAbsenceDays) {
         this.remainingAbsenceDays = remainingAbsenceDays;
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+
 }

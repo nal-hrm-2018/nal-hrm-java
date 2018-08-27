@@ -38,54 +38,21 @@ public class ProfileDTO {
 
     EmployeeType employeeType;
 
-
     Role role;
 
     int isManager;
 
     int salaryId;
 
-
     String updatedAt;
-
 
     String createdAt;
 
+    List<Permission> permissions;
 
-    List<Permission> permission;
     List<Team> teams;
 
     public ProfileDTO() {
-    }
-
-    public ProfileDTO(int idEmployee, String email, String nameEmployee, String birthday, GenderDTO genderDTO,
-                      String mobile, String address, MaritalStatusDTO maritalStatusDTO, String startWorkDate,
-                      String endWorkDate, String curriculum_vitae, boolean isEmployee, String company, String avatar,
-                      EmployeeType employeeType, Role role, int isManager, int salaryId,
-                      String updatedAt, String createdAt,
-                      List<Permission> permission,List<Team> teams) {
-        this.idEmployee = idEmployee;
-        this.email = email;
-        this.nameEmployee = nameEmployee;
-        this.birthday = birthday;
-        this.genderDTO = genderDTO;
-        this.mobile = mobile;
-        this.address = address;
-        this.maritalStatusDTO = maritalStatusDTO;
-        this.startWorkDate = startWorkDate;
-        this.endWorkDate = endWorkDate;
-        this.curriculum_vitae = curriculum_vitae;
-        this.isEmployee = isEmployee;
-        this.company = company;
-        this.avatar = avatar;
-        this.employeeType = employeeType;
-        this.role = role;
-        this.isManager = isManager;
-        this.salaryId = salaryId;
-        this.updatedAt = updatedAt;
-        this.createdAt = createdAt;
-        this.permission = permission;
-        this.teams = teams;
     }
 
     public int getIdEmployee() {
@@ -103,7 +70,6 @@ public class ProfileDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     public String getNameEmployee() {
         return nameEmployee;
@@ -209,7 +175,6 @@ public class ProfileDTO {
         this.employeeType = employeeType;
     }
 
-
     public Role getRole() {
         return role;
     }
@@ -234,7 +199,6 @@ public class ProfileDTO {
         this.salaryId = salaryId;
     }
 
-
     public String getUpdatedAt() {
         return updatedAt;
     }
@@ -242,7 +206,6 @@ public class ProfileDTO {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 
     public String getCreatedAt() {
         return createdAt;
@@ -252,13 +215,12 @@ public class ProfileDTO {
         this.createdAt = createdAt;
     }
 
-
-    public List<Permission> getPermission() {
-        return permission;
+    public List<Permission> getPermissions() {
+        return permissions;
     }
 
-    public void setPermission(List<Permission> permission) {
-        this.permission = permission;
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     public List<Team> getTeams() {
@@ -292,7 +254,7 @@ public class ProfileDTO {
                 ", salaryId=" + salaryId +
                 ", updatedAt='" + updatedAt + '\'' +
                 ", createdAt='" + createdAt + '\'' +
-                ", permission=" + permission +
+                ", permissions=" + permissions +
                 ", teams=" + teams +
                 '}';
     }

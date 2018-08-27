@@ -39,4 +39,6 @@ public class MaritalStatusDTO {
         }
         this.typeMaritalStatus = typeMaritalStatus;
     }
+
+
 }

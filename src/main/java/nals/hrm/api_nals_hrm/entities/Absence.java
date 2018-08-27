@@ -10,14 +10,14 @@ import javax.persistence.*;
 public class Absence {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private int idAbsences;
 
     @Column(name = "employee_id")
     private int employeeId;
 
-    @JsonIgnore
+    //    @JsonIgnore
     @Column(name = "absence_type_id")
     private int absenceTypeId;
 
@@ -37,7 +37,7 @@ public class Absence {
     @Column(name = "delete_flag")
     private int deleteFlag;
 
-    @JsonIgnore
+    //    @JsonIgnore
     @Column(name = "absence_time_id")
     private int absenceTimeId;
 
@@ -54,7 +54,7 @@ public class Absence {
     }
 
     public Absence(int idAbsences, int employeeId, int absenceTypeId, String fromDate, String toDate, String reason,
-                   String description, int deleteFlag) {
+                   String description, int deleteFlag,int absenceTimeId) {
         this.idAbsences = idAbsences;
         this.employeeId = employeeId;
         this.absenceTypeId = absenceTypeId;
@@ -63,7 +63,22 @@ public class Absence {
         this.reason = reason;
         this.description = description;
         this.deleteFlag = deleteFlag;
+        this.absenceTimeId = absenceTimeId;
     }
+
+    public Absence(int employeeId, int absenceTypeId, String fromDate, String toDate, String reason,
+                   String description,int absenceTimeId) {
+        this.employeeId = employeeId;
+        this.absenceTypeId = absenceTypeId;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.reason = reason;
+        this.description = description;
+        this.absenceTimeId = absenceTimeId;
+    }
+
+//    public Absence(int i, int employeeId, int absenceTypeId, String fromDate, String toDate, String abc, String def, int deleteFlag, int absenceTimeId) {
+//    }
 
     public int getIdAbsences() {
         return idAbsences;
@@ -151,5 +166,18 @@ public class Absence {
 
     public void setAbsenceTimeId(int absenceTimeId) {
         this.absenceTimeId = absenceTimeId;
+    }
+
+    @Override
+    public String toString() {
+        return "Absence{" +
+                "employeeId=" + employeeId +
+                ", absenceTypeId=" + absenceTypeId +
+                ", fromDate='" + fromDate + '\'' +
+                ", toDate='" + toDate + '\'' +
+                ", reason='" + reason + '\'' +
+                ", description='" + description + '\'' +
+                ", absenceTimeId=" + absenceTimeId +
+                '}';
     }
 }
