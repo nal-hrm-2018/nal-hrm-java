@@ -116,10 +116,24 @@ public class AbsenceService {
 
 
     public String save(Absence absence, HttpServletRequest req) {
-        Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
-        absence.setEmployeeId(employee.getIdEmployee());
-        Absence add = absenceRepository.save(absence);
-        return "Insert absence success!";
+        Date fromDate;
+        Date toDate;
+        try {
+            fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate());
+            toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getToDate());
+            //check if fromdDate before toDate => true
+            if (fromDate.equals(toDate) || fromDate.before(toDate)){
+                Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+                absence.setEmployeeId(employee.getIdEmployee());
+                absenceRepository.save(absence);
+                return "Insert absence success!";
+            }else{
+                throw new CustomException("Error data",400);
+            }
+        } catch (ParseException e) {
+            throw new CustomException("Error server",500);
+        }
+
     }
 
 }

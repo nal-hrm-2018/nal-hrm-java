@@ -2,21 +2,22 @@ package nals.hrm.api_nals_hrm.entities;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "absence_statuses")
-public class AbsenceStatus {
+public class AbsenceStatus implements Serializable {
 
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)
-    int idAbsenceStatus;
+    private int idAbsenceStatus;
 
     @Column(name = "name")
-    String nameAbsenceStattus;
+    private String nameAbsenceStattus;
 
     @Column(name = "description")
-    String description;
+    private String description;
 
     public AbsenceStatus() {
     }
