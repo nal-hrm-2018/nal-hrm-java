@@ -4,10 +4,11 @@ package nals.hrm.api_nals_hrm.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "absences")
-public class Absence {
+public class Absence implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -41,6 +42,9 @@ public class Absence {
     @Column(name = "absence_time_id")
     private int absenceTimeId;
 
+    @JsonIgnore
+    @Column(name = "created_at")
+    private String createdAt;
 
     @ManyToOne
     @JoinColumn(name = "absence_type_id", insertable = false, updatable = false)
@@ -166,6 +170,14 @@ public class Absence {
 
     public void setAbsenceTimeId(int absenceTimeId) {
         this.absenceTimeId = absenceTimeId;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

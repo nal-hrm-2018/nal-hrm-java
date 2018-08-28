@@ -1,10 +1,11 @@
 package nals.hrm.api_nals_hrm.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "absence_time")
-public class AbsenceTime {
+public class AbsenceTime implements Serializable {
 
     @Id
     @GeneratedValue

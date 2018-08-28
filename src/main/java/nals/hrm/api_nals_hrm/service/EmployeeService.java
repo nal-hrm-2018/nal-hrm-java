@@ -101,12 +101,11 @@ public class EmployeeService {
 
 
     //view basic profile any employee by idEmployee
-    public ProfileDTO findByIdEmployeeAndIsEmployeeAndDeleteFlag(int id, int isEmployee, int deleteFlag) {
-        Employee employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(id, isEmployee, deleteFlag);
+    public ProfileDTO viewBasicEmployee(int id) {
+
+        Employee employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(id, 1, 0);
         ProfileDTO profileDTO = new ProfileDTO();
         profileDTO = modelMapper.map(employee, profileDTO.getClass());
-
-        profileDTO.setEmployeeType(employeeTypeRepository.findByIdEmployeeType(employee.getEmployeeTypeId()));
 
         //config gender
         GenderDTO gender = new GenderDTO();
