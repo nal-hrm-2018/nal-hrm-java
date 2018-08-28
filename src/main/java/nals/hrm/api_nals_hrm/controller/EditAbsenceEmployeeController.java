@@ -5,22 +5,21 @@ import io.swagger.annotations.ApiParam;
 import nals.hrm.api_nals_hrm.dto.APIResponseDTO;
 import nals.hrm.api_nals_hrm.entities.Absence;
 import nals.hrm.api_nals_hrm.service.AbsenceService;
-import nals.hrm.api_nals_hrm.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class AddAbsenceEmployeeController {
+public class EditAbsenceEmployeeController {
     @Autowired
     AbsenceService absenceService;
 
-    @RequestMapping( value = "/absence/add", method = RequestMethod.POST )
-    public APIResponseDTO addAbsence(@ApiParam @RequestBody Absence absence, HttpServletRequest req) {
-        return new APIResponseDTO(200,"Success!",absenceService.addAbsence(absence, req));
+    @RequestMapping( value = "/manage/absence/edit/{id}", method = RequestMethod.PUT )
+    @PreAuthorize("hasAuthority('edit_absence_employee')")
+    public APIResponseDTO editAbsence(@PathVariable("id") int id, @ApiParam @RequestBody Absence absence) {
+        return new APIResponseDTO(200,"Success!",absenceService.editAbsence(id, absence));
     }
 }

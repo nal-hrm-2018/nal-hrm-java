@@ -1,5 +1,6 @@
 package nals.hrm.api_nals_hrm.service;
 
+import nals.hrm.api_nals_hrm.controller.DateDiff;
 import nals.hrm.api_nals_hrm.define.Define;
 import nals.hrm.api_nals_hrm.dto.AbsenceDTO;
 import nals.hrm.api_nals_hrm.dto.ListDTO;
@@ -11,6 +12,7 @@ import nals.hrm.api_nals_hrm.repository.EmployeeRepository;
 import nals.hrm.api_nals_hrm.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,17 +34,112 @@ public class AbsenceService {
     @Autowired
     private AbsenceRepository absenceRepository;
 
-    public AbsenceDTO findByIdEmployee(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
+    public AbsenceDTO getListAbsenceEmployeeByToken(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
 
+        //find employee by token
+        Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+
+        return getListAbsenceEmployeeByIdEmployee(employee.getIdEmployee(),page,pageSize);
+    }
+
+
+    public String addAbsence(Absence absence, HttpServletRequest req) {
+        Date fromDate;
+        Date toDate;
+        try {
+            fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate());
+            toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getToDate());
+            //check if fromdDate before toDate => true
+            if (fromDate.equals(toDate) || fromDate.before(toDate)){
+                Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+                absence.setEmployeeId(employee.getIdEmployee());
+                absenceRepository.save(absence);
+                return "Insert absence success!";
+            }else{
+                throw new CustomException("Error data",400);
+            }
+        } catch (ParseException e) {
+            throw new CustomException("Error server",500);
+        }
+
+    }
+
+    public String editAbsence(int id, Absence absenceEdit) {
+        Date fromDate;
+        Date toDate;
+        Date createAt;
+        try {
+
+            Absence absence = absenceRepository.findByIdAbsencesAndDeleteFlag(id,0);
+
+            String strCreateAt = absence.getCreatedAt() == null ? absence.getFromDate() : absence.getCreatedAt();
+
+            //validate fromDate, toDate edit
+            fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absenceEdit.getFromDate());
+            toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absenceEdit.getToDate());
+            createAt = new SimpleDateFormat("yyyy-MM-dd").parse(strCreateAt);
+            Date now = new Date();
+            //if time edit < 30 day =>can edit absence
+            if(DateDiff.dateDiff(createAt,now) <= 30){
+                if (fromDate.equals(toDate) || fromDate.before(toDate)){
+                    //set employeeId of absence absenceEdit
+                    //can't change employeeId
+                    absenceEdit.setEmployeeId(absence.getEmployeeId());
+                    //set idAbsenceEdit get from absence
+                    absenceEdit.setIdAbsences(absence.getIdAbsences());
+                    absenceRepository.save(absenceEdit);
+                    return "Update absence success!";
+                }else{
+                    throw new CustomException("Error data",400);
+                }
+            }else{
+                throw new CustomException("Error data",400);
+            }
+
+        } catch (ParseException e) {
+            throw new CustomException("Error server",500);
+        }
+
+    }
+
+    public String deleteAbsence(int idAbsence) {
+        Absence absence = absenceRepository.findByIdAbsencesAndDeleteFlag(idAbsence,0);
+        absence.setDeleteFlag(1);
+        absenceRepository.save(absence);
+        return "Delete absence success!";
+    }
+
+    public ListDTO getListAbsenceEmployee(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
+        //if HR login can view all absence of employee which not yer delete(deleteFlag=0)
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
 
         //find employee by token
         Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+        ArrayList<Object> list = new ArrayList<>();
+        int total = 0;
+        if (employee.getRole().getNameRole().equals("HR")){
+              total = absenceRepository.findByDeleteFlag(0).size();
+              list = absenceRepository.findByDeleteFlag(0,PageRequest.of(evalPage, evalPageSize));
+        }else{
+            if(employee.getRole().getNameRole().equals("PO")){
+                list = absenceRepository.findByDeleteFlag(0,PageRequest.of(evalPage, evalPageSize));
+            }
+        }
 
-        //find list absence employee
+        return new ListDTO(total,list);
+    }
+
+    public AbsenceDTO getListAbsenceEmployeeByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize) {
+
+        int evalPageSize = pageSize.orElse(Define.initialPageSize);
+        int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
+
+        Employee employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(idEmployee,1,0);
+
+        //find list absence employee not yet remove deleteFlag = 0
         //paging result
-        ArrayList<Object> absenceList = absenceRepository.findByEmployeeId(employee.getIdEmployee(), PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Object> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlag(employee.getIdEmployee(), 0,PageRequest.of(evalPage, evalPageSize));
 
         int allowAbsence = 0; //number absence allow
         //số ngày phép năm ngoái còn lại
@@ -109,31 +206,8 @@ public class AbsenceService {
         }
 
 
-        int total = absenceRepository.findByEmployeeId(employee.getIdEmployee()).size();
+        int total = absenceRepository.findByEmployeeIdAndDeleteFlag(employee.getIdEmployee(),0).size();
         ListDTO result = new ListDTO(total, absenceList);
         return new AbsenceDTO(allowAbsence,remainingAbsenceDays, annualLeave, unpaidLeave,maternityLeave, marriageLeave,bereavementLeave,result);
     }
-
-
-    public String save(Absence absence, HttpServletRequest req) {
-        Date fromDate;
-        Date toDate;
-        try {
-            fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate());
-            toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getToDate());
-            //check if fromdDate before toDate => true
-            if (fromDate.equals(toDate) || fromDate.before(toDate)){
-                Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
-                absence.setEmployeeId(employee.getIdEmployee());
-                absenceRepository.save(absence);
-                return "Insert absence success!";
-            }else{
-                throw new CustomException("Error data",400);
-            }
-        } catch (ParseException e) {
-            throw new CustomException("Error server",500);
-        }
-
-    }
-
 }

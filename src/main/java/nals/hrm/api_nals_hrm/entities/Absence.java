@@ -42,6 +42,9 @@ public class Absence implements Serializable {
     @Column(name = "absence_time_id")
     private int absenceTimeId;
 
+    @JsonIgnore
+    @Column(name = "created_at")
+    private String createdAt;
 
     @ManyToOne
     @JoinColumn(name = "absence_type_id", insertable = false, updatable = false)
@@ -167,6 +170,14 @@ public class Absence implements Serializable {
 
     public void setAbsenceTimeId(int absenceTimeId) {
         this.absenceTimeId = absenceTimeId;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
