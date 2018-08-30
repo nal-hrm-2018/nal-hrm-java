@@ -1,7 +1,9 @@
 package nals.hrm.api_nals_hrm.repository;
 
 import nals.hrm.api_nals_hrm.entities.Absence;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,10 +14,11 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface AbsenceRepository extends PagingAndSortingRepository<Absence, Integer> {
+public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
+
     List<Absence> findByEmployeeIdAndDeleteFlag(int idEmployee, int deleteFlag);
 
-    ArrayList<Object> findByEmployeeIdAndDeleteFlag(int idEmployee,int deleteFlag, Pageable pageable);
+    ArrayList<Object> findByEmployeeIdAndDeleteFlagOrderByFromDateDesc(int idEmployee,int deleteFlag, Pageable pageable);
 
     @Query(value = "select count(*) from absences inner join absence_types on absences.absence_type_id = absence_types.id\n" +
             "where absences.employee_id = ?1 and absence_types.name = ?2 and absences.delete_flag = 0", nativeQuery = true)
@@ -32,4 +35,16 @@ public interface AbsenceRepository extends PagingAndSortingRepository<Absence, I
 //    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateLessThanEqualAndToDateGreaterThanEqual(int idEmployee, int deleteFlag, String startDateProject, String endDateProject);
 
     List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqual(int idEmployee, int i, String startDate, String endDate);
+
+    @Query(value = "SELECT * FROM absences " +
+            " WHERE MONTH(from_date) = ?1 OR MONTH(to_date) = ?2" +
+            " OR YEAR(from_date) = ?3 OR YEAR(to_date) = ?4 AND delete_flag = 0" +
+            " ORDER BY to_date DESC ", nativeQuery = true)
+    ArrayList<Absence> findByMonthOrYear(int fromMonth,int toMonth, int fromYear,int toYear, PageRequest of);
+
+    @Query(value = "SELECT COUNT(*) FROM absences " +
+            " WHERE MONTH(from_date) = ?1 OR MONTH(to_date) = ?2" +
+            " OR YEAR(from_date) = ?3 OR YEAR(to_date) = ?4 AND delete_flag = 0" +
+            " ORDER BY to_date DESC ", nativeQuery = true)
+    int findByMonthOrYear(int fromMonth,int toMonth, int fromYear,int toYear);
 }

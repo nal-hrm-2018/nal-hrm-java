@@ -1,12 +1,12 @@
 package nals.hrm.api_nals_hrm.dto;
 
 
-import nals.hrm.api_nals_hrm.entities.Absence;
 import nals.hrm.api_nals_hrm.entities.AbsenceTime;
 import nals.hrm.api_nals_hrm.entities.AbsenceType;
 
 public class AbsenceDTO{
     private int idAbsences;
+    private int idEmployee;
     private String nameEmployee;
     private String idProject;
     private String nameProject;
@@ -18,6 +18,14 @@ public class AbsenceDTO{
     private AbsenceTime absenceTime;
 
     public AbsenceDTO() {
+    }
+
+    public int getIdEmployee() {
+        return idEmployee;
+    }
+
+    public void setIdEmployee(int idEmployee) {
+        this.idEmployee = idEmployee;
     }
 
     public String getNameEmployee() {

@@ -54,7 +54,6 @@ public class AbsenceService {
         return getListAbsenceEmployeeByIdEmployee(employee.getIdEmployee(), page, pageSize);
     }
 
-
     public String addAbsence(Absence absence, HttpServletRequest req) {
         Date fromDate;
         Date toDate;
@@ -126,96 +125,14 @@ public class AbsenceService {
         return "Delete absence success!";
     }
 
-//    public Object getListAbsenceEmployee(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
-//
-//        int evalPageSize = pageSize.orElse(Define.initialPageSize);
-//        int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
-//
-//        //find employee by token
-//        Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
-//
-//        //if HR login can view all absence of employee which not yer delete(deleteFlag=0)
-//            return getListAbsenceEmployeeHR(evalPage, evalPageSize);
-//    }
-
-//    public ListDTO getListAbsenceEmployeePO(Employee employee, int page, int pageSize) {
-//        Date now = new Date();
-//        String strNow = new SimpleDateFormat("yyyy-MM-dd").format(now);
-//        //search list project(in processes) if employee join with role = "PO"
-//        //processes
-//        ArrayList<Processes> processesRolePO = processesRepository.findByEmployeeIdAndRoleIdAndDeleteFlag(employee.getIdEmployee(), roleRepository.findByNameRole("PO").getIdRole(), 0);
-//        ArrayList<Object> listResult = new ArrayList<>();
-//        Date startDateProject;
-//        Date endDateProject;
-//        //time absence
-//        Date startDateAbsence;
-//        Date endDateAbsence;
-//
-//        try {
-//            for (Processes processes : processesRolePO) {
-//                //search list employee of project
-//                Project project = projectRepository.findByIdProjectAndDeleteFlag(processes.getProjectId(), 0);
-//                //get list employee join project
-//                List<Employee> employeeList = project.getEmployeeList();
-//                //time start project, if startDateProject null => time = now
-//                startDateProject = new SimpleDateFormat("yyyy-MM-dd").parse(processes.getStartDate() != null ? processes.getStartDate() : strNow);
-//                //time end project, if endDateProject null => time = now
-//                endDateProject = new SimpleDateFormat("yyyy-MM-dd").parse(processes.getStartDate() != null ? processes.getEndDate() : strNow);
-//
-//                for (Employee objEmp : employeeList) {
-//                    //get list absence of objEmp
-//                    //when project start to end
-////                    List<Absence> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlag(objEmp.getIdEmployee(),0);
-//                    List<Absence> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqual(objEmp.getIdEmployee(), 0, processes.getStartDate(), processes.getEndDate());
-//                    for (Absence objAbs : absenceList) {
-//                        startDateAbsence = new SimpleDateFormat("yyyy-MM-dd").parse(objAbs.getFromDate());
-//                        endDateAbsence = new SimpleDateFormat("yyyy-MM-dd").parse(objAbs.getToDate());
-//                        //kiem tra neu ngay bat dau va ket thuc xin nghi nam trong giai doan du an dang thuc hien
-//                        //moi hien thi no cho po cua project
-//                        //????
-////                        if ((startDateAbsence.equals(startDateProject) || startDateAbsence.after(startDateProject)) && (endDateAbsence.equals(endDateProject) || endDateAbsence.before(endDateProject))){
-//                        AbsenceDTO absenceDTO = new AbsenceDTO();
-//                        absenceDTO = modelMapper.map(objAbs, absenceDTO.getClass());
-//                        //find nameEmployee
-//                        //if name != null=> return name else return ""
-//                        absenceDTO.setNameEmployee(objEmp.getNameEmployee());
-//                        absenceDTO.setNameProject(project.getNameProject());
-//                        absenceDTO.setIdProject(project.getIdProject());
-//                        listResult.add(absenceDTO);
-////                        }
-//
-//                    }
-//                }
-//
-//            }
-//        } catch (ParseException e) {
-//            throw new CustomException("Error server", 500);
-//        }
-//
-//        return new ListDTO(0, listResult);
-//    }
-
     public ListDTO getListAbsenceEmployeeHR(Optional<Integer> page, Optional<Integer> pageSize) {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
         ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlag(0, PageRequest.of(evalPage, evalPageSize));
         ArrayList<Object> listResult = new ArrayList<>();
-        Employee employee;
-        String nameEmployee;
-        for (Absence objAbsence : listAbsence) {
-            AbsenceDTO absenceDTO = new AbsenceDTO();
-            absenceDTO = modelMapper.map(objAbsence, absenceDTO.getClass());
-            //find nameEmployee
-            //if name != null=> return name else return ""
-            employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(objAbsence.getEmployeeId(), 1, 0);
-            nameEmployee = employee != null ? employee.getNameEmployee() : "";
-            absenceDTO.setNameEmployee(nameEmployee);
-            listResult.add(absenceDTO);
-
-        }
+        mapListAbsence(listAbsence,listResult);
         return new ListDTO(absenceRepository.findByDeleteFlag(0).size(), listResult);
     }
-
 
     public ListAbsenceDTO getListAbsenceEmployeeByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize) {
 
@@ -226,7 +143,7 @@ public class AbsenceService {
 
         //find list absence employee not yet remove deleteFlag = 0
         //paging result
-        ArrayList<Object> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlag(employee.getIdEmployee(), 0, PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Object> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagOrderByFromDateDesc(employee.getIdEmployee(), 0, PageRequest.of(evalPage, evalPageSize));
 
         int allowAbsence = 0; //number absence allow
         //số ngày phép năm ngoái còn lại
@@ -327,6 +244,7 @@ public class AbsenceService {
                     //find nameEmployee
                     //if name != null=> return name else return ""
                     absenceDTO.setNameEmployee(objEmp.getNameEmployee());
+                    absenceDTO.setIdEmployee(objEmp.getIdEmployee());
                     absenceDTO.setNameProject(project.getNameProject());
                     absenceDTO.setIdProject(project.getIdProject());
                     listResult.add(absenceDTO);
@@ -338,5 +256,42 @@ public class AbsenceService {
         } catch (Exception e) {
             throw new CustomException("Error server", 500);
         }
+    }
+
+    public ListDTO searchAbsenceEmployeeHR(Optional<Integer> month, Optional<Integer> year, Optional<Integer> page, Optional<Integer> pageSize) {
+        try{
+            int evalPageSize = pageSize.orElse(Define.initialPageSize);
+            int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
+
+            int evalMonth = month.orElse(0);
+            int evalYear = year.orElse(0);
+
+
+            ArrayList<Absence> listAbsence = absenceRepository.findByMonthOrYear(evalMonth,evalMonth,evalYear,evalYear, PageRequest.of(evalPage, evalPageSize));
+            ArrayList<Object> listResult = new ArrayList<>();
+            mapListAbsence(listAbsence,listResult);
+            return new ListDTO(absenceRepository.findByMonthOrYear(evalMonth,evalMonth,evalYear,evalYear), listResult);
+        }catch (Exception e){
+            throw new CustomException("Error server",500);
+        }
+
+    }
+
+    public void mapListAbsence(ArrayList<Absence> listAbsence, ArrayList<Object> listResult){
+        String nameEmployee;
+        Employee employee;
+        for (Absence objAbsence : listAbsence) {
+            AbsenceDTO absenceDTO = new AbsenceDTO();
+            absenceDTO = modelMapper.map(objAbsence, absenceDTO.getClass());
+            //find nameEmployee
+            //if name != null=> return name else return ""
+            employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(objAbsence.getEmployeeId(), 1, 0);
+            nameEmployee = employee != null ? employee.getNameEmployee() : "";
+            absenceDTO.setIdEmployee(objAbsence.getEmployeeId());
+            absenceDTO.setNameEmployee(nameEmployee);
+            listResult.add(absenceDTO);
+
+        }
+
     }
 }
