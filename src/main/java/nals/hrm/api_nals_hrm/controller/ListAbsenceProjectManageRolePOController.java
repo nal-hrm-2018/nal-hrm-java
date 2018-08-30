@@ -1,6 +1,7 @@
 package nals.hrm.api_nals_hrm.controller;
 
 import nals.hrm.api_nals_hrm.dto.APIResponseDTO;
+import nals.hrm.api_nals_hrm.service.AbsenceService;
 import nals.hrm.api_nals_hrm.service.ProcessesService;
 import nals.hrm.api_nals_hrm.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class ListProjectManageRolePOController {
+public class ListAbsenceProjectManageRolePOController {
 
     @Autowired
     ProcessesService processesService;
@@ -22,9 +23,12 @@ public class ListProjectManageRolePOController {
     @Autowired
     ProjectService projectService;
 
-    @RequestMapping( value = "/manage/absence/po",params = { "page", "pageSize" }, method = RequestMethod.GET )
-    public APIResponseDTO getListProjectManageRolePO(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
-        return new APIResponseDTO(200,"Success!",projectService.findProjectProcessesManageRolePO(req,page,pageSize));
+    @Autowired
+    AbsenceService absenceService;
+
+    @RequestMapping( value = "/manage/absence/po/project",params = {"id" }, method = RequestMethod.GET )
+    public APIResponseDTO getListAbsenceProjectManageRolePO(@RequestParam("id")  String id) {
+        return new APIResponseDTO(200,"Success!",absenceService.findAbsenceProjectProcessesManageRolePO(id));
     }
 
 }

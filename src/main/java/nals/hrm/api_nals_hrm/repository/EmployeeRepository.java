@@ -3,6 +3,7 @@ package nals.hrm.api_nals_hrm.repository;
 import nals.hrm.api_nals_hrm.entities.Employee;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
@@ -24,4 +25,9 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
     List<Employee> findByEmailContainingOrNameEmployeeContainingAndIsEmployeeAndDeleteFlag(String email, String nameEmployee, int isEmployee, int deleteFlag, Pageable pageable);
 
     List<Employee> findByEmailContainingOrNameEmployeeContainingAndIsEmployeeAndDeleteFlag(String email, String name, int i, int i1);
+
+    @Query(value = "SELECT * FROM employees  INNER JOIN processes ON processes.employee_id = employees.id\n" +
+            "WHERE processes.project_id = ?1 \n" +
+            "AND processes.check_project_exit = 1", nativeQuery = true)
+    List<Employee> findAllNotExit(String id);
 }
