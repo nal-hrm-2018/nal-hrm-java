@@ -1,6 +1,6 @@
 package nals.hrm.api_nals_hrm.dto;
 
-public class AbsenceDTO {
+public class ListAbsenceDTO {
 
     private int allowAbsence; //number annualLeave allow
     private int remainingAbsenceDays;//số ngày phép năm ngoái còn lại
@@ -12,9 +12,9 @@ public class AbsenceDTO {
 
     ListDTO listAbsence;
 
-    public AbsenceDTO(int allowAbsence, int remainingAbsenceDays, int absence, int unpaidLeave,
-                      int marriageLeave, int bereavementLeave,
-                      int maternityLeave, ListDTO listAbsence) {
+    public ListAbsenceDTO(int allowAbsence, int remainingAbsenceDays, int absence, int unpaidLeave,
+                          int marriageLeave, int bereavementLeave,
+                          int maternityLeave, ListDTO listAbsence) {
         this.allowAbsence = allowAbsence;
         this.remainingAbsenceDays = remainingAbsenceDays;
         this.annualLeave = absence;

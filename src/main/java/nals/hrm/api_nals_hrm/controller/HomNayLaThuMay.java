@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package homnaylathumay;
+package nals.hrm.api_nals_hrm.controller;
 
 import java.text.DateFormat;
 import java.text.ParseException;

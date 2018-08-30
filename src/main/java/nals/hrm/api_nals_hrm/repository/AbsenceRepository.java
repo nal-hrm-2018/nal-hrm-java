@@ -8,6 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -24,7 +25,11 @@ public interface AbsenceRepository extends PagingAndSortingRepository<Absence, I
 
     Absence save(Absence absence);
 
-    ArrayList<Object> findByDeleteFlag(int deleteFlag,Pageable pageable);
+    ArrayList<Absence> findByDeleteFlag(int deleteFlag,Pageable pageable);
 
-    ArrayList<Object> findByDeleteFlag(int deleteFlag);
+    ArrayList<Absence> findByDeleteFlag(int deleteFlag);
+
+//    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateLessThanEqualAndToDateGreaterThanEqual(int idEmployee, int deleteFlag, String startDateProject, String endDateProject);
+
+    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqual(int idEmployee, int i, String startDate, String endDate);
 }

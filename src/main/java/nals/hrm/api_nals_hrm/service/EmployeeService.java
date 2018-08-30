@@ -33,11 +33,6 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private EmployeeTypeRepository employeeTypeRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;

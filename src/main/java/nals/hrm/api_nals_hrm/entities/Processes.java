@@ -27,7 +27,7 @@ public class Processes implements Serializable {
     Integer checkProjectExit;
 
     @Column(name = "man_power")
-    private double man_power;
+    private Double man_power = 0.0;
 
     @Column(name = "start_date")
     private String startDate;
@@ -59,11 +59,13 @@ public class Processes implements Serializable {
     @JoinColumn(name = "role_id", insertable = false, updatable = false)
     Role role;
 
+
+
     public Processes() {
     }
 
     public Processes(int idProcesses, int employeeId, String projectId, int roleId, Integer checkProjectExit,
-                     double man_power, String startDate, String endDate, String updatedAt,
+                     Double man_power, String startDate, String endDate, String updatedAt,
                      int updatedByEmployee, String createdAt,
                      int createdByEmployee, int deleteFlag, Role role) {
         this.idProcesses = idProcesses;
@@ -122,11 +124,11 @@ public class Processes implements Serializable {
         this.checkProjectExit = checkProjectExit;
     }
 
-    public double getMan_power() {
+    public Double getMan_power() {
         return man_power;
     }
 
-    public void setMan_power(double man_power) {
+    public void setMan_power(Double man_power) {
         this.man_power = man_power;
     }
 

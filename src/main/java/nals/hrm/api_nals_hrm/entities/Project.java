@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -11,86 +12,68 @@ public class Project implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
-    String idProject;
+    private String idProject;
 
     @Column(name = "name")
-    String nameProject;
+    private String nameProject;
 
     @Column(name = "income")
-    double income;
+    private double income;
 
     @Column(name = "real_cost")
-    double realCost;
+    private double realCost;
 
     @Column(name = "description")
-    String description;
+    private String description;
 
     @JsonIgnore
     @Column(name = "status_id")
-    int statusId;
+    private int statusId;
 
     @Column(name = "estimate_start_date")
-    String estimateStartDate;
+    private String estimateStartDate;
 
     @Column(name = "start_date")
-    String startDate;
+    private String startDate;
 
     @Column(name = "estimate_end_date")
-    String estimateEndDate;
+    private String estimateEndDate;
 
     @Column(name = "end_date")
-    String endDate;
+    private String endDate;
 
     @JsonIgnore
     @Column(name = "updated_at")
-    String updatedAt;
+    private String updatedAt;
 
     @JsonIgnore
     @Column(name = "updated_by_employee")
-    Integer updatedByEmployee;
+    private Integer updatedByEmployee;
 
     @JsonIgnore
     @Column(name = "created_at")
-    String createdAt;
+    private String createdAt;
 
     @JsonIgnore
     @Column(name = "created_by_employee")
-    Integer createdByEmployee;
+    private Integer createdByEmployee;
 
     @JsonIgnore
     @Column(name = "delete_flag")
-    int deleteFlag;
-
-
+    private int deleteFlag;
 
     @ManyToOne
     @JoinColumn(name="status_id",insertable=false, updatable=false)
-    Status status;
+    private Status status;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
+    private List<Employee> employeeList;
 
     public Project() {
     }
 
-    public Project(String idProject, String nameProject, double income, double realCost,
-                   String description, int statusId, String estimateStartDate, String startDate,
-                   String estimateEndDate, String endDate, String updatedAt, Integer updatedByEmployee,
-                   String createdAt, Integer createdByEmployee, int deleteFlag, Status status) {
-        this.idProject = idProject;
-        this.nameProject = nameProject;
-        this.income = income;
-        this.realCost = realCost;
-        this.description = description;
-        this.statusId = statusId;
-        this.estimateStartDate = estimateStartDate;
-        this.startDate = startDate;
-        this.estimateEndDate = estimateEndDate;
-        this.endDate = endDate;
-        this.updatedAt = updatedAt;
-        this.updatedByEmployee = updatedByEmployee;
-        this.createdAt = createdAt;
-        this.createdByEmployee = createdByEmployee;
-        this.deleteFlag = deleteFlag;
-        this.status = status;
-    }
+
 
     public String getIdProject() {
         return idProject;
@@ -218,6 +201,14 @@ public class Project implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public List<Employee> getEmployeeList() {
+        return employeeList;
+    }
+
+    public void setEmployeeList(List<Employee> employeeList) {
+        this.employeeList = employeeList;
     }
 
     @Override
