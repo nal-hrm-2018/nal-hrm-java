@@ -265,12 +265,20 @@ public class AbsenceService {
 
             int evalMonth = month.orElse(0);
             int evalYear = year.orElse(0);
+            ArrayList<Absence> listAbsence;
+            int total = 0;
+            if(evalMonth != 0 && evalYear != 0){
+                listAbsence = absenceRepository.findByMonthAndYear(evalMonth,evalYear,PageRequest.of(evalPage, evalPageSize));
+                total = absenceRepository.findByMonthAndYear(evalMonth,evalYear);
+            }else{
+                total = absenceRepository.findByMonthOrYear(evalMonth,evalYear);
+                listAbsence = absenceRepository.findByMonthOrYear(evalMonth,evalYear, PageRequest.of(evalPage, evalPageSize));
 
+            }
 
-            ArrayList<Absence> listAbsence = absenceRepository.findByMonthOrYear(evalMonth,evalMonth,evalYear,evalYear, PageRequest.of(evalPage, evalPageSize));
             ArrayList<Object> listResult = new ArrayList<>();
             mapListAbsence(listAbsence,listResult);
-            return new ListDTO(absenceRepository.findByMonthOrYear(evalMonth,evalMonth,evalYear,evalYear), listResult);
+            return new ListDTO(total, listResult);
         }catch (Exception e){
             throw new CustomException("Error server",500);
         }

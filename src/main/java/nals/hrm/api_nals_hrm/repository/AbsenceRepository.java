@@ -37,14 +37,26 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
     List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqual(int idEmployee, int i, String startDate, String endDate);
 
     @Query(value = "SELECT * FROM absences " +
-            " WHERE MONTH(from_date) = ?1 OR MONTH(to_date) = ?2" +
-            " OR YEAR(from_date) = ?3 OR YEAR(to_date) = ?4 AND delete_flag = 0" +
+            " WHERE MONTH(from_date) = ?1" +
+            " OR YEAR(from_date) = ?2 AND delete_flag = 0" +
             " ORDER BY to_date DESC ", nativeQuery = true)
-    ArrayList<Absence> findByMonthOrYear(int fromMonth,int toMonth, int fromYear,int toYear, PageRequest of);
+    ArrayList<Absence> findByMonthOrYear(int fromMonth, int fromYear, PageRequest of);
 
     @Query(value = "SELECT COUNT(*) FROM absences " +
-            " WHERE MONTH(from_date) = ?1 OR MONTH(to_date) = ?2" +
-            " OR YEAR(from_date) = ?3 OR YEAR(to_date) = ?4 AND delete_flag = 0" +
+            " WHERE MONTH(from_date) = ?1" +
+            " OR YEAR(from_date) = ?2 AND delete_flag = 0" +
             " ORDER BY to_date DESC ", nativeQuery = true)
-    int findByMonthOrYear(int fromMonth,int toMonth, int fromYear,int toYear);
+    int findByMonthOrYear(int fromMonth, int fromYear);
+
+    @Query(value = "SELECT * FROM absences " +
+            " WHERE MONTH(from_date) = ?1" +
+            " AND YEAR(from_date) = ?2 AND delete_flag = 0" +
+            " ORDER BY to_date DESC ", nativeQuery = true)
+    ArrayList<Absence> findByMonthAndYear(int fromMonth, int fromYear,PageRequest of);
+
+    @Query(value = "SELECT COUNT(*) FROM absences " +
+            " WHERE MONTH(from_date) = ?1" +
+            " AND YEAR(from_date) = ?2 AND delete_flag = 0" +
+            " ORDER BY to_date DESC ", nativeQuery = true)
+    int findByMonthAndYear(int fromMonth, int fromYear);
 }
