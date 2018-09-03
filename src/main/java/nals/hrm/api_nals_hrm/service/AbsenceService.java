@@ -128,7 +128,7 @@ public class AbsenceService {
     public ListDTO getListAbsenceEmployeeHR(Optional<Integer> page, Optional<Integer> pageSize) {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
-        ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlag(0, PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlagOrderByFromDateDesc(0, PageRequest.of(evalPage, evalPageSize));
         ArrayList<Object> listResult = new ArrayList<>();
         mapListAbsence(listAbsence,listResult);
         return new ListDTO(absenceRepository.findByDeleteFlag(0).size(), listResult);
@@ -238,7 +238,7 @@ public class AbsenceService {
                 //get list absence of objEmp
                 //when project start to end
 //
-                absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqual(objEmp.getIdEmployee(), 0, startDateProject, endDateProject);
+                absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(objEmp.getIdEmployee(), 0, startDateProject, endDateProject);
                 for (Absence objAbs : absenceList) {
                     absenceDTO = modelMapper.map(objAbs, absenceDTO.getClass());
                     //find nameEmployee

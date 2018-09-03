@@ -28,13 +28,11 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
 
     Absence save(Absence absence);
 
-    ArrayList<Absence> findByDeleteFlag(int deleteFlag,Pageable pageable);
+    ArrayList<Absence> findByDeleteFlagOrderByFromDateDesc(int deleteFlag,Pageable pageable);
 
     ArrayList<Absence> findByDeleteFlag(int deleteFlag);
 
-//    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateLessThanEqualAndToDateGreaterThanEqual(int idEmployee, int deleteFlag, String startDateProject, String endDateProject);
-
-    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqual(int idEmployee, int i, String startDate, String endDate);
+    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, String startDate, String endDate);
 
     @Query(value = "SELECT * FROM absences " +
             " WHERE MONTH(from_date) = ?1" +
