@@ -124,7 +124,7 @@ public class AbsenceService {
     public ListDTO getListAbsenceEmployeeHR(Optional<Integer> page, Optional<Integer> pageSize) {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
-        ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlagOrderByFromDateDesc(0, PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlagOrderByUpdateAtDesc(0, PageRequest.of(evalPage, evalPageSize));
         ArrayList<Object> listResult = new ArrayList<>();
         mapListAbsence(listAbsence,listResult);
         return new ListDTO(absenceRepository.findByDeleteFlag(0).size(), listResult);
@@ -139,7 +139,7 @@ public class AbsenceService {
 
         //find list absence employee not yet remove deleteFlag = 0
         //paging result
-        ArrayList<Object> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagOrderByFromDateDesc(employee.getIdEmployee(), 0, PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Object> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagOrderByUpdateAtDesc(employee.getIdEmployee(), 0, PageRequest.of(evalPage, evalPageSize));
 
         int allowAbsence = 0; //number absence allow
         //số ngày phép năm ngoái còn lại
@@ -228,13 +228,13 @@ public class AbsenceService {
             String startDateProject;
             String endDateProject;
             startDateProject = project.getStartDate() != null ? project.getStartDate() : strNow;
-            endDateProject = project.getEndDate() != null ? project.getEndDate() : strNow;
+            endDateProject = project.getEstimateEndDate() != null ? project.getEstimateEndDate() : strNow;
             //get list absence of a member
             for (Employee objEmp : listMember) {
                 //get list absence of objEmp
                 //when project start to end
 //
-                absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(objEmp.getIdEmployee(), 0, startDateProject, endDateProject);
+                absenceList = absenceRepository.findAbsenceInProject(objEmp.getIdEmployee(), startDateProject, endDateProject);
                 for (Absence objAbs : absenceList) {
                     absenceDTO = modelMapper.map(objAbs, absenceDTO.getClass());
                     //find nameEmployee
