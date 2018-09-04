@@ -81,20 +81,16 @@ public class AbsenceService {
     public String editAbsence(int id, Absence absenceEdit) {
         Date fromDate;
         Date toDate;
-        Date createAt;
         try {
 
             Absence absence = absenceRepository.findByIdAbsencesAndDeleteFlag(id, 0);
 
-            String strCreateAt = absence.getCreatedAt() == null ? absence.getFromDate() : absence.getCreatedAt();
-
             //validate fromDate, toDate edit
             fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absenceEdit.getFromDate());
             toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absenceEdit.getToDate());
-            createAt = new SimpleDateFormat("yyyy-MM-dd").parse(strCreateAt);
             Date now = new Date();
-            //if time edit < 30 day =>can edit absence
-            if (DateDiff.dateDiff(createAt, now) <= 30) {
+            //if time edit < 30 day(equal fromDate) =>can edit absence
+            if (DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate()), now) <= 30) {
                 if (fromDate.equals(toDate) || fromDate.before(toDate)) {
                     //set employeeId of absence absenceEdit
                     //can't change employeeId
@@ -109,7 +105,7 @@ public class AbsenceService {
                     throw new CustomException("Error data", 400);
                 }
             } else {
-                throw new CustomException("Error data", 400);
+                throw new CustomException("Can't edit!", 400);
             }
 
         } catch (ParseException e) {
@@ -271,8 +267,8 @@ public class AbsenceService {
                 listAbsence = absenceRepository.findByMonthAndYear(evalMonth,evalYear,PageRequest.of(evalPage, evalPageSize));
                 total = absenceRepository.findByMonthAndYear(evalMonth,evalYear);
             }else{
-                total = absenceRepository.findByMonthOrYear(evalMonth,evalYear);
-                listAbsence = absenceRepository.findByMonthOrYear(evalMonth,evalYear, PageRequest.of(evalPage, evalPageSize));
+                total = absenceRepository.findByYear(evalYear);
+                listAbsence = absenceRepository.findByYear(evalYear, PageRequest.of(evalPage, evalPageSize));
 
             }
 

@@ -35,16 +35,14 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
     List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, String startDate, String endDate);
 
     @Query(value = "SELECT * FROM absences " +
-            " WHERE MONTH(from_date) = ?1" +
-            " OR YEAR(from_date) = ?2 AND delete_flag = 0" +
+            " WHERE YEAR(from_date) = ?1 AND delete_flag = 0" +
             " ORDER BY to_date DESC ", nativeQuery = true)
-    ArrayList<Absence> findByMonthOrYear(int fromMonth, int fromYear, PageRequest of);
+    ArrayList<Absence> findByYear(int fromYear, PageRequest of);
 
     @Query(value = "SELECT COUNT(*) FROM absences " +
-            " WHERE MONTH(from_date) = ?1" +
-            " OR YEAR(from_date) = ?2 AND delete_flag = 0" +
+            " WHERE YEAR(from_date) = ?1 AND delete_flag = 0" +
             " ORDER BY to_date DESC ", nativeQuery = true)
-    int findByMonthOrYear(int fromMonth, int fromYear);
+    int findByYear(int fromYear);
 
     @Query(value = "SELECT * FROM absences " +
             " WHERE MONTH(from_date) = ?1" +
