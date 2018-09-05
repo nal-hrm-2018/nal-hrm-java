@@ -59,51 +59,58 @@ public class AbsenceService {
         Date toDate;
         Date now = new Date();
         try {
+            //convert date string to date
             fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate());
             toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getToDate());
-            //check if fromDate before toDate => true
-            if (fromDate.equals(toDate) || fromDate.before(toDate)) {
-                Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
-                absence.setEmployeeId(employee.getIdEmployee());
-                String strNow = new SimpleDateFormat("yyyy-MM-dd").format(now);
-                absence.setCreatedAt(strNow);
-                absenceRepository.save(absence);
-                return "Insert absence success!";
-            } else {
-                throw new CustomException("Error data", 400);
-            }
+
+            //find employee submit form absence
+            //find by token login
+            Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+
+            absence.setEmployeeId(employee.getIdEmployee());
+
+            String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+            absence.setCreatedAt(strNow);
+            absence.setUpdateAt(strNow);
+
+            handleAbsentDays(absence,fromDate, toDate);
+            return "Insert absence success!";
         } catch (ParseException e) {
             throw new CustomException("Error server", 500);
         }
 
     }
 
+
+
+
     public String editAbsence(int id, Absence absenceEdit) {
         Date fromDate;
         Date toDate;
         try {
 
-            Absence absence = absenceRepository.findByIdAbsencesAndDeleteFlag(id, 0);
+            //find absence old by id get client
+            Absence absenceOld = absenceRepository.findByIdAbsencesAndDeleteFlag(id, 0);
 
             //validate fromDate, toDate edit
             fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absenceEdit.getFromDate());
             toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absenceEdit.getToDate());
             Date now = new Date();
+            String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+
+            //set employeeId of absence absenceEdit
+            //can't change employeeId
+            absenceEdit.setEmployeeId(absenceOld.getEmployeeId());
+
+            //set idAbsenceEdit get from absence
+            absenceEdit.setIdAbsences(absenceOld.getIdAbsences());
+
+            absenceEdit.setUpdateAt(strNow);
+
             //if time edit < 30 day(equal fromDate) =>can edit absence
-            if (DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate()), now) <= 30) {
-                if (fromDate.equals(toDate) || fromDate.before(toDate)) {
-                    //set employeeId of absence absenceEdit
-                    //can't change employeeId
-                    absenceEdit.setEmployeeId(absence.getEmployeeId());
-                    //set idAbsenceEdit get from absence
-                    absenceEdit.setIdAbsences(absence.getIdAbsences());
-                    String strNow = new SimpleDateFormat("yyyy-MM-dd").format(now);
-                    absence.setUpdateAt(strNow);
-                    absenceRepository.save(absenceEdit);
-                    return "Update absence success!";
-                } else {
-                    throw new CustomException("Error data", 400);
-                }
+            if (DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absenceOld.getFromDate()), now) <= 30) {
+                handleAbsentDays(absenceEdit,fromDate,toDate);
+                return "Update absence success!";
             } else {
                 throw new CustomException("Can't edit!", 400);
             }
@@ -142,11 +149,14 @@ public class AbsenceService {
         ArrayList<Object> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagOrderByUpdateAtDesc(employee.getIdEmployee(), 0, PageRequest.of(evalPage, evalPageSize));
 
         int allowAbsence = 0; //number absence allow
+
         //số ngày phép năm ngoái còn lại
+        //được lấy dữ liệu từ database
         int remainingAbsenceDays = employee.getRemainingAbsenceDays();
 
         //số ngày phép đã nghĩ (theo đăng ký)
         // số ngày này có thể vượt mức ngày phép cho phép hằng năm
+        //tinh ở năm hiện tại
         int annualLeave = absenceRepository.countLeave(employee.getIdEmployee(), "annual_leave");
 
         //số ngày nghỉ không trả lương
@@ -233,7 +243,6 @@ public class AbsenceService {
             for (Employee objEmp : listMember) {
                 //get list absence of objEmp
                 //when project start to end
-//
                 absenceList = absenceRepository.findAbsenceInProject(objEmp.getIdEmployee(), startDateProject, endDateProject);
                 for (Absence objAbs : absenceList) {
                     absenceDTO = modelMapper.map(objAbs, absenceDTO.getClass());
@@ -269,7 +278,6 @@ public class AbsenceService {
             }else{
                 total = absenceRepository.findByYear(evalYear);
                 listAbsence = absenceRepository.findByYear(evalYear, PageRequest.of(evalPage, evalPageSize));
-
             }
 
             ArrayList<Object> listResult = new ArrayList<>();
@@ -295,6 +303,35 @@ public class AbsenceService {
             absenceDTO.setNameEmployee(nameEmployee);
             listResult.add(absenceDTO);
 
+        }
+
+    }
+
+    public void handleAbsentDays(Absence absence, Date fromDate, Date toDate){
+        //kiem tra truong hop đơn xin nghĩ được submit trong khoảng thời gian giữa 2 năm
+        //ex: from: 29/12/2017 - to: 3/1/2018
+        //chia làm 2 đơn để lưu
+        int year = 0;
+        if(fromDate.getYear() != toDate.getYear()){
+            //chia làm 2 đơn để save vào database
+            //đơn thứ nhất từ fromDate - 31/12/fromYear
+            absence.setFromDate(absence.getFromDate());
+            year = Integer.parseInt(new SimpleDateFormat("yyyy").format(fromDate));
+            absence.setToDate(year+"-12-31");
+            absenceRepository.save(absence);
+
+            //đơn thứ 2 từ 1/1/toYear - toDate
+            year = Integer.parseInt(new SimpleDateFormat("yyyy").format(toDate));
+            absence.setFromDate(year+"-01-01");
+            absence.setToDate(absence.getToDate());
+            absenceRepository.save(absence);
+
+        }else{
+            if (fromDate.equals(toDate) || fromDate.before(toDate)) {
+                absenceRepository.save(absence);
+            } else {
+                throw new CustomException("Error data", 400);
+            }
         }
 
     }
