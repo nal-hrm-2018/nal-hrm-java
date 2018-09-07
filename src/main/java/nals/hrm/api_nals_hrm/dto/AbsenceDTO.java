@@ -14,6 +14,7 @@ public class AbsenceDTO{
     private String toDate;
     private String reason;
     private String description;
+    private String createdAt;
     private AbsenceType absenceType;
     private AbsenceTime absenceTime;
 
@@ -106,5 +107,13 @@ public class AbsenceDTO{
 
     public void setIdProject(String idProject) {
         this.idProject = idProject;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

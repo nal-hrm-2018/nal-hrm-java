@@ -44,7 +44,7 @@ public class Absence implements Serializable {
     @Column(name = "absence_time_id")
     private int absenceTimeId;
 
-    @JsonIgnore
+//    @JsonIgnore
     @Column(name = "created_at")
     private String createdAt;
 

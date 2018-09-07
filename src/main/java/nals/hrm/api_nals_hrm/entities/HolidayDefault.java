@@ -26,7 +26,7 @@ public class HolidayDefault implements Serializable {
     private int holidayStatusId;
 
     @JsonIgnore
-    @Column(name = "delete_flags")
+    @Column(name = "delete_flag")
     private int deleteFlag;
 
 //    @JsonIgnore
