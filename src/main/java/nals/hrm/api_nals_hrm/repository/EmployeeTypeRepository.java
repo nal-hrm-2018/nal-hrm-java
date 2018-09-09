@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface EmployeeTypeRepository extends CrudRepository<EmployeeType, Integer> {
 
-    EmployeeType findByIdEmployeeType(int employeeTypeId);
-
     List<EmployeeType> findAll();
 }
