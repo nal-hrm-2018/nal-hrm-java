@@ -46,6 +46,8 @@ public class ProjectService {
     @Autowired
     private ModelMapper modelMapper;
 
+
+    //all project about exit or not exit
     public ListDTO getListProjectByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize) {
         try {
             ArrayList<Object> result = new ArrayList<>();//arrayList save all information the project of employee
@@ -56,13 +58,13 @@ public class ProjectService {
             //find processes the projects of employee
             //This means that all the projects that the employee has joined
             //paging result
-            List<Processes> processesList = processesRepository.findByEmployeeId(idEmployee, PageRequest.of(evalPage, evalPageSize));
-
+            List<Processes> processesList = processesRepository.findByEmployeeIdAndDeleteFlag(idEmployee, 0,PageRequest.of(evalPage, evalPageSize));
+            EmployeeProjectDTO projectDTO;
             for (Processes processes : processesList) {
-                EmployeeProjectDTO projectDTO = new EmployeeProjectDTO(projectRepository.findByIdProject(processes.getProjectId()), processes);
+                projectDTO = new EmployeeProjectDTO(projectRepository.findByIdProjectAndDeleteFlag(processes.getProjectId(),0), processes);
                 result.add(projectDTO);
             }
-            return new ListDTO(processesRepository.findByEmployeeId(idEmployee).size(), result);
+            return new ListDTO(processesRepository.findByEmployeeIdAndDeleteFlag(idEmployee,0).size(), result);
 
         } catch (Exception e) {
             throw new CustomException("No find employee", 404);
