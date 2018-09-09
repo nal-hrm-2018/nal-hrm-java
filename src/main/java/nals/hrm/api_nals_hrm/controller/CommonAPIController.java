@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/list")
-public class APICommonController {
+public class CommonAPIController {
     @Autowired
     EmployeeService employeeService;
 

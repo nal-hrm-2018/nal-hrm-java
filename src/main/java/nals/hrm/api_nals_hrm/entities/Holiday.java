@@ -23,7 +23,7 @@ public class Holiday implements Serializable {
     @Column(name = "holiday_status_id")
     private int holidayStatusId;
 
-    @Column(name = "delete_flags")
+    @Column(name = "delete_flag")
     private int deleteFlag;
 
     @ManyToOne(fetch = FetchType.EAGER)

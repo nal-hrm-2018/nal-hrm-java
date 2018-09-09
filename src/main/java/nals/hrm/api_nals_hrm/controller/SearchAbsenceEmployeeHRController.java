@@ -14,14 +14,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class ListAbsenceEmployeeByIdEmployeeController {
+public class SearchAbsenceEmployeeHRController {
 
     @Autowired
     AbsenceService absenceService;
 
-    @RequestMapping( value = "/manage/absence/employee",params = { "id","page", "pageSize" }, method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('HR') and hasAuthority('view_employee_absence_history')")
-    public APIResponseDTO getListAbsenceEmployeeByIdEmployee(@RequestParam("id") int id, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
-        return new APIResponseDTO(200,"Success!",absenceService.getListAbsenceEmployeeByIdEmployee(id,page,pageSize));
+    @RequestMapping( value = "/manage/absence/search",params = { "month","year","page", "pageSize" }, method = RequestMethod.GET )
+    @PreAuthorize("hasAuthority('HR')")
+    public APIResponseDTO searchAbsenceEmployee(@RequestParam("month") Optional<Integer> month, @RequestParam("year")  Optional<Integer> year, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
+        return new APIResponseDTO(200,"Success!",absenceService.searchAbsenceEmployeeHR(month,year,page,pageSize));
     }
 }

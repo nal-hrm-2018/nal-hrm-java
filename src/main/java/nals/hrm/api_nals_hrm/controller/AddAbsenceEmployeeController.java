@@ -19,7 +19,7 @@ public class AddAbsenceEmployeeController {
     @Autowired
     AbsenceService absenceService;
 
-    @RequestMapping( value = "/absence/add", method = RequestMethod.POST )
+    @RequestMapping( value = "/absence/add", method = RequestMethod.POST)
     public APIResponseDTO addAbsence(@ApiParam @RequestBody Absence absence, HttpServletRequest req) {
         return new APIResponseDTO(200,"Success!",absenceService.addAbsence(absence, req));
     }

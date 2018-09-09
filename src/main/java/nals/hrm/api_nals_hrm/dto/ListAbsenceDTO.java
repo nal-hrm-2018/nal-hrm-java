@@ -9,12 +9,14 @@ public class ListAbsenceDTO {
     private int marriageLeave; //nghỉ cưới
     private int bereavementLeave; //nghỉ tang
     private int maternityLeave;//nghỉ thai sản
+    private int sickLeave;//nghi om
 
-    ListDTO listAbsence;
+
+    private ListDTO listAbsence;
 
     public ListAbsenceDTO(int allowAbsence, int remainingAbsenceDays, int absence, int unpaidLeave,
                           int marriageLeave, int bereavementLeave,
-                          int maternityLeave, ListDTO listAbsence) {
+                          int maternityLeave, int sickLeave, ListDTO listAbsence) {
         this.allowAbsence = allowAbsence;
         this.remainingAbsenceDays = remainingAbsenceDays;
         this.annualLeave = absence;
@@ -22,6 +24,7 @@ public class ListAbsenceDTO {
         this.marriageLeave = marriageLeave;
         this.bereavementLeave = bereavementLeave;
         this.maternityLeave = maternityLeave;
+        this.sickLeave = sickLeave;
         this.listAbsence = listAbsence;
     }
 
@@ -87,5 +90,13 @@ public class ListAbsenceDTO {
 
     public void setListAbsence(ListDTO listAbsence) {
         this.listAbsence = listAbsence;
+    }
+
+    public int getSickLeave() {
+        return sickLeave;
+    }
+
+    public void setSickLeave(int sickLeave) {
+        this.sickLeave = sickLeave;
     }
 }

@@ -17,6 +17,6 @@ public class AbsenceTypeService {
     AbsenceTypeRepository absenceTypeRepository;
 
     public List<AbsenceType> findAll() {
-        return absenceTypeRepository.findAll();
+        return absenceTypeRepository.findTop6ByNameAbsenceTypeNotNull();
     }
 }
