@@ -17,7 +17,7 @@ public interface ProcessesRepository extends CrudRepository<Processes,Integer> {
     List<Processes> findByEmployeeIdAndDeleteFlag(int idEmployee, int deleteFlag);
 
 
-    List<Processes> findByemployeeIdAndCheckProjectExitAndDeleteFlag(int idEmployee, int i, int i1);
+    List<Processes> findByEmployeeIdAndCheckProjectExitAndDeleteFlag(int idEmployee, int i, int i1);
 
-    Processes findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(String projectId, int i, int idRole, int i1);
+    List<Processes> findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(String projectId, int i, int idRole, int i1);
 }

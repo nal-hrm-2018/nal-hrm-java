@@ -100,23 +100,29 @@ public class AbsenceService {
             //nếu k thuộc 1 project nào email được default send to CEO
 
             //tim nhung project dang dien ra ma member do tham gia :o
-            List<Processes> processesList = processesRepository.findByemployeeIdAndCheckProjectExitAndDeleteFlag(employee.getIdEmployee(), 1, 0);
+            List<Processes> processesList = processesRepository.findByEmployeeIdAndCheckProjectExitAndDeleteFlag(employee.getIdEmployee(), 1, 0);
             if (processesList != null) {
+                List<Processes> processesByRole; //find list project processes by role, idProject
                 Processes processesPO;
                 Employee employeePO;
                 //xac dinh id cua role PO
                 Role role = roleRepository.findByNameRole("PO");
                 for (Processes obj : processesList) {
                     //xac dinh PO cua tung project va goi email cho PO do
-                    processesPO = processesRepository.findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(obj.getProjectId(), 1, role.getIdRole(), 0);
+                    processesByRole = processesRepository.findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(obj.getProjectId(), 1, role.getIdRole(), 0);
+                    //mỗi project chỉ có 1 PO
+
                     //tim thong tin cua po
-                    if (processesPO != null) {
+
+                    if (processesByRole != null) {
+                        processesPO = processesByRole.get(0);
                         //xac dinh duoc PO cua du an
                         employeePO = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(processesPO.getEmployeeId(),1,0);
-                        if(employeePO != null ){
+                        //neu PO xin nghi thi goi don cho CEO
+                        if(employeePO != null && !employeePO.getEmail().equals(email)){
                             email = employeePO.getEmail();
                         }
-                        subject = "ID project: "+ processesPO.getProjectId() + " "+employee.getNameEmployee() + " xin vang nghỉ";
+                        subject = "Project: "+ processesPO.getProjectId() + " "+employee.getNameEmployee() + " xin vang nghỉ";
                         sendEmail(email,subject,content);
                     } else {
                         //send email to CEO
