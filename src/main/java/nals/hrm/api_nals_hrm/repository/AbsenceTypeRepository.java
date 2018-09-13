@@ -12,4 +12,6 @@ public interface AbsenceTypeRepository extends CrudRepository<AbsenceType, Integ
     List<AbsenceType> findTop6ByNameAbsenceTypeNotNull();
 
     AbsenceType findByIdAbsenceType(int absenceTypeId);
+
+    AbsenceType findByNameAbsenceType(String annual_leave);
 }

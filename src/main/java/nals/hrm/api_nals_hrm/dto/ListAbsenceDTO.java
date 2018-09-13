@@ -4,6 +4,7 @@ public class ListAbsenceDTO {
 
     private double allowAbsence; //number annualLeave allow
     private double remainingAbsenceDays;//số ngày phép năm ngoái còn lại
+    private double totalRemeain;
     private double annualLeave;
     private double unpaidLeave; //số ngày nghỉ không trả lương
     private double marriageLeave; //nghỉ cưới
@@ -14,12 +15,13 @@ public class ListAbsenceDTO {
 
     private ListDTO listAbsence;
 
-    public ListAbsenceDTO(double allowAbsence, double remainingAbsenceDays, double absence, double unpaidLeave,
-                          double marriageLeave, double bereavementLeave,
+    public ListAbsenceDTO(double allowAbsence, double remainingAbsenceDays, double totalRemeain,
+                          double annualLeave, double unpaidLeave, double marriageLeave, double bereavementLeave,
                           double maternityLeave, double sickLeave, ListDTO listAbsence) {
         this.allowAbsence = allowAbsence;
         this.remainingAbsenceDays = remainingAbsenceDays;
-        this.annualLeave = absence;
+        this.totalRemeain = totalRemeain;
+        this.annualLeave = annualLeave;
         this.unpaidLeave = unpaidLeave;
         this.marriageLeave = marriageLeave;
         this.bereavementLeave = bereavementLeave;
@@ -42,6 +44,14 @@ public class ListAbsenceDTO {
 
     public void setRemainingAbsenceDays(double remainingAbsenceDays) {
         this.remainingAbsenceDays = remainingAbsenceDays;
+    }
+
+    public double getTotalRemeain() {
+        return totalRemeain;
+    }
+
+    public void setTotalRemeain(double totalRemeain) {
+        this.totalRemeain = totalRemeain;
     }
 
     public double getAnnualLeave() {
@@ -84,19 +94,19 @@ public class ListAbsenceDTO {
         this.maternityLeave = maternityLeave;
     }
 
-    public ListDTO getListAbsence() {
-        return listAbsence;
-    }
-
-    public void setListAbsence(ListDTO listAbsence) {
-        this.listAbsence = listAbsence;
-    }
-
     public double getSickLeave() {
         return sickLeave;
     }
 
     public void setSickLeave(double sickLeave) {
         this.sickLeave = sickLeave;
+    }
+
+    public ListDTO getListAbsence() {
+        return listAbsence;
+    }
+
+    public void setListAbsence(ListDTO listAbsence) {
+        this.listAbsence = listAbsence;
     }
 }
