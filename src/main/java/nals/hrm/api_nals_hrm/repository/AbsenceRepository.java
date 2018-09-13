@@ -28,7 +28,7 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
 
     ArrayList<Absence> findByDeleteFlag(int deleteFlag);
 
-//    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, String startDate, String endDate);
+    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, String startDate, String endDate);
 
     @Query(value = "SELECT * FROM absences " +
             " WHERE YEAR(from_date) = ?1 AND delete_flag = 0" +
@@ -63,4 +63,6 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
     @Query(value = "SELECT * FROM absences INNER JOIN absence_types ON absences.absence_type_id = absence_types.id\n" +
             "WHERE absences.employee_id = ?1 AND absence_types.name = ?2 AND YEAR(absences.from_date) = ?3 AND absences.delete_flag = 0", nativeQuery = true)
     ArrayList<Absence> listLeave(int idEmployee, String typeLeave, int year);
+
+    ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, int idTypeAbsence, String s, String s1);
 }

@@ -183,7 +183,7 @@ public class AbsenceService {
                 //insert absence to database if send mail to PO success
                 handleAbsentDays(absence, fromDate, toDate);
                 return "Insert absence success!";
-            }else{
+            } else {
                 throw new CustomException("Can't submit form absence!", 400);
             }
         } catch (ParseException e) {
@@ -291,6 +291,8 @@ public class AbsenceService {
 
         double allowAbsence = 0; //number absence allow
 
+        double totalRemain = 0;
+
         //số ngày phép năm ngoái còn lại
         //được lấy dữ liệu từ database
         double remainingAbsenceDays = employee.getRemainingAbsenceDays();
@@ -307,6 +309,16 @@ public class AbsenceService {
         listLeave = absenceRepository.listLeave(employee.getIdEmployee(), "annual_leave", yearNow);
         //so ngay nghi hop le(da tru thu 7, cn,le, bu le)
         double annualLeave = checkAbsenceDayInvalid(listLeave);
+
+        //neu thoi gian hien tai sau  sau ngày 31/6
+        String strDateChangeRemain = yearNow + "-06-31";
+        Date dateChangeRemain;
+        try {
+            dateChangeRemain = new SimpleDateFormat("yyyy-MM-dd").parse(strDateChangeRemain);
+        } catch (ParseException e) {
+            throw new CustomException("Error server", 500);
+        }
+
 
         //số ngày nghỉ không trả lương
         //2.find list absence with type:  unpaid_leave in year now
@@ -375,32 +387,64 @@ public class AbsenceService {
             default:
                 allowAbsence = 16 + remainingAbsenceDays;
         }
+        //neu time now > 30/6
+        if (now.after(dateChangeRemain)) {
+            //find id of type absence = "annual_leave"
+            int idTypeAbsence = absenceTypeRepository.findByNameAbsenceType("annual_leave").getIdAbsenceType();
 
-        if (annualLeave > allowAbsence) {
-            unpaidLeave = unpaidLeave + annualLeave - allowAbsence;
-        }
-
-        //neu thoi gian hien tai sau  sau ngày 31/6
-        String strDateChangeRemain = yearNow+"-06-31";
-        Date dateChangeRemain;
-        try {
-            dateChangeRemain = new SimpleDateFormat("yyyy-MM-dd").parse(strDateChangeRemain);
-        } catch (ParseException e) {
-            throw new CustomException("Error server", 500);
-        }
-        if(now.after(dateChangeRemain)){
             //so ngay nghi con lai cua nam ngoai = 0
             remainingAbsenceDays = 0;
-
-            //tinh so ngay nghi tu 1/1 - >31
+            //tinh so ngay nghi phep hang nam tu 1/1 - >30/6
             //chua tinh truong hop dơn vang nghi duoc dang ky nghi from tháng 6 to tháng 7
+            ArrayList<Absence> listAbsenceFromToTypeAnnualLeave = absenceRepository.findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(employee.getIdEmployee(), 0, idTypeAbsence, yearNow + "-01-01", yearNow + "-06-31");
+            //so ngay nghi phep hang nam truoc 1/7
+            double numberAbsenceAnnualLeaveBeforeMonth7 = checkAbsenceDayInvalid(listAbsenceFromToTypeAnnualLeave);
+            double after7 = annualLeave - numberAbsenceAnnualLeaveBeforeMonth7;
+            //neu so ngay nghi nam ngoai con lai >= numberAbsenceAnnualLeave
+            //nghĩa là số ngày đăng ký nghỉ phép hằng năm được trừ từ ngày nghỉ còn lại của năm ngoái
+            if (employee.getRemainingAbsenceDays() >= numberAbsenceAnnualLeaveBeforeMonth7) {
+                //neu so ngay nghi truoc 1/7 nho hon so ngay con lai cua nam ngoái
+               //chua su dung het ngay remain
+                if (after7 > allowAbsence) {
+                    unpaidLeave = unpaidLeave + after7 - allowAbsence;
+                    annualLeave = allowAbsence + employee.getRemainingAbsenceDays() - numberAbsenceAnnualLeaveBeforeMonth7;
+                } else {
+                    totalRemain = allowAbsence - annualLeave;
 
+                }
 
+            } else {
+                //neu so ngay nghi phép hang nam truoc thang 7 vượt qua so ngay remain
+                // da su dụng het ngay remain
+                //tinh so ngay vượt mức
+                double annualTmp = numberAbsenceAnnualLeaveBeforeMonth7 - employee.getRemainingAbsenceDays();
+                if (after7 + annualTmp > allowAbsence) {
+                    unpaidLeave = unpaidLeave + after7 + annualTmp - allowAbsence;
+                    annualLeave = allowAbsence + employee.getRemainingAbsenceDays();
+                } else {
+                    totalRemain = allowAbsence - after7;
+                }
+            }
+        } else {
+            if (remainingAbsenceDays >= annualLeave) {
+                remainingAbsenceDays = remainingAbsenceDays - annualLeave;
+                totalRemain = allowAbsence + remainingAbsenceDays;
+            } else {
+                if (annualLeave > allowAbsence + employee.getRemainingAbsenceDays()) {
+                    unpaidLeave = unpaidLeave + annualLeave - allowAbsence - employee.getRemainingAbsenceDays();
+                    annualLeave = allowAbsence + remainingAbsenceDays;
+                } else {
+                    //
+                    totalRemain = allowAbsence + remainingAbsenceDays - annualLeave;
+                }
+
+                remainingAbsenceDays = 0;
+            }
         }
 
 
         int total = absenceRepository.findByEmployeeIdAndDeleteFlag(employee.getIdEmployee(), 0).size();
-        return new ListAbsenceDTO(allowAbsence, remainingAbsenceDays, annualLeave, unpaidLeave, maternityLeave, marriageLeave, bereavementLeave, sickLeave, new ListDTO(total, result));
+        return new ListAbsenceDTO(allowAbsence, remainingAbsenceDays, totalRemain, annualLeave, unpaidLeave, maternityLeave, marriageLeave, bereavementLeave, sickLeave, new ListDTO(total, result));
     }
 
     public ListDTO findAbsenceProjectProcessesManageRolePO(String id) {
@@ -494,12 +538,18 @@ public class AbsenceService {
         //ex: from: 29/12/2017 - to: 3/1/2018
         //chia làm 2 đơn để lưu
         int year = 0;
-        if (fromDate.getYear() != toDate.getYear()) {
+        year = Integer.parseInt(new SimpleDateFormat("yyyy").format(fromDate));
+        absence.setFromDate(absence.getFromDate());
+        if (fromDate.getYear() != toDate.getYear() || Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) == 6 && toDate.getMonth() == 6) {
             //chia làm 2 đơn để save vào database
-            //đơn thứ nhất từ fromDate - 31/12/fromYear
-            absence.setFromDate(absence.getFromDate());
-            year = Integer.parseInt(new SimpleDateFormat("yyyy").format(fromDate));
-            absence.setToDate(year + "-12-31");
+            if(Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) == 6 && toDate.getMonth() == 6){
+               //đơn từ from - year-06-31
+                absence.setToDate(year + "-06-30");
+            }else{
+                //đơn thứ nhất từ fromDate - 31/12/fromYear
+                absence.setToDate(year + "-12-31");
+            }
+
             absenceRepository.save(absence);
 
             //creat absence for form 2
@@ -513,9 +563,16 @@ public class AbsenceService {
             absenceForm2.setAbsenceTypeId(absence.getAbsenceTypeId());
 
 
-            //đơn thứ 2 từ 1/1/toYear - toDate
             year = Integer.parseInt(new SimpleDateFormat("yyyy").format(toDate));
-            absenceForm2.setFromDate(year + "-01-01");
+            //đơn thứ 2 từ 1/1/toYear - toDate
+            if(Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) == 6 && toDate.getMonth() == 6){
+                //đơn từ from - year-06-31
+                absenceForm2.setFromDate(year + "-07-01");
+            }else{
+                //đơn thứ nhất từ fromDate - 31/12/fromYear
+                absenceForm2.setFromDate(year + "-01-01");
+            }
+
             absenceForm2.setToDate(new SimpleDateFormat("yyyy-MM-dd").format(toDate));
             absenceRepository.save(absenceForm2);
 
@@ -587,7 +644,7 @@ public class AbsenceService {
         return leave;
     }
 
-    public void sendEmail(String to, String subject, String content){
+    public void sendEmail(String to, String subject, String content) {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper sendEmail = null;
         try {
@@ -596,7 +653,7 @@ public class AbsenceService {
             sendEmail.setSubject(subject);
             sendEmail.setText(content, true);
         } catch (MessagingException e) {
-            throw new CustomException("Error server!",500);
+            throw new CustomException("Error server!", 500);
         }
 
         javaMailSender.send(message);
