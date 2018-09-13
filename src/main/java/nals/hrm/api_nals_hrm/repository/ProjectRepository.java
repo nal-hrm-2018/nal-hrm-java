@@ -9,7 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.ArrayList;
 
 public interface ProjectRepository extends CrudRepository<Project, Integer> {
-    Project findByIdProject(String idProject);
 
     Project findByIdProjectAndDeleteFlag(String projectId, int deleteFlag);
 

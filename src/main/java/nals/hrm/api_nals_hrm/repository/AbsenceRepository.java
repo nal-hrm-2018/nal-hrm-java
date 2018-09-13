@@ -20,12 +20,6 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
 
     ArrayList<Absence> findByEmployeeIdAndDeleteFlagOrderByUpdateAtDesc(int idEmployee,int deleteFlag, Pageable pageable);
 
-    @Query(value = "select count(*) from absences inner join absence_types on absences.absence_type_id = absence_types.id\n" +
-            "where absences.employee_id = ?1 and absence_types.name = ?2 and absences.delete_flag = 0", nativeQuery = true)
-    int countLeave(int idEmployee, String unpaid_leave);
-
-
-
     Absence findByIdAbsencesAndDeleteFlag(int idAbsences,int deleteFlag);
 
     Absence save(Absence absence);

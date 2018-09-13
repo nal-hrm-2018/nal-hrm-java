@@ -2,21 +2,21 @@ package nals.hrm.api_nals_hrm.dto;
 
 public class ListAbsenceDTO {
 
-    private int allowAbsence; //number annualLeave allow
-    private int remainingAbsenceDays;//số ngày phép năm ngoái còn lại
-    private int annualLeave;
-    private int unpaidLeave; //số ngày nghỉ không trả lương
-    private int marriageLeave; //nghỉ cưới
-    private int bereavementLeave; //nghỉ tang
-    private int maternityLeave;//nghỉ thai sản
-    private int sickLeave;//nghi om
+    private double allowAbsence; //number annualLeave allow
+    private double remainingAbsenceDays;//số ngày phép năm ngoái còn lại
+    private double annualLeave;
+    private double unpaidLeave; //số ngày nghỉ không trả lương
+    private double marriageLeave; //nghỉ cưới
+    private double bereavementLeave; //nghỉ tang
+    private double maternityLeave;//nghỉ thai sản
+    private double sickLeave;//nghi om
 
 
     private ListDTO listAbsence;
 
-    public ListAbsenceDTO(int allowAbsence, int remainingAbsenceDays, int absence, int unpaidLeave,
-                          int marriageLeave, int bereavementLeave,
-                          int maternityLeave, int sickLeave, ListDTO listAbsence) {
+    public ListAbsenceDTO(double allowAbsence, double remainingAbsenceDays, double absence, double unpaidLeave,
+                          double marriageLeave, double bereavementLeave,
+                          double maternityLeave, double sickLeave, ListDTO listAbsence) {
         this.allowAbsence = allowAbsence;
         this.remainingAbsenceDays = remainingAbsenceDays;
         this.annualLeave = absence;
@@ -28,59 +28,59 @@ public class ListAbsenceDTO {
         this.listAbsence = listAbsence;
     }
 
-    public int getAllowAbsence() {
+    public double getAllowAbsence() {
         return allowAbsence;
     }
 
-    public void setAllowAbsence(int allowAbsence) {
+    public void setAllowAbsence(double allowAbsence) {
         this.allowAbsence = allowAbsence;
     }
 
-    public int getRemainingAbsenceDays() {
+    public double getRemainingAbsenceDays() {
         return remainingAbsenceDays;
     }
 
-    public void setRemainingAbsenceDays(int remainingAbsenceDays) {
+    public void setRemainingAbsenceDays(double remainingAbsenceDays) {
         this.remainingAbsenceDays = remainingAbsenceDays;
     }
 
-    public int getAnnualLeave() {
+    public double getAnnualLeave() {
         return annualLeave;
     }
 
-    public void setAnnualLeave(int annualLeave) {
+    public void setAnnualLeave(double annualLeave) {
         this.annualLeave = annualLeave;
     }
 
-    public int getUnpaidLeave() {
+    public double getUnpaidLeave() {
         return unpaidLeave;
     }
 
-    public void setUnpaidLeave(int unpaidLeave) {
+    public void setUnpaidLeave(double unpaidLeave) {
         this.unpaidLeave = unpaidLeave;
     }
 
-    public int getMarriageLeave() {
+    public double getMarriageLeave() {
         return marriageLeave;
     }
 
-    public void setMarriageLeave(int marriageLeave) {
+    public void setMarriageLeave(double marriageLeave) {
         this.marriageLeave = marriageLeave;
     }
 
-    public int getBereavementLeave() {
+    public double getBereavementLeave() {
         return bereavementLeave;
     }
 
-    public void setBereavementLeave(int bereavementLeave) {
+    public void setBereavementLeave(double bereavementLeave) {
         this.bereavementLeave = bereavementLeave;
     }
 
-    public int getMaternityLeave() {
+    public double getMaternityLeave() {
         return maternityLeave;
     }
 
-    public void setMaternityLeave(int maternityLeave) {
+    public void setMaternityLeave(double maternityLeave) {
         this.maternityLeave = maternityLeave;
     }
 
@@ -92,11 +92,11 @@ public class ListAbsenceDTO {
         this.listAbsence = listAbsence;
     }
 
-    public int getSickLeave() {
+    public double getSickLeave() {
         return sickLeave;
     }
 
-    public void setSickLeave(int sickLeave) {
+    public void setSickLeave(double sickLeave) {
         this.sickLeave = sickLeave;
     }
 }

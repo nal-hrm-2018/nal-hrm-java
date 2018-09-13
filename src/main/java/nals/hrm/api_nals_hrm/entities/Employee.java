@@ -401,5 +401,40 @@ public class Employee implements Serializable {
         this.role = role;
     }
 
-
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "idEmployee=" + idEmployee +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nameEmployee='" + nameEmployee + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", gender=" + gender +
+                ", mobile='" + mobile + '\'' +
+                ", address='" + address + '\'' +
+                ", maritalStatus=" + maritalStatus +
+                ", startWorkDate='" + startWorkDate + '\'' +
+                ", endWorkDate='" + endWorkDate + '\'' +
+                ", curriculum_vitae='" + curriculum_vitae + '\'' +
+                ", isEmployee=" + isEmployee +
+                ", company='" + company + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", employeeTypeId=" + employeeTypeId +
+                ", idRole=" + idRole +
+                ", isManager=" + isManager +
+                ", salaryId=" + salaryId +
+                ", workStatus=" + workStatus +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", updatedByEmployee=" + updatedByEmployee +
+                ", createdAt='" + createdAt + '\'' +
+                ", createdByEmployee=" + createdByEmployee +
+                ", deleteFlag=" + deleteFlag +
+                ", remainingAbsenceDays=" + remainingAbsenceDays +
+                ", permissions=" + permissions +
+                ", employeeType=" + employeeType +
+                ", teams=" + teams +
+                ", projects=" + projects +
+                ", role=" + role +
+                '}';
+    }
 }

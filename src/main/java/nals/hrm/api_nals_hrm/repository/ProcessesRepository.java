@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ProcessesRepository extends CrudRepository<Processes,Integer> {
-    List<Processes> findByEmployeeId(int idEmployee, Pageable pageable);
-
-    List<Processes> findByEmployeeId(int idEmployee);
-
-    ArrayList<Processes> findByEmployeeIdAndRoleIdAndDeleteFlag(int employeeId, int roleId, int deleteFlag);
 
 
+    List<Processes> findByEmployeeIdAndDeleteFlag(int idEmployee, int deleteFlag,Pageable pageable);
+    List<Processes> findByEmployeeIdAndDeleteFlag(int idEmployee, int deleteFlag);
+
+
+    List<Processes> findByEmployeeIdAndCheckProjectExitAndDeleteFlag(int idEmployee, int i, int i1);
+
+    List<Processes> findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(String projectId, int i, int idRole, int i1);
 }

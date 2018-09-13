@@ -10,4 +10,6 @@ import java.util.List;
 public interface AbsenceTypeRepository extends CrudRepository<AbsenceType, Integer> {
 
     List<AbsenceType> findTop6ByNameAbsenceTypeNotNull();
+
+    AbsenceType findByIdAbsenceType(int absenceTypeId);
 }
