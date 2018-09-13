@@ -65,4 +65,6 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
     ArrayList<Absence> listLeave(int idEmployee, String typeLeave, int year);
 
     ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, int idTypeAbsence, String s, String s1);
+
+//    ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateNotLessThanEqualAndToDateNotGreaterThanEqual(int idEmployee, int i, int idTypeAbsence, String s, String s1);
 }

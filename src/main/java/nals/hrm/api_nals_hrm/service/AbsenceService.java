@@ -80,7 +80,7 @@ public class AbsenceService {
         Date toDate;
         Date now = new Date();
         //this email defaut of CEO
-        String email = "nguyenthithanhtuyenbkdn@gmail.com";
+        String email = "nals_pmo@nal.com";
         String subject = "Đơn xin nghỉ phép";
         String content = "";
 
@@ -311,7 +311,7 @@ public class AbsenceService {
         double annualLeave = checkAbsenceDayInvalid(listLeave);
 
         //neu thoi gian hien tai sau  sau ngày 31/6
-        String strDateChangeRemain = yearNow + "-06-31";
+        String strDateChangeRemain = yearNow + "-06-30";
         Date dateChangeRemain;
         try {
             dateChangeRemain = new SimpleDateFormat("yyyy-MM-dd").parse(strDateChangeRemain);
@@ -395,8 +395,7 @@ public class AbsenceService {
             //so ngay nghi con lai cua nam ngoai = 0
             remainingAbsenceDays = 0;
             //tinh so ngay nghi phep hang nam tu 1/1 - >30/6
-            //chua tinh truong hop dơn vang nghi duoc dang ky nghi from tháng 6 to tháng 7
-            ArrayList<Absence> listAbsenceFromToTypeAnnualLeave = absenceRepository.findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(employee.getIdEmployee(), 0, idTypeAbsence, yearNow + "-01-01", yearNow + "-06-31");
+            ArrayList<Absence> listAbsenceFromToTypeAnnualLeave = absenceRepository.findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(employee.getIdEmployee(), 0, idTypeAbsence, yearNow + "-01-01", yearNow + "-06-30");
             //so ngay nghi phep hang nam truoc 1/7
             double numberAbsenceAnnualLeaveBeforeMonth7 = checkAbsenceDayInvalid(listAbsenceFromToTypeAnnualLeave);
             double after7 = annualLeave - numberAbsenceAnnualLeaveBeforeMonth7;

@@ -11,12 +11,14 @@ public class ListAbsenceDTO {
     private double bereavementLeave; //nghỉ tang
     private double maternityLeave;//nghỉ thai sản
     private double sickLeave;//nghi om
-
-
     private ListDTO listAbsence;
 
+    public ListAbsenceDTO() {
+    }
+
     public ListAbsenceDTO(double allowAbsence, double remainingAbsenceDays, double totalRemain,
-                          double annualLeave, double unpaidLeave, double marriageLeave, double bereavementLeave,
+                          double annualLeave, double unpaidLeave, double marriageLeave,
+                          double bereavementLeave,
                           double maternityLeave, double sickLeave, ListDTO listAbsence) {
         this.allowAbsence = allowAbsence;
         this.remainingAbsenceDays = remainingAbsenceDays;
@@ -46,12 +48,12 @@ public class ListAbsenceDTO {
         this.remainingAbsenceDays = remainingAbsenceDays;
     }
 
-    public double getTotalRemeain() {
+    public double getTotalRemain() {
         return totalRemain;
     }
 
-    public void setTotalRemeain(double totalRemeain) {
-        this.totalRemain = totalRemeain;
+    public void setTotalRemain(double totalRemain) {
+        this.totalRemain = totalRemain;
     }
 
     public double getAnnualLeave() {
