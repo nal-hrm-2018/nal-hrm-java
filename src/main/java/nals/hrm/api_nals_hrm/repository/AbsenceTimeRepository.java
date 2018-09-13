@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface AbsenceTimeRepository extends CrudRepository<AbsenceTime, Integer> {
 
+    AbsenceTime findByIdAbsenceTime(int absenceTypeId);
 }

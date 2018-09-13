@@ -60,6 +60,12 @@ public class AbsenceService {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    AbsenceTimeRepository absenceTimeRepository;
+
+    @Autowired
+    AbsenceTypeRepository absenceTypeRepository;
+
 
     public ListAbsenceDTO getListAbsenceEmployeeByToken(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
 
@@ -75,68 +81,111 @@ public class AbsenceService {
         Date now = new Date();
         //this email defaut of CEO
         String email = "nguyenthithanhtuyenbkdn@gmail.com";
-        String subject;
-        String content = "Lý do vắng: "+absence.getReason() + "\nThời gian: "+absence.getFromDate() + " đến "+absence.getToDate()+"\nGhi chú: "+absence.getDescription();
+        String subject = "Đơn xin nghỉ phép";
+        String content = "";
+
 
         try {
             //convert date string to date
             fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate());
             toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absence.getToDate());
 
-            //find employee submit form absence
-            //find by token login
-            Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+            if (fromDate.equals(toDate) || fromDate.before(toDate)) {
+                //find employee submit form absence
+                //find by token login
+                Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
 
-            //set subject for email absence
-            subject = employee.getNameEmployee() + " xin nghỉ";
-
-            absence.setEmployeeId(employee.getIdEmployee());
-
-            String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
-            absence.setCreatedAt(strNow);
-            absence.setUpdateAt(strNow);
-
-            //xác định xác PO của dự án mà member này đang tham gia
-            //nếu k thuộc 1 project nào email được default send to CEO
-
-            //tim nhung project dang dien ra ma member do tham gia :o
-            List<Processes> processesList = processesRepository.findByEmployeeIdAndCheckProjectExitAndDeleteFlag(employee.getIdEmployee(), 1, 0);
-            if (processesList != null) {
-                List<Processes> processesByRole; //find list project processes by role, idProject
-                Processes processesPO;
-                Employee employeePO;
-                //xac dinh id cua role PO
-                Role role = roleRepository.findByNameRole("PO");
-                for (Processes obj : processesList) {
-                    //xac dinh PO cua tung project va goi email cho PO do
-                    processesByRole = processesRepository.findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(obj.getProjectId(), 1, role.getIdRole(), 0);
-                    //mỗi project chỉ có 1 PO
-
-                    //tim thong tin cua po
-
-                    if (processesByRole != null) {
-                        processesPO = processesByRole.get(0);
-                        //xac dinh duoc PO cua du an
-                        employeePO = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(processesPO.getEmployeeId(),1,0);
-                        //neu PO xin nghi thi goi don cho CEO
-                        if(employeePO != null && !employeePO.getEmail().equals(email)){
-                            email = employeePO.getEmail();
-                        }
-                        subject = "Project: "+ processesPO.getProjectId() + " "+employee.getNameEmployee() + " xin vang nghỉ";
-                        sendEmail(email,subject,content);
-                    } else {
-                        //send email to CEO
-                        sendEmail(email, subject, content);
-                    }
+                AbsenceType absenceType = absenceTypeRepository.findByIdAbsenceType(absence.getAbsenceTypeId());
+                String absenceNameType = "Nghỉ ốm";
+                switch (absenceType.getNameAbsenceType()) {
+                    case "annual_leave":
+                        absenceNameType = "Nghỉ phép năm";
+                        break;
+                    case "unpaid_leave":
+                        absenceNameType = "Nghỉ không lương";
+                        break;
+                    case "maternity_leave":
+                        absenceNameType = "Nghỉ cưới hỏi";
+                        break;
+                    case "marriage_leave":
+                        absenceNameType = "Nghỉ thai sản";
+                        break;
+                    case "bereavement_leave":
+                        absenceNameType = "Nghỉ tang";
+                        break;
                 }
-            } else {
-                //send email to CEO
-                sendEmail(email, subject, content);
-            }
 
-            //insert absence to database if send mail to PO success
-            handleAbsentDays(absence, fromDate, toDate);
-            return "Insert absence success!";
+                AbsenceTime absenceTime = absenceTimeRepository.findByIdAbsenceTime(absence.getAbsenceTimeId());
+                String absenceNameTime = "Cả ngày";
+                switch (absenceTime.getNameAbsenceTime()) {
+                    case "morning":
+                        absenceNameTime = "Sáng";
+                        break;
+                    case "afternoon":
+                        absenceNameTime = "Chiều";
+                        break;
+                }
+
+                content = "<html><body>Kính gửi HR,<br><br>Nhân sự " + employee.getNameEmployee() + " xin nghỉ phép từ " + absence.getFromDate() + " đến " + absence.getToDate();
+                content += "<br><br>Kiểu nghỉ: " + absenceNameType + ", nghỉ: " + absenceNameTime;
+                content += "<br><br>Lý do: " + absence.getReason() + "<br><br>Ghi chú: " + absence.getDescription();
+                content += "<br><br>Mong HR xem xét.<br><br>Cảm ơn.";
+                content += "<br><br><br><strong style=\"color: red\">P/S: PO/PM dự án duyệt đơn, trường hợp nhân sự không làm dự án nào thì PO/Mentor của team sẽ duyệt.</strong> </body></html>";
+
+                absence.setEmployeeId(employee.getIdEmployee());
+
+                String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+                absence.setCreatedAt(strNow);
+                absence.setUpdateAt(strNow);
+
+                //xác định xác PO của dự án mà member này đang tham gia
+                //nếu k thuộc 1 project nào email được default send to CEO
+
+                //tim nhung project dang dien ra ma member do tham gia :o
+                List<Processes> processesList = processesRepository.findByEmployeeIdAndCheckProjectExitAndDeleteFlag(employee.getIdEmployee(), 1, 0);
+                if (processesList.size() > 0) {
+                    List<Processes> processesByRole; //find list project processes by role, idProject
+                    Processes processesPO;
+                    Employee employeePO;
+                    //xac dinh id cua role PO
+                    Role role = roleRepository.findByNameRole("PO");
+                    for (Processes obj : processesList) {
+                        //xac dinh PO cua tung project va goi email cho PO do
+                        processesByRole = processesRepository.findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(obj.getProjectId(), 1, role.getIdRole(), 0);
+                        //mỗi project chỉ có 1 PO
+                        //phong tru truong hop lo nhu database bị sai ai do them vao ma co den 2 PO
+                        //nen tam tra ket qua ve list roi lay PO dau tien thoi :o
+                        //tim thong tin cua po
+                        if (processesByRole.size() > 0) {
+                            processesPO = processesByRole.get(0);
+                            //xac dinh duoc PO cua du an
+                            employeePO = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(processesPO.getEmployeeId(), 1, 0);
+                            //neu PO xin nghi thi goi don cho CEO
+                            if (employeePO != null && !employeePO.getEmail().equals(employee.getEmail())) {
+                                content = "<html><body>Kính gửi " + employeePO.getNameEmployee() + ",<br><br>Nhân sự " + employee.getNameEmployee() + " xin nghỉ phép từ " + absence.getFromDate() + " đến " + absence.getToDate();
+                                content += "<br><br>Kiểu nghỉ: " + absenceNameType + ", nghỉ: " + absenceNameTime;
+                                content += "<br><br>Lý do: " + absence.getReason() + "<br><br>Ghi chú: " + absence.getDescription();
+                                content += "<br><br>Mong " + employeePO.getNameEmployee() + " xem xét.<br><br>Cảm ơn.";
+                                content += "<br><br><br><strong style=\"color: red\">P/S: PO/PM dự án duyệt đơn, trường hợp nhân sự không làm dự án nào thì PO/Mentor của team sẽ duyệt.</strong> </body></html>";
+                                sendEmail(employeePO.getEmail(), subject, content);
+                            }
+                            sendEmail(email, subject, content);
+                        } else {
+                            //send email to CEO
+                            sendEmail(email, subject, content);
+                        }
+                    }
+                } else {
+                    //send email to CEO
+                    sendEmail(email, subject, content);
+                }
+
+                //insert absence to database if send mail to PO success
+                handleAbsentDays(absence, fromDate, toDate);
+                return "Insert absence success!";
+            }else{
+                throw new CustomException("Can't submit form absence!", 400);
+            }
         } catch (ParseException e) {
             throw new CustomException("Error server", 500);
         }
@@ -240,11 +289,15 @@ public class AbsenceService {
 
         ArrayList<Absence> listLeave; //list leave by type
 
-        int allowAbsence = 0; //number absence allow
+        double allowAbsence = 0; //number absence allow
 
         //số ngày phép năm ngoái còn lại
         //được lấy dữ liệu từ database
-        int remainingAbsenceDays = employee.getRemainingAbsenceDays();
+        double remainingAbsenceDays = employee.getRemainingAbsenceDays();
+
+        //có 2 đoạn thoi gian de tinh so ngay nghi con lai cua nam ngoai:
+        //1/1-31/6
+        //1/7-31/12 ->bo het so ngay nghi con lai
 
         //số ngày phép đã nghĩ (theo đăng ký)
         // số ngày này có thể vượt mức ngày phép cho phép hằng năm
@@ -253,16 +306,16 @@ public class AbsenceService {
         //1.find list absence with type:  annual_leave in year now
         listLeave = absenceRepository.listLeave(employee.getIdEmployee(), "annual_leave", yearNow);
         //so ngay nghi hop le(da tru thu 7, cn,le, bu le)
-        int annualLeave = checkAbsenceDayInvalid(listLeave);
+        double annualLeave = checkAbsenceDayInvalid(listLeave);
 
         //số ngày nghỉ không trả lương
         //2.find list absence with type:  unpaid_leave in year now
         listLeave = absenceRepository.listLeave(employee.getIdEmployee(), "unpaid_leave", yearNow);
-        int unpaidLeave = checkAbsenceDayInvalid(listLeave);
+        double unpaidLeave = checkAbsenceDayInvalid(listLeave);
 
         //nghi thai san
         listLeave = absenceRepository.listLeave(employee.getIdEmployee(), "maternity_leave", yearNow);
-        int maternityLeave = 0;
+        double maternityLeave = 0;
         for (Absence obj : listLeave) {
             try {
                 maternityLeave += DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(obj.getFromDate()), new SimpleDateFormat("yyyy-MM-dd").parse(obj.getToDate()));
@@ -274,17 +327,17 @@ public class AbsenceService {
         //nghỉ cưới
         listLeave = absenceRepository.listLeave(employee.getIdEmployee(), "marriage_leave", yearNow);
         //so ngay nghi hop le(da tru thu 7, cn,le, bu le)
-        int marriageLeave = checkAbsenceDayInvalid(listLeave);
+        double marriageLeave = checkAbsenceDayInvalid(listLeave);
 
         //nghỉ tang
         listLeave = absenceRepository.listLeave(employee.getIdEmployee(), "bereavement_leave", yearNow);
         //so ngay nghi hop le(da tru thu 7, cn,le, bu le)
-        int bereavementLeave = checkAbsenceDayInvalid(listLeave);
+        double bereavementLeave = checkAbsenceDayInvalid(listLeave);
 
         //nghỉ dau om
         listLeave = absenceRepository.listLeave(employee.getIdEmployee(), "sick_leave", yearNow);
         //so ngay nghi hop le(da tru thu 7, cn,le, bu le)
-        int sickLeave = checkAbsenceDayInvalid(listLeave);
+        double sickLeave = checkAbsenceDayInvalid(listLeave);
 
         //tinh số ngày nghỉ duoc phep hang nam
         String strStartWorkDate = employee.getStartWorkDate();
@@ -295,17 +348,13 @@ public class AbsenceService {
             throw new CustomException("Error server", 500);
         }
 
-        Calendar calendarNow = Calendar.getInstance();
-        Calendar calendarWork = Calendar.getInstance();
-        calendarNow.setTime(now);
-        calendarWork.setTime(startWorkDate);
 
         //so nam da lam viec cua nhan vien
-        int timeWork = calendarNow.get(Calendar.YEAR) - calendarWork.get(Calendar.YEAR);
+        int timeWork = Integer.parseInt(new SimpleDateFormat("yyyy").format(now.getYear())) - Integer.parseInt(new SimpleDateFormat("yyyy").format(startWorkDate.getYear()));
 
         switch (timeWork) {
             case 0:
-                allowAbsence = 12 - calendarWork.get(Calendar.MONTH);
+                allowAbsence = 12 - Integer.parseInt(new SimpleDateFormat("MM").format(startWorkDate.getMonth()));
                 break;
             case 1:
             case 2:
@@ -325,10 +374,28 @@ public class AbsenceService {
                 break;
             default:
                 allowAbsence = 16 + remainingAbsenceDays;
-
         }
+
         if (annualLeave > allowAbsence) {
             unpaidLeave = unpaidLeave + annualLeave - allowAbsence;
+        }
+
+        //neu thoi gian hien tai sau  sau ngày 31/6
+        String strDateChangeRemain = yearNow+"-06-31";
+        Date dateChangeRemain;
+        try {
+            dateChangeRemain = new SimpleDateFormat("yyyy-MM-dd").parse(strDateChangeRemain);
+        } catch (ParseException e) {
+            throw new CustomException("Error server", 500);
+        }
+        if(now.after(dateChangeRemain)){
+            //so ngay nghi con lai cua nam ngoai = 0
+            remainingAbsenceDays = 0;
+
+            //tinh so ngay nghi tu 1/1 - >31
+            //chua tinh truong hop dơn vang nghi duoc dang ky nghi from tháng 6 to tháng 7
+
+
         }
 
 
@@ -353,7 +420,7 @@ public class AbsenceService {
             String startDateProject;
             String endDateProject;
             startDateProject = project.getStartDate() != null ? project.getStartDate() : strNow;
-            endDateProject = project.getEstimateEndDate() != null ? project.getEstimateEndDate() : strNow;
+            endDateProject = strNow;
             //get list absence of a member
             for (Employee objEmp : listMember) {
                 //get list absence of objEmp
@@ -463,9 +530,9 @@ public class AbsenceService {
     }
 
     //kiem tra xem so ngay nghi hop le(tru di ngay le, ngay thu 7, cn, nghi bu)
-    public int checkAbsenceDayInvalid(ArrayList<Absence> listLeave) {
-        int leave = 0;
-        long tmp = 0;
+    public double checkAbsenceDayInvalid(ArrayList<Absence> listLeave) {
+        double leave = 0;
+        double tmp = 0;
         int countWeekend = 0;
         int countHolidayDefault = 0;
         int countHoliday = 0;
@@ -522,11 +589,12 @@ public class AbsenceService {
 
     public void sendEmail(String to, String subject, String content){
         MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper sendEmail = new MimeMessageHelper(message);
+        MimeMessageHelper sendEmail = null;
         try {
+            sendEmail = new MimeMessageHelper(message, true);
             sendEmail.setTo(to);
             sendEmail.setSubject(subject);
-            sendEmail.setText(content);
+            sendEmail.setText(content, true);
         } catch (MessagingException e) {
             throw new CustomException("Error server!",500);
         }
