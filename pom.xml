@@ -9,6 +9,7 @@
     <packaging>jar</packaging>
     <!--<packaging>war</packaging>-->
 
+
     <name>api_nals_hrm</name>
     <description>API NALs HRM</description>
 
@@ -101,7 +102,6 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>
