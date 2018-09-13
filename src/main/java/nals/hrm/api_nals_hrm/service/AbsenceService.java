@@ -387,14 +387,14 @@ public class AbsenceService {
             default:
                 allowAbsence = 16 + remainingAbsenceDays;
         }
-        //neu time now > 31/6
+        //neu time now > 30/6
         if (now.after(dateChangeRemain)) {
             //find id of type absence = "annual_leave"
             int idTypeAbsence = absenceTypeRepository.findByNameAbsenceType("annual_leave").getIdAbsenceType();
 
             //so ngay nghi con lai cua nam ngoai = 0
             remainingAbsenceDays = 0;
-            //tinh so ngay nghi phep hang nam tu 1/1 - >31/6
+            //tinh so ngay nghi phep hang nam tu 1/1 - >30/6
             //chua tinh truong hop dơn vang nghi duoc dang ky nghi from tháng 6 to tháng 7
             ArrayList<Absence> listAbsenceFromToTypeAnnualLeave = absenceRepository.findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(employee.getIdEmployee(), 0, idTypeAbsence, yearNow + "-01-01", yearNow + "-06-31");
             //so ngay nghi phep hang nam truoc 1/7
@@ -404,20 +404,24 @@ public class AbsenceService {
             //nghĩa là số ngày đăng ký nghỉ phép hằng năm được trừ từ ngày nghỉ còn lại của năm ngoái
             if (employee.getRemainingAbsenceDays() >= numberAbsenceAnnualLeaveBeforeMonth7) {
                 //neu so ngay nghi truoc 1/7 nho hon so ngay con lai cua nam ngoái
-                //so ngay nghi phep sau thang 7;
+               //chua su dung het ngay remain
                 if (after7 > allowAbsence) {
                     unpaidLeave = unpaidLeave + after7 - allowAbsence;
-                }else{
+                    annualLeave = allowAbsence + employee.getRemainingAbsenceDays() - numberAbsenceAnnualLeaveBeforeMonth7;
+                } else {
                     totalRemain = allowAbsence - annualLeave;
+
                 }
 
             } else {
                 //neu so ngay nghi phép hang nam truoc thang 7 vượt qua so ngay remain
+                // da su dụng het ngay remain
                 //tinh so ngay vượt mức
                 double annualTmp = numberAbsenceAnnualLeaveBeforeMonth7 - employee.getRemainingAbsenceDays();
                 if (after7 + annualTmp > allowAbsence) {
                     unpaidLeave = unpaidLeave + after7 + annualTmp - allowAbsence;
-                }else{
+                    annualLeave = allowAbsence + employee.getRemainingAbsenceDays();
+                } else {
                     totalRemain = allowAbsence - after7;
                 }
             }
@@ -428,9 +432,10 @@ public class AbsenceService {
             } else {
                 if (annualLeave > allowAbsence + employee.getRemainingAbsenceDays()) {
                     unpaidLeave = unpaidLeave + annualLeave - allowAbsence - employee.getRemainingAbsenceDays();
-                }else{
+                    annualLeave = allowAbsence + remainingAbsenceDays;
+                } else {
                     //
-                    totalRemain = allowAbsence +remainingAbsenceDays - annualLeave;
+                    totalRemain = allowAbsence + remainingAbsenceDays - annualLeave;
                 }
 
                 remainingAbsenceDays = 0;
@@ -533,12 +538,18 @@ public class AbsenceService {
         //ex: from: 29/12/2017 - to: 3/1/2018
         //chia làm 2 đơn để lưu
         int year = 0;
-        if (fromDate.getYear() != toDate.getYear()) {
+        year = Integer.parseInt(new SimpleDateFormat("yyyy").format(fromDate));
+        absence.setFromDate(absence.getFromDate());
+        if (fromDate.getYear() != toDate.getYear() || Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) == 6 && toDate.getMonth() == 6) {
             //chia làm 2 đơn để save vào database
-            //đơn thứ nhất từ fromDate - 31/12/fromYear
-            absence.setFromDate(absence.getFromDate());
-            year = Integer.parseInt(new SimpleDateFormat("yyyy").format(fromDate));
-            absence.setToDate(year + "-12-31");
+            if(Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) == 6 && toDate.getMonth() == 6){
+               //đơn từ from - year-06-31
+                absence.setToDate(year + "-06-30");
+            }else{
+                //đơn thứ nhất từ fromDate - 31/12/fromYear
+                absence.setToDate(year + "-12-31");
+            }
+
             absenceRepository.save(absence);
 
             //creat absence for form 2
@@ -552,9 +563,16 @@ public class AbsenceService {
             absenceForm2.setAbsenceTypeId(absence.getAbsenceTypeId());
 
 
-            //đơn thứ 2 từ 1/1/toYear - toDate
             year = Integer.parseInt(new SimpleDateFormat("yyyy").format(toDate));
-            absenceForm2.setFromDate(year + "-01-01");
+            //đơn thứ 2 từ 1/1/toYear - toDate
+            if(Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) == 6 && toDate.getMonth() == 6){
+                //đơn từ from - year-06-31
+                absenceForm2.setFromDate(year + "-07-01");
+            }else{
+                //đơn thứ nhất từ fromDate - 31/12/fromYear
+                absenceForm2.setFromDate(year + "-01-01");
+            }
+
             absenceForm2.setToDate(new SimpleDateFormat("yyyy-MM-dd").format(toDate));
             absenceRepository.save(absenceForm2);
 
