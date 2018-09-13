@@ -6,8 +6,8 @@
     <groupId>nals.hrm</groupId>
     <artifactId>api_nals_hrm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <!--<packaging>war</packaging>-->
+    <!--<packaging>jar</packaging>-->
+    <packaging>war</packaging>
 
 
     <name>api_nals_hrm</name>

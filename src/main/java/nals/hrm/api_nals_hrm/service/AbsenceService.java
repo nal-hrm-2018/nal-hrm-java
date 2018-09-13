@@ -444,7 +444,7 @@ public class AbsenceService {
 
 
         int total = absenceRepository.findByEmployeeIdAndDeleteFlag(employee.getIdEmployee(), 0).size();
-        return new ListAbsenceDTO(allowAbsence, remainingAbsenceDays, totalRemain, annualLeave, unpaidLeave, maternityLeave, marriageLeave, bereavementLeave, sickLeave, new ListDTO(total, result));
+        return new ListAbsenceDTO(allowAbsence, remainingAbsenceDays, totalRemain, annualLeave, unpaidLeave, marriageLeave,  bereavementLeave, maternityLeave,  sickLeave, new ListDTO(total, result));
     }
 
     public ListDTO findAbsenceProjectProcessesManageRolePO(String id) {
