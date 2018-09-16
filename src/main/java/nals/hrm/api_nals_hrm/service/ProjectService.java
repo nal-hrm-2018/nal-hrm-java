@@ -78,7 +78,7 @@ public class ProjectService {
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
 
         //find employee by token
-        Employee employee = employeeRepository.findByEmailAndDeleteFlag(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0);
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
 
         //get list project(in processes) manage role PO
         //project not end

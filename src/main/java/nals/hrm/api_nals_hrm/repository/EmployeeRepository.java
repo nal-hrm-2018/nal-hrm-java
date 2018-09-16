@@ -30,5 +30,7 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
             "AND processes.check_project_exit = 1 AND processes.delete_flag = 0 AND employees.delete_flag = 0", nativeQuery = true)
     List<Employee> findAllNotExit(String id);
 
-    Employee findByEmailAndDeleteFlag(String username, int deleteFlag);
+    //all employee or vendor can login
+    //if workStatus = 0
+    Employee findByEmailAndDeleteFlagAndWorkStatus(String username, int deleteFlag, int workStatus);
 }

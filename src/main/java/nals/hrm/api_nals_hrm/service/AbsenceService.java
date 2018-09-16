@@ -70,7 +70,7 @@ public class AbsenceService {
     public ListAbsenceDTO getListAbsenceEmployeeByToken(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
 
         //find employee by token
-        Employee employee = employeeRepository.findByEmailAndDeleteFlag(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0);
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0,0);
 
         return getListAbsenceEmployeeByIdEmployee(employee.getIdEmployee(), page, pageSize);
     }
@@ -98,7 +98,7 @@ public class AbsenceService {
 
                 //find employee submit form absence
                 //find by token login
-                Employee employee = employeeRepository.findByEmailAndDeleteFlag(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0);
+                Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0,0);
 
                 //check form duplicate
 
