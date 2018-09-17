@@ -594,7 +594,7 @@ public class AbsenceService {
         int year = 0;
         year = Integer.parseInt(new SimpleDateFormat("yyyy").format(fromDate));
         absence.setFromDate(absence.getFromDate());
-        if (fromDate.getYear() != toDate.getYear() || (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) == 6 && Integer.parseInt(new SimpleDateFormat("MM").format(toDate))  == 7)) {
+        if (fromDate.getYear() != toDate.getYear() || (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= 6 && Integer.parseInt(new SimpleDateFormat("MM").format(toDate))  >= 7)) {
             //chia làm 2 đơn để save vào database
             if (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= 6 && Integer.parseInt(new SimpleDateFormat("MM").format(toDate))  >= 7) {
                 //đơn từ from - year-06-30
@@ -619,7 +619,7 @@ public class AbsenceService {
 
             year = Integer.parseInt(new SimpleDateFormat("yyyy").format(toDate));
             //đơn thứ 2 từ 1/1/toYear - toDate
-            if (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) == 6 && Integer.parseInt(new SimpleDateFormat("MM").format(toDate))  == 7) {
+            if (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= 6 && Integer.parseInt(new SimpleDateFormat("MM").format(toDate))  >= 7) {
                 //đơn từ from - year-06-31
                 absenceForm2.setFromDate(year + "-07-01");
             } else {
