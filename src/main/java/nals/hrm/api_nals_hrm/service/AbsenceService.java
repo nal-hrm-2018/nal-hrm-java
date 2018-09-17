@@ -79,12 +79,12 @@ public class AbsenceService {
         Date fromDate;
         Date toDate;
 
-        Date fromDateAbsence;
-        Date toDateAbsence;
+//        Date fromDateAbsence;
+//        Date toDateAbsence;
 
         Date now = new Date();
-        //this email defaut of CEO
-        String email = "nguyenthithanhtuyenpct122@gmail.com";
+        //this email default of CEO
+        String email = "nals_pmo@nal.com";
         String subject = "Đơn xin nghỉ phép";
         String content = "";
 
@@ -104,7 +104,7 @@ public class AbsenceService {
 
                 List<Absence> absenceDuplicate = absenceRepository.findAbsenceByDate(employee.getIdEmployee(),absence.getFromDate(),absence.getToDate());
                 if(absenceDuplicate.size() > 0){
-                    throw new CustomException("Duplicate form",400);
+                    throw new CustomException("Duplicate form", 400);
                 }
                 AbsenceType absenceType = absenceTypeRepository.findByIdAbsenceType(absence.getAbsenceTypeId());
                 String absenceNameType = "Nghỉ ốm";
@@ -335,7 +335,7 @@ public class AbsenceService {
         //so ngay nghi hop le(da tru thu 7, cn,le, bu le)
         double annualLeave = checkAbsenceDayInvalid(listLeave);
 
-        //neu thoi gian hien tai sau  sau ngày 31/6
+        //neu thoi gian hien tai sau  sau ngày 30/6
         String strDateChangeRemain = yearNow + "-06-30";
         Date dateChangeRemain;
         try {
