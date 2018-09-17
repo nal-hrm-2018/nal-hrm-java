@@ -1,6 +1,7 @@
 package nals.hrm.api_nals_hrm.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -81,7 +82,7 @@ public class Employee implements Serializable {
 
     @JsonIgnore
     @Column(name = "work_status")
-    private boolean workStatus;
+    private int workStatus;
 
     @JsonIgnore
     @Column(name = "updated_at")
@@ -115,7 +116,7 @@ public class Employee implements Serializable {
     private List<Permission> permissions;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_type_id", insertable = false, updatable = false)
     private EmployeeType employeeType;
 
@@ -133,15 +134,14 @@ public class Employee implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "project_id"))
     private List<Project> projects;
 
-//    @JsonIgnore
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "role_id", insertable = false, updatable = false)
-//    private Role role;
+    @JsonIgnore
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    private Role role;
 
     public Employee() {
     }
-
-
 
     public int getIdEmployee() {
         return idEmployee;
@@ -288,11 +288,11 @@ public class Employee implements Serializable {
         this.isManager = isManager;
     }
 
-    public boolean isWorkStatus() {
+    public int isWorkStatus() {
         return workStatus;
     }
 
-    public void setWorkStatus(boolean workStatus) {
+    public void setWorkStatus(int workStatus) {
         this.workStatus = workStatus;
     }
 
@@ -391,5 +391,50 @@ public class Employee implements Serializable {
 
     public void setRemainingAbsenceDays(int remainingAbsenceDays) {
         this.remainingAbsenceDays = remainingAbsenceDays;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "idEmployee=" + idEmployee +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nameEmployee='" + nameEmployee + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", gender=" + gender +
+                ", mobile='" + mobile + '\'' +
+                ", address='" + address + '\'' +
+                ", maritalStatus=" + maritalStatus +
+                ", startWorkDate='" + startWorkDate + '\'' +
+                ", endWorkDate='" + endWorkDate + '\'' +
+                ", curriculum_vitae='" + curriculum_vitae + '\'' +
+                ", isEmployee=" + isEmployee +
+                ", company='" + company + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", employeeTypeId=" + employeeTypeId +
+                ", idRole=" + idRole +
+                ", isManager=" + isManager +
+                ", salaryId=" + salaryId +
+                ", workStatus=" + workStatus +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", updatedByEmployee=" + updatedByEmployee +
+                ", createdAt='" + createdAt + '\'' +
+                ", createdByEmployee=" + createdByEmployee +
+                ", deleteFlag=" + deleteFlag +
+                ", remainingAbsenceDays=" + remainingAbsenceDays +
+                ", permissions=" + permissions +
+                ", employeeType=" + employeeType +
+                ", teams=" + teams +
+                ", projects=" + projects +
+                ", role=" + role +
+                '}';
     }
 }

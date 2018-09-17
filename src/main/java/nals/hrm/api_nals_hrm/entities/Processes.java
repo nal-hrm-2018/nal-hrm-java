@@ -15,7 +15,7 @@ public class Processes implements Serializable {
     private int idProcesses;
 
     @Column(name = "employee_id")
-    int employeeId;
+    private int employeeId;
 
     @Column(name = "project_id")
     private String projectId;
@@ -24,10 +24,10 @@ public class Processes implements Serializable {
     private int roleId;
 
     @Column(name = "check_project_exit")
-    Integer checkProjectExit;
+    private Integer checkProjectExit;
 
     @Column(name = "man_power")
-    private double man_power;
+    private Double man_power = 0.0;
 
     @Column(name = "start_date")
     private String startDate;
@@ -57,30 +57,7 @@ public class Processes implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "role_id", insertable = false, updatable = false)
-    Role role;
-
-    public Processes() {
-    }
-
-    public Processes(int idProcesses, int employeeId, String projectId, int roleId, Integer checkProjectExit,
-                     double man_power, String startDate, String endDate, String updatedAt,
-                     int updatedByEmployee, String createdAt,
-                     int createdByEmployee, int deleteFlag, Role role) {
-        this.idProcesses = idProcesses;
-        this.employeeId = employeeId;
-        this.projectId = projectId;
-        this.roleId = roleId;
-        this.checkProjectExit = checkProjectExit;
-        this.man_power = man_power;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.updatedAt = updatedAt;
-        this.updatedByEmployee = updatedByEmployee;
-        this.createdAt = createdAt;
-        this.createdByEmployee = createdByEmployee;
-        this.deleteFlag = deleteFlag;
-        this.role = role;
-    }
+    private Role role;
 
     public int getIdProcesses() {
         return idProcesses;
@@ -122,11 +99,11 @@ public class Processes implements Serializable {
         this.checkProjectExit = checkProjectExit;
     }
 
-    public double getMan_power() {
+    public Double getMan_power() {
         return man_power;
     }
 
-    public void setMan_power(double man_power) {
+    public void setMan_power(Double man_power) {
         this.man_power = man_power;
     }
 
@@ -192,5 +169,25 @@ public class Processes implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "Processes{" +
+                "idProcesses=" + idProcesses +
+                ", employeeId=" + employeeId +
+                ", projectId='" + projectId + '\'' +
+                ", roleId=" + roleId +
+                ", checkProjectExit=" + checkProjectExit +
+                ", man_power=" + man_power +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", updatedByEmployee=" + updatedByEmployee +
+                ", createdAt='" + createdAt + '\'' +
+                ", createdByEmployee=" + createdByEmployee +
+                ", deleteFlag=" + deleteFlag +
+                ", role=" + role +
+                '}';
     }
 }

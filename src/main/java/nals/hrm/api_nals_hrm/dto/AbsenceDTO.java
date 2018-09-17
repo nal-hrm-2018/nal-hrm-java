@@ -1,91 +1,119 @@
 package nals.hrm.api_nals_hrm.dto;
 
-public class AbsenceDTO {
 
-    private int allowAbsence; //number annualLeave allow
-    private int remainingAbsenceDays;//số ngày phép năm ngoái còn lại
-    private int annualLeave;
-    private int unpaidLeave; //số ngày nghỉ không trả lương
-    private int marriageLeave; //nghỉ cưới
-    private int bereavementLeave; //nghỉ tang
-    private int maternityLeave;//nghỉ thai sản
+import nals.hrm.api_nals_hrm.entities.AbsenceTime;
+import nals.hrm.api_nals_hrm.entities.AbsenceType;
 
-    ListDTO listAbsence;
+public class AbsenceDTO{
+    private int idAbsences;
+    private int idEmployee;
+    private String nameEmployee;
+    private String idProject;
+    private String nameProject;
+    private String fromDate;
+    private String toDate;
+    private String reason;
+    private String description;
+    private String createdAt;
+    private AbsenceType absenceType;
+    private AbsenceTime absenceTime;
 
-    public AbsenceDTO(int allowAbsence, int remainingAbsenceDays, int absence, int unpaidLeave,
-                      int marriageLeave, int bereavementLeave,
-                      int maternityLeave, ListDTO listAbsence) {
-        this.allowAbsence = allowAbsence;
-        this.remainingAbsenceDays = remainingAbsenceDays;
-        this.annualLeave = absence;
-        this.unpaidLeave = unpaidLeave;
-        this.marriageLeave = marriageLeave;
-        this.bereavementLeave = bereavementLeave;
-        this.maternityLeave = maternityLeave;
-        this.listAbsence = listAbsence;
+    public AbsenceDTO() {
     }
 
-    public int getAllowAbsence() {
-        return allowAbsence;
+    public int getIdEmployee() {
+        return idEmployee;
     }
 
-    public void setAllowAbsence(int allowAbsence) {
-        this.allowAbsence = allowAbsence;
+    public void setIdEmployee(int idEmployee) {
+        this.idEmployee = idEmployee;
     }
 
-    public int getRemainingAbsenceDays() {
-        return remainingAbsenceDays;
+    public String getNameEmployee() {
+        return nameEmployee;
     }
 
-    public void setRemainingAbsenceDays(int remainingAbsenceDays) {
-        this.remainingAbsenceDays = remainingAbsenceDays;
+    public void setNameEmployee(String nameEmployee) {
+        this.nameEmployee = nameEmployee;
     }
 
-    public int getAnnualLeave() {
-        return annualLeave;
+    public String getNameProject() {
+        return nameProject;
     }
 
-    public void setAnnualLeave(int annualLeave) {
-        this.annualLeave = annualLeave;
+    public void setNameProject(String nameProject) {
+        this.nameProject = nameProject;
     }
 
-    public int getUnpaidLeave() {
-        return unpaidLeave;
+    public int getIdAbsences() {
+        return idAbsences;
     }
 
-    public void setUnpaidLeave(int unpaidLeave) {
-        this.unpaidLeave = unpaidLeave;
+    public void setIdAbsences(int idAbsences) {
+        this.idAbsences = idAbsences;
     }
 
-    public int getMarriageLeave() {
-        return marriageLeave;
+    public String getFromDate() {
+        return fromDate;
     }
 
-    public void setMarriageLeave(int marriageLeave) {
-        this.marriageLeave = marriageLeave;
+    public void setFromDate(String fromDate) {
+        this.fromDate = fromDate;
     }
 
-    public int getBereavementLeave() {
-        return bereavementLeave;
+    public String getToDate() {
+        return toDate;
     }
 
-    public void setBereavementLeave(int bereavementLeave) {
-        this.bereavementLeave = bereavementLeave;
+    public void setToDate(String toDate) {
+        this.toDate = toDate;
     }
 
-    public int getMaternityLeave() {
-        return maternityLeave;
+    public String getReason() {
+        return reason;
     }
 
-    public void setMaternityLeave(int maternityLeave) {
-        this.maternityLeave = maternityLeave;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
-    public ListDTO getListAbsence() {
-        return listAbsence;
+    public String getDescription() {
+        return description;
     }
 
-    public void setListAbsence(ListDTO listAbsence) {
-        this.listAbsence = listAbsence;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public AbsenceType getAbsenceType() {
+        return absenceType;
+    }
+
+    public void setAbsenceType(AbsenceType absenceType) {
+        this.absenceType = absenceType;
+    }
+
+    public AbsenceTime getAbsenceTime() {
+        return absenceTime;
+    }
+
+    public void setAbsenceTime(AbsenceTime absenceTime) {
+        this.absenceTime = absenceTime;
+    }
+
+    public String getIdProject() {
+        return idProject;
+    }
+
+    public void setIdProject(String idProject) {
+        this.idProject = idProject;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

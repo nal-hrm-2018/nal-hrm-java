@@ -4,20 +4,23 @@ package nals.hrm.api_nals_hrm.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "absences")
-public class Absence {
+public class Absence implements Serializable {
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="seq",sequenceName="oracle_seq")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private int idAbsences;
 
     @Column(name = "employee_id")
     private int employeeId;
 
-    @JsonIgnore
+    //    @JsonIgnore
     @Column(name = "absence_type_id")
     private int absenceTypeId;
 
@@ -37,10 +40,17 @@ public class Absence {
     @Column(name = "delete_flag")
     private int deleteFlag;
 
-    @JsonIgnore
+    //    @JsonIgnore
     @Column(name = "absence_time_id")
     private int absenceTimeId;
 
+//    @JsonIgnore
+    @Column(name = "created_at")
+    private String createdAt;
+
+    @JsonIgnore
+    @Column(name = "updated_at")
+    private String updateAt;
 
     @ManyToOne
     @JoinColumn(name = "absence_type_id", insertable = false, updatable = false)
@@ -50,19 +60,32 @@ public class Absence {
     @JoinColumn(name = "absence_time_id", insertable = false, updatable = false)
     private AbsenceTime absenceTime;
 
+
+
+
     public Absence() {
     }
 
-    public Absence(int idAbsences, int employeeId, int absenceTypeId, String fromDate, String toDate, String reason,
-                   String description, int deleteFlag) {
+    public Absence(int idAbsences, String fromDate, String toDate, String reason,
+                   String description,AbsenceType absenceType, AbsenceTime absenceTime) {
         this.idAbsences = idAbsences;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.reason = reason;
+        this.description = description;
+        this.absenceType = absenceType;
+        this.absenceTime = absenceTime;
+    }
+
+    public Absence(int employeeId, int absenceTypeId, String fromDate, String toDate, String reason,
+                   String description,int absenceTimeId) {
         this.employeeId = employeeId;
         this.absenceTypeId = absenceTypeId;
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.reason = reason;
         this.description = description;
-        this.deleteFlag = deleteFlag;
+        this.absenceTimeId = absenceTimeId;
     }
 
     public int getIdAbsences() {
@@ -151,5 +174,34 @@ public class Absence {
 
     public void setAbsenceTimeId(int absenceTimeId) {
         this.absenceTimeId = absenceTimeId;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(String updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Absence{" +
+                "employeeId=" + employeeId +
+                ", absenceTypeId=" + absenceTypeId +
+                ", fromDate='" + fromDate + '\'' +
+                ", toDate='" + toDate + '\'' +
+                ", reason='" + reason + '\'' +
+                ", description='" + description + '\'' +
+                ", absenceTimeId=" + absenceTimeId +
+                '}';
     }
 }

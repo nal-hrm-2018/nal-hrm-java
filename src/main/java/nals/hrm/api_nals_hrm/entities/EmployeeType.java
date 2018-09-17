@@ -107,4 +107,6 @@ public class EmployeeType implements Serializable {
                 ", deleteFlagEmployeeType=" + deleteFlagEmployeeType +
                 '}';
     }
+
+
 }

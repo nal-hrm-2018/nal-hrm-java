@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
@@ -15,10 +16,10 @@ import java.util.TimeZone;
         ApiNalsHrmApplication.class,
         Jsr310JpaConverters.class
 })
-public class ApiNalsHrmApplication {
+public class ApiNalsHrmApplication extends SpringBootServletInitializer {
     @PostConstruct
     void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(TimeZone.getTimeZone("ICT"));
     }
 
     @Bean

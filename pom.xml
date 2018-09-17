@@ -6,7 +6,9 @@
     <groupId>nals.hrm</groupId>
     <artifactId>api_nals_hrm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <!--<packaging>jar</packaging>-->
+    <packaging>war</packaging>
+
 
     <name>api_nals_hrm</name>
     <description>API NALs HRM</description>
@@ -89,6 +91,17 @@
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -133,47 +146,9 @@
                 <db.connectionURL>
                     jdbc:mysql://localhost:3306/nal_hrm?autoReconnect=true&amp;useSSL=false&amp;useUnicode=yes&amp;characterEncoding=UTF-8
                 </db.connectionURL>
-                <db.username>nalstest_user</db.username>
-                <db.password>nalstest_password</db.password>
+                <db.username>root</db.username>
+                <db.password>root</db.password>
             </properties>
-        </profile>
-        <profile>
-            <id>staging</id>
-            <!--<properties>-->
-                <!--<db.connectionURL>-->
-                    <!--jdbc:mysql://eu-cdbr-west-02.cleardb.net:3306/heroku_7eec86fe3e615e4?autoReconnect=true&amp;useSSL=false&amp;useUnicode=yes&amp;characterEncoding=UTF-8-->
-                <!--</db.connectionURL>-->
-                <!--<db.username>b9c7e30cbea604</db.username>-->
-                <!--<db.password>d4223919</db.password>-->
-            <!--</properties>-->
-
-            <properties>
-                <db.connectionURL>
-                    jdbc:mysql://nalstest.cojf3ywjf3so.us-east-2.rds.amazonaws.com:3306/nal_hrm?autoReconnect=true&amp;useSSL=false&amp;useUnicode=yes&amp;characterEncoding=UTF-8
-                </db.connectionURL>
-                <db.username>nalstest_user</db.username>
-                <db.password>nalstest_password</db.password>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.heroku.sdk</groupId>
-                        <artifactId>heroku-maven-plugin</artifactId>
-                        <configuration>
-                            <appName>hrm-app-staging</appName>
-                            <includeTarget>false</includeTarget>
-                            <includes>
-                                <include>target/${project.build.finalName}.jar</include>
-                            </includes>
-                            <jdkVersion>${java.version}</jdkVersion>
-                            <processTypes>
-                                <web>java $JAVA_OPTS -jar target/${project.build.finalName}.jar
-                                </web>
-                            </processTypes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 </project>
