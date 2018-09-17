@@ -54,14 +54,14 @@ public class EmployeeService {
 
 
     public Employee findByEmail(String email) {
-        return employeeRepository.findByEmail(email);
+        return employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(email, 0, 0);
     }
 
 
     //get profile of user login by token
     public ProfileDTO getProfile(HttpServletRequest req) {
 
-        Employee employee = employeeRepository.findByEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0 , 0);
         ProfileDTO profileDTO = new ProfileDTO();
         profileDTO = modelMapper.map(employee, profileDTO.getClass());
 

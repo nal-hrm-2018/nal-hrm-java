@@ -58,11 +58,13 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
             "AND delete_flag = 0\n" +
             "AND ((to_date >= ?2 AND to_date <= ?3 ) OR (from_date >= ?2 AND from_date <= ?3))\n" +
             "ORDER BY updated_at DESC", nativeQuery = true)
-    List<Absence> findAbsenceInProject(int idEmployee, String startDateProject, String endDateProject);
+    List<Absence> findAbsenceByDate(int idEmployee, String startDateProject, String endDateProject);
 
     @Query(value = "SELECT * FROM absences INNER JOIN absence_types ON absences.absence_type_id = absence_types.id\n" +
             "WHERE absences.employee_id = ?1 AND absence_types.name = ?2 AND YEAR(absences.from_date) = ?3 AND absences.delete_flag = 0", nativeQuery = true)
     ArrayList<Absence> listLeave(int idEmployee, String typeLeave, int year);
 
     ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, int idTypeAbsence, String s, String s1);
+
+//    ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateNotLessThanEqualAndToDateNotGreaterThanEqual(int idEmployee, int i, int idTypeAbsence, String s, String s1);
 }

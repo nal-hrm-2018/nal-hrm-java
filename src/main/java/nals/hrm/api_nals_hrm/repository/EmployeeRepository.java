@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends PagingAndSortingRepository<Employee, Integer> {
-    Employee findByEmail(String email);
+//    Employee findByEmail(String email);
 
     List<Employee> findByIsEmployeeAndDeleteFlag(int isEmployee, int deleteFlag, Pageable pageable);
 
@@ -29,4 +29,8 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
             "WHERE processes.project_id = ?1 \n" +
             "AND processes.check_project_exit = 1 AND processes.delete_flag = 0 AND employees.delete_flag = 0", nativeQuery = true)
     List<Employee> findAllNotExit(String id);
+
+    //all employee or vendor can login
+    //if workStatus = 0
+    Employee findByEmailAndDeleteFlagAndWorkStatus(String username, int deleteFlag, int workStatus);
 }

@@ -82,7 +82,7 @@ public class Employee implements Serializable {
 
     @JsonIgnore
     @Column(name = "work_status")
-    private boolean workStatus;
+    private int workStatus;
 
     @JsonIgnore
     @Column(name = "updated_at")
@@ -288,11 +288,11 @@ public class Employee implements Serializable {
         this.isManager = isManager;
     }
 
-    public boolean isWorkStatus() {
+    public int isWorkStatus() {
         return workStatus;
     }
 
-    public void setWorkStatus(boolean workStatus) {
+    public void setWorkStatus(int workStatus) {
         this.workStatus = workStatus;
     }
 
