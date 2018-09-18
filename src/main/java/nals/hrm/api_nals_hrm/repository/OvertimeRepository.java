@@ -15,4 +15,8 @@ public interface OvertimeRepository extends PagingAndSortingRepository<OverTime,
     ArrayList<OverTime> findByEmployeeIdAndDeleteFlagOrderByUpdatedAtDesc(int idEmployee, int deleteFlag, Pageable pageable);
 
     ArrayList<OverTime> findByEmployeeIdAndDeleteFlag(int idEmployee, int i);
+
+    ArrayList<OverTime> findByDeleteFlagOrderByUpdatedAtDesc(int deleteFlag);
+
+    ArrayList<OverTime> findByDeleteFlagOrderByUpdatedAtDesc(int deleteFlag, Pageable pageable);
 }

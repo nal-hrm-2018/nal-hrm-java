@@ -526,7 +526,7 @@ public class AbsenceService {
             for (Employee objEmp : listMember) {
                 //get list absence of objEmp
                 //when project start to end
-                absenceList = absenceRepository.findAbsenceByDate(objEmp.getIdEmployee(), startDateProject, endDateProject);
+                absenceList = absenceRepository.findAbsenceProject(objEmp.getIdEmployee(), startDateProject, endDateProject);
                 for (Absence objAbs : absenceList) {
                     absenceDTO = modelMapper.map(objAbs, absenceDTO.getClass());
                     //find nameEmployee
@@ -535,7 +535,11 @@ public class AbsenceService {
                     absenceDTO.setIdEmployee(objEmp.getIdEmployee());
                     absenceDTO.setNameProject(project.getNameProject());
                     absenceDTO.setIdProject(project.getIdProject());
-                    absenceDTO.setNumberDayAbsence(dateValidate(objAbs));
+                    if(objAbs.getAbsenceType().getNameAbsenceType().equals("maternity_leave")){
+                        absenceDTO.setNumberDayAbsence(DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(objAbs.getFromDate()), new SimpleDateFormat("yyyy-MM-dd").parse(objAbs.getToDate())) + 1);
+                    }else{
+                        absenceDTO.setNumberDayAbsence(dateValidate(objAbs));
+                    }
                     listResult.add(absenceDTO);
                 }
 
@@ -574,11 +578,11 @@ public class AbsenceService {
 
     }
 
-    public void mapListAbsence(ArrayList<Absence> listAbsence, ArrayList<Object> listResult) {
+    private void mapListAbsence(ArrayList<Absence> listAbsence, ArrayList<Object> listResult) {
         String nameEmployee;
         Employee employee;
+        AbsenceDTO absenceDTO = new AbsenceDTO();
         for (Absence objAbsence : listAbsence) {
-            AbsenceDTO absenceDTO = new AbsenceDTO();
             absenceDTO = modelMapper.map(objAbsence, absenceDTO.getClass());
             //find nameEmployee
             //if name != null=> return name else return ""
@@ -586,14 +590,22 @@ public class AbsenceService {
             nameEmployee = employee != null ? employee.getNameEmployee() : "";
             absenceDTO.setIdEmployee(objAbsence.getEmployeeId());
             absenceDTO.setNameEmployee(nameEmployee);
-            absenceDTO.setNumberDayAbsence(dateValidate(objAbsence));
+            if(objAbsence.getAbsenceType().getNameAbsenceType().equals("maternity_leave")){
+                try {
+                    absenceDTO.setNumberDayAbsence(DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getFromDate()), new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getToDate())) + 1);
+                } catch (ParseException e) {
+                    throw new CustomException("Error server", 500);
+                }
+            }else{
+                absenceDTO.setNumberDayAbsence(dateValidate(objAbsence));
+            }
             listResult.add(absenceDTO);
 
         }
 
     }
 
-    public void handleAbsentDays(Absence absence, Date fromDate, Date toDate) {
+    private void handleAbsentDays(Absence absence, Date fromDate, Date toDate) {
         //kiem tra truong hop đơn xin nghĩ được submit trong khoảng thời gian giữa 2 năm
         //ex: from: 29/12/2017 - to: 3/1/2018
         //chia làm 2 đơn để lưu
@@ -647,7 +659,7 @@ public class AbsenceService {
     }
 
     //kiem tra xem so ngay nghi hop le(tru di ngay le, ngay thu 7, cn, nghi bu)
-    public double checkAbsenceDayInvalid(ArrayList<Absence> listLeave) {
+    private double checkAbsenceDayInvalid(ArrayList<Absence> listLeave) {
         double leave = 0;
         for (Absence objAbsence : listLeave) {
             leave += dateValidate(objAbsence);
@@ -655,12 +667,12 @@ public class AbsenceService {
         return leave;
     }
 
-    public double dateValidate(Absence objAbsence){
+    private double dateValidate(Absence objAbsence){
         double leave = 0;
-        double tmp = 0;
-        int countWeekend = 0;
-        int countHolidayDefault = 0;
-        int countHoliday = 0;
+        double tmp;
+        int countWeekend;
+        int countHolidayDefault;
+        int countHoliday;
         Date from;
         Date to;
         String strFrom;
@@ -710,7 +722,7 @@ public class AbsenceService {
         return leave;
     }
 
-    public void sendEmail(String to, String subject, String content) {
+    private void sendEmail(String to, String subject, String content) {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper sendEmail = null;
         try {

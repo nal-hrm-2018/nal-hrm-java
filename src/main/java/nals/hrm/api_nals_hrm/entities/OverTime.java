@@ -43,7 +43,7 @@ public class OverTime implements Serializable {
     private float totalTime;
 
     @Column(name = "correct_total_time")
-    private String correctTotalTime;
+    private Float correctTotalTime;
 
     @JsonIgnore
     @Column(name = "updated_at")
@@ -170,11 +170,11 @@ public class OverTime implements Serializable {
         this.totalTime = totalTime;
     }
 
-    public String getCorrectTotalTime() {
+    public Float getCorrectTotalTime() {
         return correctTotalTime;
     }
 
-    public void setCorrectTotalTime(String correctTotalTime) {
+    public void setCorrectTotalTime(Float correctTotalTime) {
         this.correctTotalTime = correctTotalTime;
     }
 

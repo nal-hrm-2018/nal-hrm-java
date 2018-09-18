@@ -22,7 +22,7 @@ public class OverTimeDTO {
 
     private float totalTime;
 
-    private String correctTotalTime;
+    private Float correctTotalTime;
 
     private String updatedAt;
 
@@ -84,11 +84,11 @@ public class OverTimeDTO {
         this.totalTime = totalTime;
     }
 
-    public String getCorrectTotalTime() {
+    public Float getCorrectTotalTime() {
         return correctTotalTime;
     }
 
-    public void setCorrectTotalTime(String correctTotalTime) {
+    public void setCorrectTotalTime(Float correctTotalTime) {
         this.correctTotalTime = correctTotalTime;
     }
 
