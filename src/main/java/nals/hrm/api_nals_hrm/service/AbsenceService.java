@@ -84,7 +84,7 @@ public class AbsenceService {
 
         Date now = new Date();
         //this email default of CEO
-        String email = "nals_pmo@nal.com";
+        String email = "nguyenthithanhtuyen.dr@gmail.com";
         String subject = "Đơn xin nghỉ phép";
         String content = "";
 
@@ -287,6 +287,7 @@ public class AbsenceService {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
         ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlagOrderByUpdateAtDesc(0, PageRequest.of(evalPage, evalPageSize));
+
         ArrayList<Object> listResult = new ArrayList<>();
         mapListAbsence(listAbsence, listResult);
         return new ListDTO(absenceRepository.findByDeleteFlag(0).size(), listResult);
@@ -297,6 +298,7 @@ public class AbsenceService {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
 
+        //find employee by id
         Employee employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(idEmployee, 1, 0);
 
         //find list absence employee not yet remove deleteFlag = 0
@@ -304,10 +306,9 @@ public class AbsenceService {
         //paging result
         ArrayList<Absence> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagOrderByUpdateAtDesc(employee.getIdEmployee(), 0, PageRequest.of(evalPage, evalPageSize));
 
-        //map Absence to Object
-        ArrayList<Object> result = new ArrayList<>();
 
-        result = modelMapper.map(absenceList, result.getClass());
+        ArrayList<Object> result = new ArrayList<>();
+        mapListAbsence(absenceList, result);
 
         Date now = new Date();
         int yearNow = Integer.parseInt(new SimpleDateFormat("yyyy").format(now));
@@ -387,7 +388,8 @@ public class AbsenceService {
 
 
         //so nam da lam viec cua nhan vien
-        int timeWork = Integer.parseInt(new SimpleDateFormat("yyyy").format(now)) - Integer.parseInt(new SimpleDateFormat("yyyy").format(startWorkDate));
+        int timeWork = Integer.parseInt(new SimpleDateFormat("yyyy").format(now)) -
+                Integer.parseInt(new SimpleDateFormat("yyyy").format(startWorkDate));
 
         switch (timeWork) {
             case 0:
@@ -498,7 +500,8 @@ public class AbsenceService {
 
 
         int total = absenceRepository.findByEmployeeIdAndDeleteFlag(employee.getIdEmployee(), 0).size();
-        return new ListAbsenceDTO(allowAbsence, remainingAbsenceDays, totalRemain, annualLeave, unpaidLeave, marriageLeave, bereavementLeave, maternityLeave, sickLeave, new ListDTO(total, result));
+        return new ListAbsenceDTO(allowAbsence, remainingAbsenceDays, totalRemain, annualLeave,
+                unpaidLeave, marriageLeave, bereavementLeave, maternityLeave, sickLeave, new ListDTO(total, result));
     }
 
     public ListDTO findAbsenceProjectProcessesManageRolePO(String id) {
@@ -532,8 +535,10 @@ public class AbsenceService {
                     absenceDTO.setIdEmployee(objEmp.getIdEmployee());
                     absenceDTO.setNameProject(project.getNameProject());
                     absenceDTO.setIdProject(project.getIdProject());
+                    absenceDTO.setNumberDayAbsence(dateValidate(objAbs));
                     listResult.add(absenceDTO);
                 }
+
             }
 
             return new ListDTO(listResult.size(), listResult);
@@ -581,6 +586,7 @@ public class AbsenceService {
             nameEmployee = employee != null ? employee.getNameEmployee() : "";
             absenceDTO.setIdEmployee(objAbsence.getEmployeeId());
             absenceDTO.setNameEmployee(nameEmployee);
+            absenceDTO.setNumberDayAbsence(dateValidate(objAbsence));
             listResult.add(absenceDTO);
 
         }
@@ -643,6 +649,14 @@ public class AbsenceService {
     //kiem tra xem so ngay nghi hop le(tru di ngay le, ngay thu 7, cn, nghi bu)
     public double checkAbsenceDayInvalid(ArrayList<Absence> listLeave) {
         double leave = 0;
+        for (Absence objAbsence : listLeave) {
+            leave += dateValidate(objAbsence);
+        }
+        return leave;
+    }
+
+    public double dateValidate(Absence objAbsence){
+        double leave = 0;
         double tmp = 0;
         int countWeekend = 0;
         int countHolidayDefault = 0;
@@ -650,50 +664,48 @@ public class AbsenceService {
         Date from;
         Date to;
         String strFrom;
-        for (Absence objAbsence : listLeave) {
-            try {
+        try {
 
-                from = new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getFromDate());
-                to = new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getToDate());
-                countHoliday = 0;
-                countHolidayDefault = 0;
+            from = new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getFromDate());
+            to = new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getToDate());
+            countHoliday = 0;
+            countHolidayDefault = 0;
 
-                //đếm số ngày đăng ký nghỉ của mỗi đơn.
-                //chưa trừ thứ 7, cn và ngày lễ
-                tmp = DateDiff.dateDiff(from, to) + 1;
+            //đếm số ngày đăng ký nghỉ của mỗi đơn.
+            //chưa trừ thứ 7, cn và ngày lễ
+            tmp = DateDiff.dateDiff(from, to) + 1;
 
-                //đếm số thứ 7, chủ nhật trong khoảng thời gian nghỉ
-                countWeekend = CheckWeekend.countWeekend(from, to);
+            //đếm số thứ 7, chủ nhật trong khoảng thời gian nghỉ
+            countWeekend = CheckWeekend.countWeekend(from, to);
 
-                from = new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getFromDate());
-                to = new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getToDate());
+            from = new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getFromDate());
+            to = new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getToDate());
 
-                //danh sách ngày lễ default
-                while (from.compareTo(to) <= 0) {
-                    strFrom = new SimpleDateFormat("yyyy-MM-dd").format(from);
-                    //kiểm tra xem nếu không phải thứ 7 or chủ nhật thì mới kiểm tra ngày nghỉ đó có thuộc ngày lễ hay không
-                    //nếu là ngày lễ thì countHolidayDefault += 1
-                    if (CheckWeekend.checkDate(from) < 7 && holidayDefaultRepository.findByDateHolidayDefaultAndDeleteFlag(strFrom, 0) != null) {
-                        countHolidayDefault += 1;
-                    }
-                    //kiem tra xe ngay nghi do co thuoc ngay nghi bu nao khong
-                    //neu có thì countHoliday += 1
-                    if (holidayRepository.findByDateHolidayAndDeleteFlag(strFrom, 0) != null) {
-                        countHoliday += 1;
-                    }
-                    from.setDate(from.getDate() + 1);
+            //danh sách ngày lễ default
+            while (from.compareTo(to) <= 0) {
+                strFrom = new SimpleDateFormat("yyyy-MM-dd").format(from);
+                //kiểm tra xem nếu không phải thứ 7 or chủ nhật thì mới kiểm tra ngày nghỉ đó có thuộc ngày lễ hay không
+                //nếu là ngày lễ thì countHolidayDefault += 1
+                if (CheckWeekend.checkDate(from) < 7 && holidayDefaultRepository.findByDateHolidayDefaultAndDeleteFlag(strFrom, 0) != null) {
+                    countHolidayDefault += 1;
                 }
-
-                tmp = tmp - countWeekend - countHolidayDefault - countHoliday;
-                if (objAbsence.getAbsenceTime().getNameAbsenceTime().equals("all")) {
-                    leave += tmp;
-                } else {
-                    leave += (tmp / 2);
+                //kiem tra xe ngay nghi do co thuoc ngay nghi bu nao khong
+                //neu có thì countHoliday += 1
+                if (holidayRepository.findByDateHolidayAndDeleteFlag(strFrom, 0) != null) {
+                    countHoliday += 1;
                 }
-
-            } catch (ParseException e) {
-                throw new CustomException("Error server", 500);
+                from.setDate(from.getDate() + 1);
             }
+
+            tmp = tmp - countWeekend - countHolidayDefault - countHoliday;
+            if (objAbsence.getAbsenceTime().getNameAbsenceTime().equals("all")) {
+                leave += tmp;
+            } else {
+                leave += (tmp / 2);
+            }
+
+        } catch (ParseException e) {
+            throw new CustomException("Error server", 500);
         }
         return leave;
     }

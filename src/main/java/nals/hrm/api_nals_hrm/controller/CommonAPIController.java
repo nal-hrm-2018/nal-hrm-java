@@ -2,6 +2,7 @@ package nals.hrm.api_nals_hrm.controller;
 
 
 import nals.hrm.api_nals_hrm.dto.APIResponseDTO;
+import nals.hrm.api_nals_hrm.entities.OvertimeTypes;
 import nals.hrm.api_nals_hrm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,12 @@ public class CommonAPIController {
     @Autowired
     AbsenceTypeService absenceTypeService;
 
+    @Autowired
+    OvertimeTypesService overtimeTypesService;
+
+    @Autowired
+    OvertimeStatusesService overtimeStatusesService;
+
     @RequestMapping( value = "/role",method = RequestMethod.GET )
     @PreAuthorize("hasAuthority('HR') or hasAuthority('PO')")
     public APIResponseDTO getRole() {
@@ -49,4 +56,15 @@ public class CommonAPIController {
     public APIResponseDTO getAbsenceType() {
         return new APIResponseDTO(200,"Success!",absenceTypeService.findAll());
     }
+
+    @RequestMapping( value = "/overtime/types",method = RequestMethod.GET )
+    public APIResponseDTO getOvertimeTypes() {
+        return new APIResponseDTO(200,"Success!",overtimeTypesService.findAll());
+    }
+
+    @RequestMapping( value = "/overtime/statuses",method = RequestMethod.GET )
+    public APIResponseDTO getOvertimeStatuses() {
+        return new APIResponseDTO(200,"Success!",overtimeStatusesService.findAll());
+    }
+
 }
