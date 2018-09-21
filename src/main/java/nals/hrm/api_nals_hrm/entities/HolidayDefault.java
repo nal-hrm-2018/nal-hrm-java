@@ -22,8 +22,8 @@ public class HolidayDefault implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "holiday_status_id")
-    private int holidayStatusId;
+    @Column(name = "day_type_id")
+    private int dayTypeId;
 
     @JsonIgnore
     @Column(name = "delete_flag")
@@ -31,8 +31,8 @@ public class HolidayDefault implements Serializable {
 
 //    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "holiday_status_id", insertable = false, updatable = false)
-    private HolidayStatus holidayStatus;
+    @JoinColumn(name = "day_type_id", insertable = false, updatable = false)
+    private DayTypes dateTypes;
 
     public int getIdHolidayDefault() {
         return idHolidayDefault;
@@ -66,12 +66,20 @@ public class HolidayDefault implements Serializable {
         this.description = description;
     }
 
-    public int getHolidayStatusId() {
-        return holidayStatusId;
+    public int getDayTypeId() {
+        return dayTypeId;
     }
 
-    public void setHolidayStatusId(int holidayStatusId) {
-        this.holidayStatusId = holidayStatusId;
+    public void setDayTypeId(int dayTypeId) {
+        this.dayTypeId = dayTypeId;
+    }
+
+    public DayTypes getDateTypes() {
+        return dateTypes;
+    }
+
+    public void setDateTypes(DayTypes dateTypes) {
+        this.dateTypes = dateTypes;
     }
 
     public int getDeleteFlag() {
@@ -82,11 +90,4 @@ public class HolidayDefault implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
-    public HolidayStatus getHolidayStatus() {
-        return holidayStatus;
-    }
-
-    public void setHolidayStatus(HolidayStatus holidayStatus) {
-        this.holidayStatus = holidayStatus;
-    }
 }

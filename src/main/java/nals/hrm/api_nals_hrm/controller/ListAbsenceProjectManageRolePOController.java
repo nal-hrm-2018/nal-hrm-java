@@ -27,8 +27,8 @@ public class ListAbsenceProjectManageRolePOController {
     AbsenceService absenceService;
 
     @RequestMapping( value = "/manage/absence/po/project",params = {"id" }, method = RequestMethod.GET )
-    public APIResponseDTO getListAbsenceProjectManageRolePO(@RequestParam("id")  String id) {
-        return new APIResponseDTO(200,"Success!",absenceService.findAbsenceProjectProcessesManageRolePO(id));
+    public APIResponseDTO getListAbsenceProjectManageRolePO(@RequestParam("id")  String id, HttpServletRequest req) {
+        return new APIResponseDTO(200,"Success!",absenceService.findAbsenceProjectProcessesManageRolePO(id, req));
     }
 
 }

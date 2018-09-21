@@ -27,7 +27,7 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 
     @Query(value = "SELECT * FROM employees  INNER JOIN processes ON processes.employee_id = employees.id\n" +
             "WHERE processes.project_id = ?1 \n" +
-            "AND processes.check_project_exit = 1 AND processes.delete_flag = 0 AND employees.delete_flag = 0", nativeQuery = true)
+            "AND processes.check_project_exit = 0 AND processes.delete_flag = 0 AND employees.delete_flag = 0", nativeQuery = true)
     List<Employee> findAllNotExit(String id);
 
     //all employee or vendor can login

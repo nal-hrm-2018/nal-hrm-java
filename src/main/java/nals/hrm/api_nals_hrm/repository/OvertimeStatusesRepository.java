@@ -1,6 +1,5 @@
 package nals.hrm.api_nals_hrm.repository;
 
-import nals.hrm.api_nals_hrm.entities.OverTime;
 import nals.hrm.api_nals_hrm.entities.OvertimeStatuses;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;

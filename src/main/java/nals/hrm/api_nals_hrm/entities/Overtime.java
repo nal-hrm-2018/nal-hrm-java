@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "overtime")
-public class OverTime implements Serializable {
+public class Overtime implements Serializable {
     @Id
     @SequenceGenerator(name = "seq",sequenceName = "oracle_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
@@ -18,8 +18,8 @@ public class OverTime implements Serializable {
     @Column(name = "employee_id")
     private int employeeId;
 
-    @Column(name = "project_id")
-    private String projectId;
+    @Column(name = "process_id")
+    private Integer processId;
 
     @Column(name = "reason")
     private String reason;
@@ -33,8 +33,8 @@ public class OverTime implements Serializable {
     @Column(name = "end_time")
     private String endTime;
 
-    @Column(name = "overtime_type_id")
-    private int overtimeTypeId;
+    @Column(name = "day_type_id")
+    private int dayTypeId;
 
     @Column(name = "overtime_status_id")
     private int overtimeStatusId;
@@ -67,8 +67,8 @@ public class OverTime implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "overtime_type_id", insertable = false, updatable = false)
-    private OvertimeTypes overtimeTypes;
+    @JoinColumn(name = "day_type_id", insertable = false, updatable = false)
+    private DayTypes dateTypes;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
@@ -82,12 +82,8 @@ public class OverTime implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="project_id", insertable = false, updatable = false)
-    private Project project;
-
-
-
-
+    @JoinColumn(name="process_id", insertable = false, updatable = false)
+    private Processes processes;
 
 
     public int getId() {
@@ -106,12 +102,12 @@ public class OverTime implements Serializable {
         this.employeeId = employeeId;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public Integer getProcessId() {
+        return processId;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setProcessId(Integer processId) {
+        this.processId = processId;
     }
 
     public String getReason() {
@@ -144,14 +140,6 @@ public class OverTime implements Serializable {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public int getOvertimeTypeId() {
-        return overtimeTypeId;
-    }
-
-    public void setOvertimeTypeId(int overtimeTypeId) {
-        this.overtimeTypeId = overtimeTypeId;
     }
 
     public int getOvertimeStatusId() {
@@ -218,14 +206,6 @@ public class OverTime implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
-    public OvertimeTypes getOvertimeTypes() {
-        return overtimeTypes;
-    }
-
-    public void setOvertimeTypes(OvertimeTypes overtimeTypes) {
-        this.overtimeTypes = overtimeTypes;
-    }
-
     public OvertimeStatuses getOvertimeStatuses() {
         return overtimeStatuses;
     }
@@ -242,11 +222,27 @@ public class OverTime implements Serializable {
         this.employee = employee;
     }
 
-    public Project getProject() {
-        return project;
+    public Processes getProcesses() {
+        return processes;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProcesses(Processes processes) {
+        this.processes = processes;
+    }
+
+    public int getDayTypeId() {
+        return dayTypeId;
+    }
+
+    public void setDayTypeId(int dayTypeId) {
+        this.dayTypeId = dayTypeId;
+    }
+
+    public DayTypes getDayTypes() {
+        return dateTypes;
+    }
+
+    public void setDayTypes(DayTypes dateTypes) {
+        this.dateTypes = dateTypes;
     }
 }

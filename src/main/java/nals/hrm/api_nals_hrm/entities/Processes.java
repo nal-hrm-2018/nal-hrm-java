@@ -59,6 +59,11 @@ public class Processes implements Serializable {
     @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private Role role;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="project_id", insertable = false, updatable = false)
+    private Project project;
+
     public int getIdProcesses() {
         return idProcesses;
     }
@@ -171,23 +176,11 @@ public class Processes implements Serializable {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "Processes{" +
-                "idProcesses=" + idProcesses +
-                ", employeeId=" + employeeId +
-                ", projectId='" + projectId + '\'' +
-                ", roleId=" + roleId +
-                ", checkProjectExit=" + checkProjectExit +
-                ", man_power=" + man_power +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", updatedByEmployee=" + updatedByEmployee +
-                ", createdAt='" + createdAt + '\'' +
-                ", createdByEmployee=" + createdByEmployee +
-                ", deleteFlag=" + deleteFlag +
-                ", role=" + role +
-                '}';
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

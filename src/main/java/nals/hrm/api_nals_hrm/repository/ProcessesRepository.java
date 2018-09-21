@@ -14,10 +14,12 @@ public interface ProcessesRepository extends CrudRepository<Processes,Integer> {
 
 
     List<Processes> findByEmployeeIdAndDeleteFlag(int idEmployee, int deleteFlag,Pageable pageable);
+
     List<Processes> findByEmployeeIdAndDeleteFlag(int idEmployee, int deleteFlag);
 
+    List<Processes> findByEmployeeIdAndCheckProjectExitAndDeleteFlag(int idEmployee, int checkProjectExit, int deleteFlag);
 
-    List<Processes> findByEmployeeIdAndCheckProjectExitAndDeleteFlag(int idEmployee, int i, int i1);
+    List<Processes> findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(String projectId, int checkProjectExit, int idRole, int deleteFlag);
 
-    List<Processes> findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(String projectId, int i, int idRole, int i1);
+    Processes findByEmployeeIdAndProjectIdAndRoleIdAndCheckProjectExitAndDeleteFlag(int idEmployee, String idProject, int rolePO, int checkProjectExit, int deleteFlag);
 }

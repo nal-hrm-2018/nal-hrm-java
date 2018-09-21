@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class ListOverTimeByTokenController {
+public class ListMyOverTimeController {
 
     @Autowired
     OvertimeService overtimeService;

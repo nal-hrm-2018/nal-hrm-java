@@ -1,14 +1,14 @@
 package nals.hrm.api_nals_hrm.dto;
 
 
+import nals.hrm.api_nals_hrm.entities.DayTypes;
 import nals.hrm.api_nals_hrm.entities.Employee;
 import nals.hrm.api_nals_hrm.entities.OvertimeStatuses;
-import nals.hrm.api_nals_hrm.entities.OvertimeTypes;
 import nals.hrm.api_nals_hrm.entities.Project;
 
 
 
-public class OverTimeDTO {
+public class OvertimeDTO {
 
     private int id;
 
@@ -28,13 +28,17 @@ public class OverTimeDTO {
 
     private String createdAt;
 
-    private OvertimeTypes overtimeTypes;
+    private DayTypes dayTypes;
 
     private OvertimeStatuses overtimeStatuses;
 
-    private Employee employee;
+    private int idEmployee;
 
-    private Project project;
+    private String  nameEmployee;
+
+    private String idProject;
+
+    private String nameProject;
 
     public int getId() {
         return id;
@@ -108,12 +112,12 @@ public class OverTimeDTO {
         this.createdAt = createdAt;
     }
 
-    public OvertimeTypes getOvertimeTypes() {
-        return overtimeTypes;
+    public DayTypes getDayTypes() {
+        return dayTypes;
     }
 
-    public void setOvertimeTypes(OvertimeTypes overtimeTypes) {
-        this.overtimeTypes = overtimeTypes;
+    public void setDayTypes(DayTypes dayTypes) {
+        this.dayTypes = dayTypes;
     }
 
     public OvertimeStatuses getOvertimeStatuses() {
@@ -124,19 +128,35 @@ public class OverTimeDTO {
         this.overtimeStatuses = overtimeStatuses;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public int getIdEmployee() {
+        return idEmployee;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setIdEmployee(int idEmployee) {
+        this.idEmployee = idEmployee;
     }
 
-    public Project getProject() {
-        return project;
+    public String getNameEmployee() {
+        return nameEmployee;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setNameEmployee(String nameEmployee) {
+        this.nameEmployee = nameEmployee;
+    }
+
+    public String getIdProject() {
+        return idProject;
+    }
+
+    public void setIdProject(String idProject) {
+        this.idProject = idProject;
+    }
+
+    public String getNameProject() {
+        return nameProject;
+    }
+
+    public void setNameProject(String nameProject) {
+        this.nameProject = nameProject;
     }
 }

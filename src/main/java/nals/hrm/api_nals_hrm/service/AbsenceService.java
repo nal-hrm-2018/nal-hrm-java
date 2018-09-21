@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,10 +77,6 @@ public class AbsenceService {
     public String addAbsence(Absence absence, HttpServletRequest req) {
         Date fromDate;
         Date toDate;
-
-//        Date fromDateAbsence;
-//        Date toDateAbsence;
-
         Date now = new Date();
         //this email default of CEO
         String email = "nguyenthithanhtuyen.dr@gmail.com";
@@ -162,7 +157,7 @@ public class AbsenceService {
                     Role role = roleRepository.findByNameRole("PO");
                     for (Processes obj : processesList) {
                         //xac dinh PO cua tung project va goi email cho PO do
-                        processesByRole = processesRepository.findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(obj.getProjectId(), 1, role.getIdRole(), 0);
+                        processesByRole = processesRepository.findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(obj.getProjectId(), 0, role.getIdRole(), 0);
                         //mỗi project chỉ có 1 PO
                         //phong tru truong hop lo nhu database bị sai ai do them vao ma co den 2 PO
                         //nen tam tra ket qua ve list roi lay PO dau tien thoi :o
@@ -324,8 +319,8 @@ public class AbsenceService {
         double remainingAbsenceDays = employee.getRemainingAbsenceDays();
 
         //có 2 đoạn thoi gian de tinh so ngay nghi con lai cua nam ngoai:
-        //1/1-31/6
-        //1/7-31/12 ->bo het so ngay nghi con lai
+        //1/1-31/3
+        //1/4-31/12 ->bo het so ngay nghi con lai
 
         //số ngày phép đã nghĩ (theo đăng ký)
         // số ngày này có thể vượt mức ngày phép cho phép hằng năm
@@ -336,8 +331,8 @@ public class AbsenceService {
         //so ngay nghi hop le(da tru thu 7, cn,le, bu le)
         double annualLeave = checkAbsenceDayInvalid(listLeave);
 
-        //neu thoi gian hien tai sau  sau ngày 30/6
-        String strDateChangeRemain = yearNow + "-06-30";
+        //neu thoi gian hien tai sau  sau ngày 31/3
+        String strDateChangeRemain = yearNow + "-03-31";
         Date dateChangeRemain;
         try {
             dateChangeRemain = new SimpleDateFormat("yyyy-MM-dd").parse(strDateChangeRemain);
@@ -417,17 +412,17 @@ public class AbsenceService {
 //find id of type absence = "annual_leave"
         int idTypeAbsence = absenceTypeRepository.findByNameAbsenceType("annual_leave").getIdAbsenceType();
 
-        //tinh so ngay nghi phep hang nam tu 1/1 - >30/6
-        ArrayList<Absence> listAbsenceFromToTypeAnnualLeave = absenceRepository.findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(employee.getIdEmployee(), 0, idTypeAbsence, yearNow + "-01-01", yearNow + "-06-30");
+        //tinh so ngay nghi phep hang nam tu 1/1 - >31/3
+        ArrayList<Absence> listAbsenceFromToTypeAnnualLeave = absenceRepository.findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(employee.getIdEmployee(), 0, idTypeAbsence, yearNow + "-01-01", yearNow + "-03-31");
 
-        //so ngay nghi phep hang nam truoc 1/7
-        double before7 = checkAbsenceDayInvalid(listAbsenceFromToTypeAnnualLeave);
+        //so ngay nghi phep hang nam truoc 1/4
+        double before4 = checkAbsenceDayInvalid(listAbsenceFromToTypeAnnualLeave);
 
-        //so ngay nghi hang nam sau thang 7
-        double after7 = annualLeave - before7;
+        //so ngay nghi hang nam sau thang 3
+        double after4 = annualLeave - before4;
 
 
-        //neu time now > 30/6
+        //neu time now > 31/3
         if (now.after(dateChangeRemain)) {
 
 
@@ -436,26 +431,26 @@ public class AbsenceService {
 
             //neu so ngay nghi nam ngoai con lai >= numberAbsenceAnnualLeave
             //nghĩa là số ngày đăng ký nghỉ phép hằng năm được trừ từ ngày nghỉ còn lại của năm ngoái
-            if (employee.getRemainingAbsenceDays() > before7) {
-                //neu so ngay nghi truoc 1/7 nho hon so ngay con lai cua nam ngoái
+            if (employee.getRemainingAbsenceDays() > before4) {
+                //neu so ngay nghi truoc 1/4 nho hon so ngay con lai cua nam ngoái
                 //chua su dung het ngay remain
-                if (after7 > allowAbsence) {
-                    unpaidLeave = unpaidLeave + after7 - allowAbsence;
-                    annualLeave = allowAbsence + before7;
+                if (after4 > allowAbsence) {
+                    unpaidLeave = unpaidLeave + after4 - allowAbsence;
+                    annualLeave = allowAbsence + before4;
                 } else {
-                    totalRemain = allowAbsence - after7;
+                    totalRemain = allowAbsence - after4;
                 }
 
             } else {
                 //neu so ngay nghi phép hang nam truoc thang 7 vượt qua so ngay remain
                 // da su dụng het ngay remain
                 //tinh so ngay vượt mức
-                double annualTmp = before7 - employee.getRemainingAbsenceDays();
-                if (after7 + annualTmp > allowAbsence) {
-                    unpaidLeave = unpaidLeave + after7 + annualTmp - allowAbsence;
+                double annualTmp = before4 - employee.getRemainingAbsenceDays();
+                if (after4 + annualTmp > allowAbsence) {
+                    unpaidLeave = unpaidLeave + after4 + annualTmp - allowAbsence;
                     annualLeave = allowAbsence + employee.getRemainingAbsenceDays();
                 } else {
-                    totalRemain = allowAbsence - after7 - annualTmp;
+                    totalRemain = allowAbsence - after4 - annualTmp;
                 }
             }
 
@@ -464,22 +459,22 @@ public class AbsenceService {
 
 
         } else {
-            if (remainingAbsenceDays >= before7) {
+            if (remainingAbsenceDays >= before4) {
                 //so ngay nghi truoc thang 7 it hon so ngay phep con lai
                 //chua nghi het ~ chua su dung ngay allowAbsence
-                remainingAbsenceDays = remainingAbsenceDays - before7;
-                if(after7 > allowAbsence){
+                remainingAbsenceDays = remainingAbsenceDays - before4;
+                if(after4 > allowAbsence){
                     //so ngay dang ky nghi sau thang 7 vuot muc cho phep
                     //chuyen ngay vuot muc thanh khong luong
-                    unpaidLeave = unpaidLeave + after7 - allowAbsence;
-                    totalRemain = remainingAbsenceDays - before7;
+                    unpaidLeave = unpaidLeave + after4 - allowAbsence;
+                    totalRemain = remainingAbsenceDays - before4;
 
                 }else{
-                    totalRemain = allowAbsence + remainingAbsenceDays - after7;
+                    totalRemain = allowAbsence + remainingAbsenceDays - after4;
                 }
 
             } else {
-                if (before7 > allowAbsence + employee.getRemainingAbsenceDays()) {
+                if (before4 > allowAbsence + employee.getRemainingAbsenceDays()) {
                     //da su dung het ngay phep nam nay va nam ngoai
                     unpaidLeave = unpaidLeave + annualLeave - allowAbsence - employee.getRemainingAbsenceDays();
                     annualLeave = allowAbsence + remainingAbsenceDays;
@@ -504,14 +499,30 @@ public class AbsenceService {
                 unpaidLeave, marriageLeave, bereavementLeave, maternityLeave, sickLeave, new ListDTO(total, result));
     }
 
-    public ListDTO findAbsenceProjectProcessesManageRolePO(String id) {
-        try {
+    public ListDTO findAbsenceProjectProcessesManageRolePO(String idProject, HttpServletRequest req) {
             //get project by id
-            Project project = projectRepository.findByIdProjectAndDeleteFlag(id, 0);
+            Project project = projectRepository.findByIdProjectAndEndDateAndDeleteFlag(idProject, null,0);
+            if(project == null) {
+                throw new CustomException("project not found", 404);
+            }
+            int rolePO = roleRepository.findByNameRole("PO").getIdRole();
 
+            //xác định xem có đúng project mà employee đó làm PO hay k?
+
+            Employee employeePO = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0,0);
+
+            Processes obj = processesRepository.findByEmployeeIdAndProjectIdAndRoleIdAndCheckProjectExitAndDeleteFlag(
+                    employeePO.getIdEmployee(), idProject, rolePO, 0, 0);
+            if(obj == null){
+                throw new CustomException("Access Denied Exception", 403);
+
+            }
             //get list member of project
             //any member not exit project
-            List<Employee> listMember = employeeRepository.findAllNotExit(id);
+            List<Employee> listMember = employeeRepository.findAllNotExit(idProject);
+            if(listMember.size() < 1){
+                return new ListDTO(0, null);
+            }
 
             AbsenceDTO absenceDTO = new AbsenceDTO();
             ArrayList<Object> listResult = new ArrayList<>();
@@ -522,34 +533,43 @@ public class AbsenceService {
             String endDateProject;
             startDateProject = project.getStartDate() != null ? project.getStartDate() : strNow;
             endDateProject = strNow;
-            //get list absence of a member
-            for (Employee objEmp : listMember) {
-                //get list absence of objEmp
-                //when project start to end
-                absenceList = absenceRepository.findAbsenceProject(objEmp.getIdEmployee(), startDateProject, endDateProject);
-                for (Absence objAbs : absenceList) {
-                    absenceDTO = modelMapper.map(objAbs, absenceDTO.getClass());
-                    //find nameEmployee
-                    //if name != null=> return name else return ""
-                    absenceDTO.setNameEmployee(objEmp.getNameEmployee());
-                    absenceDTO.setIdEmployee(objEmp.getIdEmployee());
-                    absenceDTO.setNameProject(project.getNameProject());
-                    absenceDTO.setIdProject(project.getIdProject());
-                    if(objAbs.getAbsenceType().getNameAbsenceType().equals("maternity_leave")){
-                        absenceDTO.setNumberDayAbsence(DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(objAbs.getFromDate()), new SimpleDateFormat("yyyy-MM-dd").parse(objAbs.getToDate())) + 1);
-                    }else{
-                        absenceDTO.setNumberDayAbsence(dateValidate(objAbs));
-                    }
-                    listResult.add(absenceDTO);
-                }
 
+            ArrayList<Integer> listIdEmp = new ArrayList<>();
+
+            for (Employee objEmp : listMember) {
+                listIdEmp.add(objEmp.getIdEmployee());
             }
+
+            Employee employee;
+            String nameEmployee;
+
+        //get list absence of objEmp
+        //when project start to now
+        absenceList = absenceRepository.findAbsenceProject(startDateProject, endDateProject, listIdEmp);
+        for (Absence objAbs : absenceList) {
+            absenceDTO = modelMapper.map(objAbs, absenceDTO.getClass());
+            //find nameEmployee
+            //if name != null=> return name else return ""
+            employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(objAbs.getEmployeeId(), 1, 0);
+            nameEmployee = employee != null ? employee.getNameEmployee() : "";
+            absenceDTO.setIdEmployee(objAbs.getEmployeeId());
+            absenceDTO.setNameEmployee(nameEmployee);
+            absenceDTO.setNameProject(project.getNameProject());
+            absenceDTO.setIdProject(project.getIdProject());
+            if(objAbs.getAbsenceType().getNameAbsenceType().equals("maternity_leave")){
+                try {
+                    absenceDTO.setNumberDayAbsence(DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(objAbs.getFromDate()), new SimpleDateFormat("yyyy-MM-dd").parse(objAbs.getToDate())) + 1);
+                } catch (ParseException e) {
+                    throw new CustomException("Error server", 500);
+                }
+            }else{
+                absenceDTO.setNumberDayAbsence(dateValidate(objAbs));
+            }
+            listResult.add(absenceDTO);
+        }
 
             return new ListDTO(listResult.size(), listResult);
 
-        } catch (Exception e) {
-            throw new CustomException("Error server", 500);
-        }
     }
 
     public ListDTO searchAbsenceEmployeeHR(Optional<Integer> month, Optional<Integer> year, Optional<Integer> page, Optional<Integer> pageSize) {

@@ -5,6 +5,7 @@ import nals.hrm.api_nals_hrm.dto.APIResponseDTO;
 import nals.hrm.api_nals_hrm.entities.Absence;
 import nals.hrm.api_nals_hrm.service.AbsenceService;
 import nals.hrm.api_nals_hrm.service.ProcessesService;
+import nals.hrm.api_nals_hrm.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,12 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api")
-public class ListJoiningProjects {
-    @Autowired
-    ProcessesService processesService;
+public class ListJoiningProjectsController {
 
-    @RequestMapping( value = "/list/project/joining", method = RequestMethod.POST)
-    public APIResponseDTO getListJoiningProjects(@ApiParam @RequestBody Absence absence, HttpServletRequest req) {
-        return new APIResponseDTO(200,"Success!",processesService.getListJoiningProjects(absence, req));
+    @Autowired
+    ProjectService projectService;
+
+    @RequestMapping( value = "/list/project/joining", method = RequestMethod.GET)
+    public APIResponseDTO getListJoiningProjects(HttpServletRequest req) {
+        return new APIResponseDTO(200,"Success!",projectService.getListJoiningProjects(req));
     }
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class ListOverTimeByEmployeeId {
+public class ListOverTimeByEmployeeIdController {
 
     @Autowired
     OvertimeService overtimeService;

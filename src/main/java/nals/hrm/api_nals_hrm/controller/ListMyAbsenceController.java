@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class ListAbsenceEmployeeByTokenController {
+public class ListMyAbsenceController {
 
     @Autowired
     AbsenceService absenceService;

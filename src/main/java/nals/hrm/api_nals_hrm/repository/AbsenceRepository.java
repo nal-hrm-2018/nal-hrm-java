@@ -61,12 +61,17 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
     List<Absence> findAbsenceByDate(int idEmployee, String startDateProject, String endDateProject);
 
 
+//    @Query(value = "SELECT * FROM absences\n" +
+//            "WHERE employee_id = ?1\n" +
+//            "AND delete_flag = 0\n" +
+//            "AND ((to_date >= ?2 AND to_date <= ?3 ) OR (from_date >= ?2))\n" +
+//            "ORDER BY updated_at DESC", nativeQuery = true)
     @Query(value = "SELECT * FROM absences\n" +
-            "WHERE employee_id = ?1\n" +
+            "WHERE employee_id IN (?3)\n" +
             "AND delete_flag = 0\n" +
-            "AND ((to_date >= ?2 AND to_date <= ?3 ) OR (from_date >= ?2))\n" +
+            "AND ((to_date >= ?1 AND to_date <= ?2 ) OR (from_date >= ?1))\n" +
             "ORDER BY updated_at DESC", nativeQuery = true)
-    List<Absence> findAbsenceProject(int idEmployee, String startDateProject, String endDateProject);
+    List<Absence> findAbsenceProject(String startDateProject, String endDateProject, ArrayList<Integer> listIdEmp);
 
 
     @Query(value = "SELECT * FROM absences INNER JOIN absence_types ON absences.absence_type_id = absence_types.id\n" +
@@ -74,6 +79,7 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
     ArrayList<Absence> listLeave(int idEmployee, String typeLeave, int year);
 
     ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, int idTypeAbsence, String s, String s1);
+
 
 //    ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateNotLessThanEqualAndToDateNotGreaterThanEqual(int idEmployee, int i, int idTypeAbsence, String s, String s1);
 }

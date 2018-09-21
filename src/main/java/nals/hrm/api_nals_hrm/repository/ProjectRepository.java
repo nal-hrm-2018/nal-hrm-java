@@ -29,4 +29,6 @@ public interface ProjectRepository extends CrudRepository<Project, Integer> {
             "AND processes.delete_flag = ?4\n" +
             "AND projects.delete_flag = 0", nativeQuery = true)
     int findProjectProcessesAndNotEnd(int idEmployee, int po, int checkProjectExit, int deleteFlag);
+
+    Project findByIdProjectAndEndDateAndDeleteFlag(String idProject, String ennDate, int deleteFlag);
 }

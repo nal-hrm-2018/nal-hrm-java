@@ -20,15 +20,15 @@ public class Holiday implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "holiday_status_id")
-    private int holidayStatusId;
+    @Column(name = "day_type_id")
+    private int dayTypeId;
 
     @Column(name = "delete_flag")
     private int deleteFlag;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "holiday_status_id", insertable = false, updatable = false)
-    private HolidayStatus holidayStatus;
+    @JoinColumn(name = "day_type_id", insertable = false, updatable = false)
+    private DayTypes dayTypes;
 
     public int getIdHoliday() {
         return idHoliday;
@@ -62,12 +62,12 @@ public class Holiday implements Serializable {
         this.description = description;
     }
 
-    public int getHolidayStatusId() {
-        return holidayStatusId;
+    public int getDayTypeId() {
+        return dayTypeId;
     }
 
-    public void setHolidayStatusId(int holidayStatusId) {
-        this.holidayStatusId = holidayStatusId;
+    public void setDayTypeId(int dayTypeId) {
+        this.dayTypeId = dayTypeId;
     }
 
     public int getDeleteFlag() {
@@ -78,11 +78,11 @@ public class Holiday implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
-    public HolidayStatus getHolidayStatus() {
-        return holidayStatus;
+    public DayTypes getDayTypes() {
+        return dayTypes;
     }
 
-    public void setHolidayStatus(HolidayStatus holidayStatus) {
-        this.holidayStatus = holidayStatus;
+    public void setDayTypes(DayTypes dayTypes) {
+        this.dayTypes = dayTypes;
     }
 }

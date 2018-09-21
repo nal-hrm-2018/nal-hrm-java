@@ -21,8 +21,8 @@ public class ListOvertimeEmployeeHRController {
     OvertimeService overtimeService;
 
     @RequestMapping( value = "/manage/overtime/hr/list",params = { "page", "pageSize" }, method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('HR')")
-    public APIResponseDTO getListOvertimeEmployeeHR(@RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
-        return new APIResponseDTO(200,"Success!", overtimeService.getListOvertimeEmployeeHR(page,pageSize));
+    @PreAuthorize("hasAuthority('HR') or hasAuthority('CEO')")
+    public APIResponseDTO getListOvertimeEmployeeHR(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
+        return new APIResponseDTO(200,"Success!", overtimeService.getListOvertimeEmployeeHR(req, page,pageSize));
     }
 }
