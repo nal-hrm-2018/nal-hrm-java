@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class ListAbsenceEmployeeByIdEmployeeController {
+public class ListAbsenceByIdEmployeeController {
 
     @Autowired
     AbsenceService absenceService;

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api")
-public class EditAbsenceEmployeeController {
+public class EditAbsenceController {
     @Autowired
     AbsenceService absenceService;
 

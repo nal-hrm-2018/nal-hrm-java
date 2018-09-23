@@ -24,6 +24,8 @@ public class OvertimeDTO {
 
     private Float correctTotalTime;
 
+    private String reasonReject;
+
     private String updatedAt;
 
     private String createdAt;
@@ -32,7 +34,7 @@ public class OvertimeDTO {
 
     private OvertimeStatuses overtimeStatuses;
 
-    private int idEmployee;
+    private int employeeId;
 
     private String  nameEmployee;
 
@@ -96,6 +98,14 @@ public class OvertimeDTO {
         this.correctTotalTime = correctTotalTime;
     }
 
+    public String getReasonReject() {
+        return reasonReject;
+    }
+
+    public void setReasonReject(String reasonReject) {
+        this.reasonReject = reasonReject;
+    }
+
     public String getUpdatedAt() {
         return updatedAt;
     }
@@ -128,12 +138,12 @@ public class OvertimeDTO {
         this.overtimeStatuses = overtimeStatuses;
     }
 
-    public int getIdEmployee() {
-        return idEmployee;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setIdEmployee(int idEmployee) {
-        this.idEmployee = idEmployee;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getNameEmployee() {

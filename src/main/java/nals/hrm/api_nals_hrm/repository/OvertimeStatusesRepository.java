@@ -8,5 +8,8 @@ import java.util.List;
 
 @Repository
 public interface OvertimeStatusesRepository extends PagingAndSortingRepository<OvertimeStatuses, Integer> {
+
     List<OvertimeStatuses> findAll();
+
+    OvertimeStatuses findByName(String not_yet);
 }

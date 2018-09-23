@@ -104,8 +104,8 @@ public class ProjectService {
         Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(
                 jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
 
-        List<Processes> listJoiningProjects = processesRepository.findByEmployeeIdAndCheckProjectExitAndDeleteFlag(
-                employee.getIdEmployee(), 0, 0);
+        List<Processes> listJoiningProjects = processesRepository.findListJoiningProject(
+                employee.getIdEmployee());
 
         ArrayList<ProjectDTO> result = new ArrayList<>();
         ProjectDTO projectDTO = new ProjectDTO();

@@ -19,7 +19,7 @@ public interface OvertimeRepository extends PagingAndSortingRepository<Overtime,
 
     ArrayList<Overtime> findByDeleteFlagOrderByUpdatedAtDesc(int deleteFlag, Pageable pageable);
 
-    @Query(value = "SELECT * FROM nal_hrm.overtime WHERE MONTH(overtime.date) = MONTH(NOW()) AND YEAR(overtime.date) = YEAR(NOW()) AND employee_id = ?1 AND delete_flag = 0\n" +
+    @Query(value = "SELECT * FROM overtime WHERE MONTH(overtime.date) = MONTH(NOW()) AND YEAR(overtime.date) = YEAR(NOW()) AND employee_id = ?1 AND delete_flag = 0\n" +
             "ORDER BY updated_at DESC ", nativeQuery = true)
     ArrayList<Overtime> findMonthNow(int idEmployee);
 
@@ -48,4 +48,18 @@ public interface OvertimeRepository extends PagingAndSortingRepository<Overtime,
             "AND overtime.delete_flag = 0 \n" +
             "ORDER BY overtime.updated_at DESC", nativeQuery = true)
     ArrayList<Overtime> findOTOfPoOrHr(Pageable pageable);
+
+    @Query(value = "SELECT * FROM overtime LEFT OUTER JOIN processes ON overtime.process_id = processes.id\n" +
+            "WHERE (overtime.process_id IS NULL OR (processes.role_id = 4 AND processes.check_project_exit = 0 AND processes.delete_flag = 0)) \n" +
+            "AND overtime.delete_flag = 0 \n" +
+            "ORDER BY overtime.updated_at DESC", nativeQuery = true)
+    ArrayList<Overtime> findOTOfPoOrHr();
+
+    ArrayList<Overtime> findByEmployeeIdAndDeleteFlagOrderByUpdatedAtDesc(int idEmployee, int i);
+
+    List<Overtime> findByEmployeeIdAndDateAndDeleteFlag(int idEmployee, String date, int deleteFlag);
+
+
+//    Overtime save(Overtime overtime);
+
 }

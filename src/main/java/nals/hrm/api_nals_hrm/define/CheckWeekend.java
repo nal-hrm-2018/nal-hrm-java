@@ -1,8 +1,5 @@
 package nals.hrm.api_nals_hrm.define;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CheckWeekend {
@@ -27,16 +24,16 @@ public class CheckWeekend {
         }
         return count;
     }
-    public static void main(String[] args) {
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        Date startDate = null,endDate = null;
-        try {
-            startDate = df.parse("09/02/2018");
-            endDate = df.parse("09/02/2018");
-            System.out.println(countWeekend(startDate, endDate));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    public static void main(String[] args) {
+//        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+//        Date startDate = null,endDate = null;
+//        try {
+//            startDate = df.parse("09/02/2018");
+//            endDate = df.parse("09/02/2018");
+//            System.out.println(countWeekend(startDate, endDate));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 }

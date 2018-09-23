@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "overtime")
 public class Overtime implements Serializable {
+
     @Id
     @SequenceGenerator(name = "seq",sequenceName = "oracle_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
@@ -45,7 +46,10 @@ public class Overtime implements Serializable {
     @Column(name = "correct_total_time")
     private Float correctTotalTime;
 
-    @JsonIgnore
+    @Column(name = "reason_reject")
+    private String reasonReject;
+
+//    @JsonIgnore
     @Column(name = "updated_at")
     private String updatedAt;
 
@@ -53,7 +57,7 @@ public class Overtime implements Serializable {
     @Column(name = "updated_by_employee")
     private Integer updatedByEmployee;
 
-    @JsonIgnore
+//    @JsonIgnore
     @Column(name = "created_at")
     private String createdAt;
 
@@ -84,7 +88,6 @@ public class Overtime implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="process_id", insertable = false, updatable = false)
     private Processes processes;
-
 
     public int getId() {
         return id;
@@ -142,6 +145,14 @@ public class Overtime implements Serializable {
         this.endTime = endTime;
     }
 
+    public int getDayTypeId() {
+        return dayTypeId;
+    }
+
+    public void setDayTypeId(int dayTypeId) {
+        this.dayTypeId = dayTypeId;
+    }
+
     public int getOvertimeStatusId() {
         return overtimeStatusId;
     }
@@ -164,6 +175,14 @@ public class Overtime implements Serializable {
 
     public void setCorrectTotalTime(Float correctTotalTime) {
         this.correctTotalTime = correctTotalTime;
+    }
+
+    public String getReasonReject() {
+        return reasonReject;
+    }
+
+    public void setReasonReject(String reasonReject) {
+        this.reasonReject = reasonReject;
     }
 
     public String getUpdatedAt() {
@@ -206,6 +225,14 @@ public class Overtime implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
+    public DayTypes getDateTypes() {
+        return dateTypes;
+    }
+
+    public void setDateTypes(DayTypes dateTypes) {
+        this.dateTypes = dateTypes;
+    }
+
     public OvertimeStatuses getOvertimeStatuses() {
         return overtimeStatuses;
     }
@@ -228,21 +255,5 @@ public class Overtime implements Serializable {
 
     public void setProcesses(Processes processes) {
         this.processes = processes;
-    }
-
-    public int getDayTypeId() {
-        return dayTypeId;
-    }
-
-    public void setDayTypeId(int dayTypeId) {
-        this.dayTypeId = dayTypeId;
-    }
-
-    public DayTypes getDayTypes() {
-        return dateTypes;
-    }
-
-    public void setDayTypes(DayTypes dateTypes) {
-        this.dateTypes = dateTypes;
     }
 }
