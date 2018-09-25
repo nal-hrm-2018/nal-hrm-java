@@ -72,7 +72,7 @@ public class AbsenceService {
         //find employee by token
         Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
 
-        return getListAbsenceEmployeeByIdEmployee(employee.getIdEmployee(), page, pageSize);
+        return getListAbsenceByIdEmployee(employee.getIdEmployee(), page, pageSize);
     }
 
     public String addAbsence(Absence absence, HttpServletRequest req) {
@@ -279,7 +279,7 @@ public class AbsenceService {
 
     }
 
-    public ListDTO getListAbsenceEmployeeHR(Optional<Integer> page, Optional<Integer> pageSize) {
+    public ListDTO getListAbsenceHR(Optional<Integer> page, Optional<Integer> pageSize) {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
         ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlagOrderByUpdateAtDesc(0, PageRequest.of(evalPage, evalPageSize));
@@ -289,7 +289,7 @@ public class AbsenceService {
         return new ListDTO(absenceRepository.findByDeleteFlag(0).size(), listResult);
     }
 
-    public ListAbsenceDTO getListAbsenceEmployeeByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize) {
+    public ListAbsenceDTO getListAbsenceByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize) {
 
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
@@ -483,7 +483,7 @@ public class AbsenceService {
                 unpaidLeave, marriageLeave, bereavementLeave, maternityLeave, sickLeave, new ListDTO(total, result));
     }
 
-    public ListDTO findAbsenceProjectProcessesManageRolePO(String idProject, Optional<Integer> page, Optional<Integer> pageSize, HttpServletRequest req) {
+    public ListDTO findAbsenceProjectManageRolePO(String idProject, Optional<Integer> page, Optional<Integer> pageSize, HttpServletRequest req) {
 
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;

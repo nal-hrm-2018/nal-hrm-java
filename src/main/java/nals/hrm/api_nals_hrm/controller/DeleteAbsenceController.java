@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class DeleteEmployeeController {
+public class DeleteAbsenceController {
     @Autowired
     AbsenceService absenceService;
 
     @RequestMapping( value = "/manage/absence/delete/{id}", method = RequestMethod.DELETE )
-    @PreAuthorize("hasAuthority('cancel_emplyee_absence_history')")
+    @PreAuthorize("hasAuthority('HR') and hasAuthority('cancel_employee_absence_history')")
     public APIResponseDTO deleteAbsence(@PathVariable("id") int id) {
         return new APIResponseDTO(200,"Success!",absenceService.deleteAbsence(id));
     }

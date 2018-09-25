@@ -21,7 +21,7 @@ public class ListAbsenceHRController {
 
     @RequestMapping( value = "/manage/absence/list",params = { "page", "pageSize" }, method = RequestMethod.GET )
     @PreAuthorize("hasAuthority('HR') and hasAuthority('view_employee_absence_history')")
-    public APIResponseDTO getListAbsenceEmployee(@RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
-        return new APIResponseDTO(200,"Success!",absenceService.getListAbsenceEmployeeHR(page,pageSize));
+    public APIResponseDTO getListAbsenceHR(@RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
+        return new APIResponseDTO(200,"Success!",absenceService.getListAbsenceHR(page,pageSize));
     }
 }

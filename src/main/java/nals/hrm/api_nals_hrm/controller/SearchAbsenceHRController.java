@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class SearchAbsenceEmployeeHRController {
+public class SearchAbsenceHRController {
 
     @Autowired
     AbsenceService absenceService;

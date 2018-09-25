@@ -63,10 +63,10 @@ public class OvertimeService {
 
     public Object getListOvertimeByToken(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
         Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0 , 0);
-        return getListOvertimeByIdEmployee(employee.getIdEmployee(),page,pageSize);
+        return getListOvertimeByIdEmployee(employee.getIdEmployee(),page,pageSize, true);
     }
 
-    public ListOvertimeDTO getListOvertimeByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize) {
+    public ListOvertimeDTO getListOvertimeByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize, boolean check) {
 
         float normal = 0;
         float dayOff = 0;
@@ -75,7 +75,16 @@ public class OvertimeService {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
 
-        ArrayList<Overtime> overtimeList = overtimeRepository.findByEmployeeIdAndDeleteFlagOrderByUpdatedAtDesc(idEmployee, 0, PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Overtime> overtimeList;
+        int total = 0;
+        if(check){
+            overtimeList = overtimeRepository.findByEmployeeIdAndDeleteFlagOrderByUpdatedAtDesc(idEmployee, 0, PageRequest.of(evalPage, evalPageSize));
+            total = overtimeRepository.findByEmployeeIdAndDeleteFlagOrderByUpdatedAtDesc(idEmployee, 0).size();
+        }else{
+            overtimeList = overtimeRepository.findByEmployeeIdHR(idEmployee, PageRequest.of(evalPage, evalPageSize));
+            total = overtimeRepository.findByEmployeeIdHR(idEmployee).size();
+
+        }
         ArrayList<Object> result = new ArrayList<>();
 
         mapOvertime(overtimeList,result);
@@ -87,18 +96,25 @@ public class OvertimeService {
             if(obj.getOvertimeStatuses().getName().equals("Rejected") ||obj.getOvertimeStatuses().getName().equals("Accepted")){
                 switch (obj.getDateTypes().getNameDayType()){
                     case "normal":
-                        normal += obj.getCorrectTotalTime();
+                        if(obj.getCorrectTotalTime() != null){
+                            normal += obj.getCorrectTotalTime();
+                        }
                         break;
                     case "weekend":
-                        dayOff += obj.getCorrectTotalTime();
+                        if(obj.getCorrectTotalTime() != null){
+                            dayOff += obj.getCorrectTotalTime();
+                        }
                         break;
                     default:
-                        holiday += obj.getCorrectTotalTime();
+                        if(obj.getCorrectTotalTime() != null){
+                            holiday += obj.getCorrectTotalTime();
+                        }
+
                 }
             }
 
         }
-        return new ListOvertimeDTO(normal, dayOff, holiday, new ListDTO(overtimeRepository.findByEmployeeIdAndDeleteFlagOrderByUpdatedAtDesc(idEmployee, 0).size(), result));
+        return new ListOvertimeDTO(normal, dayOff, holiday, new ListDTO(total, result));
     }
 
     public ListDTO getListOvertimeEmployeeHR(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
@@ -115,8 +131,8 @@ public class OvertimeService {
             listOT = overtimeRepository.findOTOfPoOrHr(PageRequest.of(evalPage, evalPageSize));
             total = overtimeRepository.findOTOfPoOrHr().size();
         }else{
-           listOT = overtimeRepository.findByDeleteFlagOrderByUpdatedAtDesc(0, PageRequest.of(evalPage, evalPageSize));
-            total = overtimeRepository.findByDeleteFlagOrderByUpdatedAtDesc(0).size();
+           listOT = overtimeRepository.findOTHR(PageRequest.of(evalPage, evalPageSize));
+            total = overtimeRepository.findOTHR().size();
         }
 
 
@@ -188,10 +204,21 @@ public class OvertimeService {
 
         Overtime overtimeAdd = new Overtime();
 
-        Date dateOT;
+        Date startTime;
+        Date endTime;
+
         try {
-            dateOT = new SimpleDateFormat("yyyy-MM-dd").parse(overtimeDTO.getDate());
+            startTime = new SimpleDateFormat("hh:mm").parse(overtimeDTO.getStartTime());
+            endTime = new SimpleDateFormat("hh:mm").parse(overtimeDTO.getEndTime());
+
         } catch (ParseException e) {
+            throw new CustomException("data error", 400);
+        }
+
+        float numberEnd = endTime.getHours() + (float) endTime.getMinutes()/60;
+        float numberStart = startTime.getHours() + (float) startTime.getMinutes()/60;
+
+        if(endTime.before(startTime) || ((numberEnd - numberStart) < overtimeDTO.getTotalTime())){
             throw new CustomException("data error", 400);
         }
 
@@ -221,27 +248,116 @@ public class OvertimeService {
         overtimeAdd.setCreatedAt(strNow);
         overtimeAdd.setUpdatedAt(strNow);
 
-
-        if(holidayDefaultRepository.findByDateHolidayDefaultAndDeleteFlag(overtimeDTO.getDate(), 0) != null){
-            overtimeAdd.setDayTypeId(dayTypesRepository.findByNameDayTypeAndDeleteFlag("holiday", 0).getIdDayType());
-        }else{
-            if(holidayRepository.findByDateHolidayAndDeleteFlag(overtimeDTO.getDate(), 0) != null){
-                Holiday holiday = holidayRepository.findByDateHolidayAndDeleteFlag(overtimeDTO.getDate(), 0);
-                overtimeAdd.setDayTypeId(holiday.getDayTypeId());
-            }else{
-                if(CheckWeekend.checkDate(dateOT) > 6){
-                    //this weekend
-                    overtimeAdd.setDayTypeId(dayTypesRepository.findByNameDayTypeAndDeleteFlag("weekend", 0).getIdDayType());
-
-                }else{
-                    overtimeAdd.setDayTypeId(dayTypesRepository.findByNameDayTypeAndDeleteFlag("normal", 0).getIdDayType());
-
-                }
-            }
-        }
+        checkDaysType(overtimeDTO, overtimeAdd);
 
         overtimeRepository.save(overtimeAdd);
 
         return "Submit overtime success!";
     }
+
+    public String editOvertime(int id, OvertimeDTO overtimeDTO, HttpServletRequest req) {
+
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0,0);
+        Overtime overtimeOld = overtimeRepository.findByIdAndEmployeeIdAndDeleteFlag(id,employee.getIdEmployee(), 0);
+
+        if(overtimeOld == null || !overtimeOld.getOvertimeStatuses().getName().equals("Not yet") ){
+            throw new CustomException("Access Denied Exception!", 403);
+        }
+
+        //check duplicate
+        if(!overtimeOld.getDate().equals(overtimeDTO.getDate()) && overtimeRepository.findByEmployeeIdAndDateAndDeleteFlag(employee.getIdEmployee(), overtimeDTO.getDate(), 0).size() > 0){
+            throw new CustomException("duplicate form ot", 400);
+        }
+
+        Date startTime;
+        Date endTime;
+        try {
+            startTime = new SimpleDateFormat("hh:mm").parse(overtimeDTO.getStartTime());
+            endTime = new SimpleDateFormat("hh:mm").parse(overtimeDTO.getEndTime());
+
+        } catch (ParseException e) {
+            throw new CustomException("data error", 400);
+        }
+
+        float numberEnd = endTime.getHours() + (float) endTime.getMinutes()/60;
+        float numberStart = startTime.getHours() + (float) startTime.getMinutes()/60;
+
+        if(endTime.before(startTime) || ((numberEnd - numberStart) < overtimeDTO.getTotalTime())){
+            throw new CustomException("data error", 400);
+        }
+
+        Date now = new Date();
+
+        String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+        Processes processes;
+        if(overtimeDTO.getIdProject() != null){
+            processes = processesRepository.findByProjectIdAndEmployeeIdAndCheckProjectExitAndDeleteFlag(overtimeDTO.getIdProject(), employee.getIdEmployee(), 0, 0);
+            if(processes != null){
+                overtimeOld.setProcessId(processes.getIdProcesses());
+            }else{
+                throw new CustomException("not joining project", 400);
+            }
+
+        }
+
+        overtimeOld.setReason(overtimeDTO.getReason());
+        overtimeOld.setDate(overtimeDTO.getDate());
+        overtimeOld.setStartTime(overtimeDTO.getStartTime());
+        overtimeOld.setEndTime(overtimeDTO.getEndTime());
+        overtimeOld.setTotalTime(overtimeDTO.getTotalTime());
+        overtimeOld.setUpdatedAt(strNow);
+
+        checkDaysType(overtimeDTO, overtimeOld);
+
+        overtimeRepository.save(overtimeOld);
+
+        return "Updated overtime success!";
+    }
+
+    public String confirmOvertime(int id, Overtime overtime, HttpServletRequest req) {
+
+
+        Employee employeeConfirm = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)),0,0);
+        Overtime overtimeOld = overtimeRepository.findByIdAndDeleteFlag(id, 0);
+
+        if (employeeConfirm.getIsManager() == 1){
+            overtimeOld.setOvertimeStatusId(overtime.getOvertimeStatusId());
+
+        }else{
+
+        }
+
+        overtimeRepository.save(overtimeOld);
+
+        return "Confirm OT success!";
+    }
+
+    public void checkDaysType(OvertimeDTO overtimeDTO, Overtime overtime){
+        Date dateOT;
+        try {
+            dateOT = new SimpleDateFormat("yyyy-MM-dd").parse(overtimeDTO.getDate());
+        } catch (ParseException e) {
+            throw new CustomException("data error", 400);
+        }
+
+        if(holidayDefaultRepository.findByDateHolidayDefaultAndDeleteFlag(overtimeDTO.getDate(), 0) != null){
+            overtime.setDayTypeId(dayTypesRepository.findByNameDayTypeAndDeleteFlag("holiday", 0).getIdDayType());
+        }else{
+            if(holidayRepository.findByDateHolidayAndDeleteFlag(overtimeDTO.getDate(), 0) != null){
+                Holiday holiday = holidayRepository.findByDateHolidayAndDeleteFlag(overtimeDTO.getDate(), 0);
+                overtime.setDayTypeId(holiday.getDayTypeId());
+            }else{
+                if(CheckWeekend.checkDate(dateOT) > 6){
+                    //this weekend
+                    overtime.setDayTypeId(dayTypesRepository.findByNameDayTypeAndDeleteFlag("weekend", 0).getIdDayType());
+
+                }else{
+                    overtime.setDayTypeId(dayTypesRepository.findByNameDayTypeAndDeleteFlag("normal", 0).getIdDayType());
+
+                }
+            }
+        }
+    }
+
+
 }

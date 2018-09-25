@@ -59,6 +59,37 @@ public interface OvertimeRepository extends PagingAndSortingRepository<Overtime,
 
     List<Overtime> findByEmployeeIdAndDateAndDeleteFlag(int idEmployee, String date, int deleteFlag);
 
+    Overtime findByIdAndDeleteFlag(int id, int i);
+
+
+    @Query(value = "SELECT * FROM overtime INNER JOIN overtime_statuses ON overtime.overtime_status_id = overtime_statuses.id\n" +
+            "WHERE (overtime_statuses.name = \"Accepted\" OR overtime_statuses.name = \"Rejected\")\n" +
+            "AND overtime.delete_flag = 0\n" +
+            "ORDER BY overtime.updated_at DESC", nativeQuery = true)
+    ArrayList<Overtime> findOTHR(Pageable pageable);
+
+
+    @Query(value = "SELECT * FROM overtime INNER JOIN overtime_statuses ON overtime.overtime_status_id = overtime_statuses.id\n" +
+            "WHERE (overtime_statuses.name = \"Accepted\" OR overtime_statuses.name = \"Rejected\")\n" +
+            "AND overtime.delete_flag = 0\n" +
+            "ORDER BY overtime.updated_at DESC", nativeQuery = true)
+    ArrayList<Overtime> findOTHR();
+
+    @Query(value = "SELECT * FROM overtime INNER JOIN overtime_statuses ON overtime.overtime_status_id = overtime_statuses.id\n" +
+            "WHERE (overtime_statuses.name = \"Accepted\" OR overtime_statuses.name = \"Rejected\")\n" +
+            "AND employee_id = ?1\n" +
+            "AND overtime.delete_flag = 0\n" +
+            "ORDER BY overtime.updated_at DESC", nativeQuery = true)
+    ArrayList<Overtime> findByEmployeeIdHR(int idEmployee, Pageable pageable);
+
+    @Query(value = "SELECT * FROM overtime INNER JOIN overtime_statuses ON overtime.overtime_status_id = overtime_statuses.id\n" +
+            "WHERE (overtime_statuses.name = \"Accepted\" OR overtime_statuses.name = \"Rejected\")\n" +
+            "AND employee_id = ?1\n" +
+            "AND overtime.delete_flag = 0\n" +
+            "ORDER BY overtime.updated_at DESC", nativeQuery = true)
+    ArrayList<Overtime> findByEmployeeIdHR(int idEmployee);
+
+    Overtime findByIdAndEmployeeIdAndDeleteFlag(int id, int idEmployee, int i);
 
 //    Overtime save(Overtime overtime);
 

@@ -14,8 +14,8 @@ public class BasicEmployeeController {
     EmployeeService employeeService;
 
     @RequestMapping( value = "/manage/employee/basic",params = { "id"}, method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('view_employee_basic')")
-    public APIResponseDTO getBasic(@RequestParam("id")  int id) {
+    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO') and hasAuthority('view_employee_basic')")
+    public APIResponseDTO viewBasicEmployee(@RequestParam("id")  int id) {
         return new APIResponseDTO(200,"Success!",employeeService.viewBasicEmployee(id));
     }
 }

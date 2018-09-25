@@ -19,7 +19,7 @@ public class ListEmployeesController {
     EmployeeService employeeService;
 
     @RequestMapping( value = "/manage/employee/list",params = { "page", "pageSize" }, method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('view_list_employee')")
+    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO') and hasAuthority('view_list_employee')")
     public APIResponseDTO getListEmployees( @RequestParam("page")  Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
         return new APIResponseDTO(200,"Success!",employeeService.getListEmployees(page,pageSize));
     }

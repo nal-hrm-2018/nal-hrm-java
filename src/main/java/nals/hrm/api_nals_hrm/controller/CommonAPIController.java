@@ -51,6 +51,7 @@ public class CommonAPIController {
         return new APIResponseDTO(200,"Success!",employeeTypeService.findAll());
     }
 
+
     @RequestMapping( value = "/type/absence",method = RequestMethod.GET )
     public APIResponseDTO getAbsenceType() {
         return new APIResponseDTO(200,"Success!",absenceTypeService.findAll());
