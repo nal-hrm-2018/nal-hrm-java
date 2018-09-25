@@ -371,6 +371,22 @@ public class OvertimeService {
         return "Confirm OT success!";
     }
 
+    public String deleteOvertime(int id, HttpServletRequest req) {
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
+        Overtime overtimeOld = overtimeRepository.findByIdAndEmployeeIdAndDeleteFlag(id, employee.getIdEmployee(), 0);
+        if(overtimeOld == null){
+            //Access Denied Exception this form
+            throw new CustomException("Access Denied Exception", 403);
+        }
+        if (!overtimeOld.getOvertimeStatuses().getName().equals("Not yet")){
+            throw new CustomException("Can't not delete", 400);
+        }else{
+            //can delete
+            overtimeOld.setDeleteFlag(1);
+        }
+        return "Delete OT success!";
+    }
+
     public void checkDaysType(OvertimeDTO overtimeDTO, Overtime overtime) {
         Date dateOT;
         try {
@@ -397,6 +413,7 @@ public class OvertimeService {
             }
         }
     }
+
 
 
 }
