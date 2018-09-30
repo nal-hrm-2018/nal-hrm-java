@@ -11,13 +11,13 @@ public class HolidayDefault implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
-    private int idHolidayDefault;
+    private int idHoliday;
 
     @Column(name = "date")
-    private String dateHolidayDefault;
+    private String dateHoliday;
 
     @Column(name = "name")
-    private String nameHolidayDefault;
+    private String nameHoliday;
 
     @Column(name = "description")
     private String description;
@@ -35,28 +35,28 @@ public class HolidayDefault implements Serializable {
     @JoinColumn(name = "day_type_id", insertable = false, updatable = false)
     private DayTypes dateTypes;
 
-    public int getIdHolidayDefault() {
-        return idHolidayDefault;
+    public int getIdHoliday() {
+        return idHoliday;
     }
 
-    public void setIdHolidayDefault(int idHolidayDefault) {
-        this.idHolidayDefault = idHolidayDefault;
+    public void setIdHoliday(int idHoliday) {
+        this.idHoliday = idHoliday;
     }
 
-    public String getDateHolidayDefault() {
-        return dateHolidayDefault;
+    public String getDateHoliday() {
+        return dateHoliday;
     }
 
-    public void setDateHolidayDefault(String dateHolidayDefault) {
-        this.dateHolidayDefault = dateHolidayDefault;
+    public void setDateHoliday(String dateHoliday) {
+        this.dateHoliday = dateHoliday;
     }
 
-    public String getNameHolidayDefault() {
-        return nameHolidayDefault;
+    public String getNameHoliday() {
+        return nameHoliday;
     }
 
-    public void setNameHolidayDefault(String nameHolidayDefault) {
-        this.nameHolidayDefault = nameHolidayDefault;
+    public void setNameHoliday(String nameHoliday) {
+        this.nameHoliday = nameHoliday;
     }
 
     public String getDescription() {

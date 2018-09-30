@@ -400,7 +400,7 @@ public class OvertimeService {
             throw new CustomException("data error", 400);
         }
 
-        if (holidayDefaultRepository.findByDateHolidayDefaultAndDeleteFlag(overtimeDTO.getDate(), 0) != null) {
+        if (holidayDefaultRepository.findByDateHolidayAndDeleteFlag(overtimeDTO.getDate(), 0) != null) {
             overtime.setDayTypeId(dayTypesRepository.findByNameDayTypeAndDeleteFlag("holiday", 0).getIdDayType());
         } else {
             if (holidayRepository.findByDateHolidayAndDeleteFlag(overtimeDTO.getDate(), 0) != null) {

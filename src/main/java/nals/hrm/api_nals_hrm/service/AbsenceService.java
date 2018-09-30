@@ -708,7 +708,7 @@ public class AbsenceService {
                 strFrom = new SimpleDateFormat("yyyy-MM-dd").format(from);
                 //kiểm tra xem nếu không phải thứ 7 or chủ nhật thì mới kiểm tra ngày nghỉ đó có thuộc ngày lễ hay không
                 //nếu là ngày lễ thì countHolidayDefault += 1
-                if (CheckWeekend.checkDate(from) < 7 && holidayDefaultRepository.findByDateHolidayDefaultAndDeleteFlag(strFrom, 0) != null) {
+                if (CheckWeekend.checkDate(from) < 7 && holidayDefaultRepository.findByDateHolidayAndDeleteFlag(strFrom, 0) != null) {
                     countHolidayDefault += 1;
                 }
                 //kiem tra xe ngay nghi do co thuoc ngay nghi bu nao khong

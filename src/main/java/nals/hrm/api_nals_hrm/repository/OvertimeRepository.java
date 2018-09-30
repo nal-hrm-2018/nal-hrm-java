@@ -60,7 +60,7 @@ public interface OvertimeRepository extends PagingAndSortingRepository<Overtime,
 
     ArrayList<Overtime> findByEmployeeIdAndDeleteFlagOrderByUpdatedAtDesc(int idEmployee, int i);
 
-    List<Overtime> findByEmployeeIdAndDateAndDeleteFlag(int idEmployee, String date, int deleteFlag);
+//    List<Overtime> findByEmployeeIdAndDateAndDeleteFlag(int idEmployee, String date, int deleteFlag);
 
     Overtime findByIdAndDeleteFlag(int id, int i);
 
