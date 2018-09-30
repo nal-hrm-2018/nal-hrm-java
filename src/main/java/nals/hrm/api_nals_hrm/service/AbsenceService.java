@@ -562,7 +562,7 @@ public class AbsenceService {
 
     }
 
-    public ListDTO searchAbsenceEmployeeHR(Optional<Integer> month, Optional<Integer> year, Optional<Integer> page, Optional<Integer> pageSize) {
+    public ListDTO searchAbsenceHR(Optional<Integer> month, Optional<Integer> year, Optional<Integer> page, Optional<Integer> pageSize) {
         try {
             int evalPageSize = pageSize.orElse(Define.initialPageSize);
             int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;

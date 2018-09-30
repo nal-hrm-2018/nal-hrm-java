@@ -1,5 +1,7 @@
 package nals.hrm.api_nals_hrm.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -20,9 +22,11 @@ public class Holiday implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @JsonIgnore
     @Column(name = "day_type_id")
     private int dayTypeId;
 
+    @JsonIgnore
     @Column(name = "delete_flag")
     private int deleteFlag;
 

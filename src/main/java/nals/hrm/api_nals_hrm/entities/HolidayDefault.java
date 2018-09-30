@@ -22,6 +22,7 @@ public class HolidayDefault implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @JsonIgnore
     @Column(name = "day_type_id")
     private int dayTypeId;
 

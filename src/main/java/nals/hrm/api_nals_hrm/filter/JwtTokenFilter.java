@@ -1,5 +1,6 @@
 package nals.hrm.api_nals_hrm.filter;
 
+import nals.hrm.api_nals_hrm.exception.CustomException;
 import nals.hrm.api_nals_hrm.security.JwtTokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

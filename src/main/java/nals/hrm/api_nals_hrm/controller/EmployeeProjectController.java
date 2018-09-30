@@ -29,7 +29,7 @@ public class EmployeeProjectController {
     ProcessesService processesService;
 
     @RequestMapping( value = "/manage/employee/project",params = { "id","page", "pageSize" }, method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO') and hasAuthority('view_employee_project')")
+    @PreAuthorize("hasAuthority('BO') or hasAuthority('SM/AL') or hasAuthority('PO') and hasAuthority('view_employee_project')")
     public APIResponseDTO getEmployeeProject(@RequestParam("id")  int id, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
         return new APIResponseDTO(200,"Success!",projectService.getListProjectByIdEmployee(id,page,pageSize));
     }

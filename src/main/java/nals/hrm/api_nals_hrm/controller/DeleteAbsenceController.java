@@ -16,7 +16,7 @@ public class DeleteAbsenceController {
     AbsenceService absenceService;
 
     @RequestMapping( value = "/manage/absence/delete/{id}", method = RequestMethod.DELETE )
-    @PreAuthorize("hasAuthority('HR') and hasAuthority('cancel_employee_absence_history')")
+    @PreAuthorize("hasAuthority('BO') and hasAuthority('cancel_employee_absence_history')")
     public APIResponseDTO deleteAbsence(@PathVariable("id") int id) {
         return new APIResponseDTO(200,"Success!",absenceService.deleteAbsence(id));
     }

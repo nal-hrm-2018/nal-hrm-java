@@ -1,6 +1,7 @@
 package nals.hrm.api_nals_hrm.service;
 
 import nals.hrm.api_nals_hrm.define.CheckWeekend;
+import nals.hrm.api_nals_hrm.define.ConvertStringLibrary;
 import nals.hrm.api_nals_hrm.define.Define;
 import nals.hrm.api_nals_hrm.dto.ListDTO;
 import nals.hrm.api_nals_hrm.dto.ListOvertimeDTO;
@@ -21,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -121,15 +123,15 @@ public class OvertimeService {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
 
-        Employee employeeCEO = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
         ArrayList<Overtime> listOT = new ArrayList<>();
         int total;
-        if (employeeCEO.getIsManager() == 1) {
+        if (employee.getIsManager() == 1) {
             //this is CEO
             //view list OT of CEO and HR
             //can accept or reject form OT
-            listOT = overtimeRepository.findOTOfPoOrHr(PageRequest.of(evalPage, evalPageSize));
-            total = overtimeRepository.findOTOfPoOrHr().size();
+            listOT = overtimeRepository.findOTCEO(PageRequest.of(evalPage, evalPageSize));
+            total = overtimeRepository.findOTCEO().size();
         } else {
             listOT = overtimeRepository.findOTHR(PageRequest.of(evalPage, evalPageSize));
             total = overtimeRepository.findOTHR().size();
@@ -198,9 +200,9 @@ public class OvertimeService {
 
         //check duplicate
 
-        if (overtimeRepository.findByEmployeeIdAndDateAndDeleteFlag(employee.getIdEmployee(), overtimeDTO.getDate(), 0).size() > 0) {
-            throw new CustomException("duplicate form ot", 400);
-        }
+//        if (overtimeRepository.findByEmployeeIdAndDateAndDeleteFlag(employee.getIdEmployee(), overtimeDTO.getDate(), 0).size() > 0) {
+//            throw new CustomException("duplicate form ot", 400);
+//        }
 
         Overtime overtimeAdd = new Overtime();
 
@@ -264,10 +266,10 @@ public class OvertimeService {
             throw new CustomException("Access Denied Exception!", 403);
         }
 
-        //check duplicate
-        if (!overtimeOld.getDate().equals(overtimeDTO.getDate()) && overtimeRepository.findByEmployeeIdAndDateAndDeleteFlag(employee.getIdEmployee(), overtimeDTO.getDate(), 0).size() > 0) {
-            throw new CustomException("duplicate form ot", 400);
-        }
+//        //check duplicate
+//        if (!overtimeOld.getDate().equals(overtimeDTO.getDate()) && overtimeRepository.findByEmployeeIdAndDateAndDeleteFlag(employee.getIdEmployee(), overtimeDTO.getDate(), 0).size() > 0) {
+//            throw new CustomException("duplicate form ot", 400);
+//        }
 
         Date startTime;
         Date endTime;
@@ -365,6 +367,9 @@ public class OvertimeService {
         } else {
             overtimeOld.setCorrectTotalTime(overtimeOld.getTotalTime());
         }
+        Date now = new Date();
+        String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+        overtimeOld.setUpdatedAt(strNow);
 
         overtimeRepository.save(overtimeOld);
 
@@ -415,5 +420,28 @@ public class OvertimeService {
     }
 
 
+    public ListDTO searchOvertimeHR(HttpServletRequest req, String keyword, Optional<Integer> page, Optional<Integer> pageSize) {
 
+        int evalPageSize = pageSize.orElse(Define.initialPageSize);
+        int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
+        keyword = ConvertStringLibrary.createSlug(keyword);
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
+        ArrayList<Overtime> listOT;
+        int total;
+        if (employee.getIsManager() == 1) {
+            //search all OT of employee
+            listOT = overtimeRepository.searchOTCEO(keyword, PageRequest.of(evalPage, evalPageSize));
+            total = overtimeRepository.searchOTCEO(keyword).size();
+        } else {
+            //search accept reject
+            listOT = overtimeRepository.searchOTHR(keyword,PageRequest.of(evalPage, evalPageSize));
+            total = overtimeRepository.searchOTHR(keyword).size();
+        }
+
+        ArrayList<Object> result = new ArrayList<>();
+
+        mapOvertime(listOT, result);
+
+        return new ListDTO(total, result);
+    }
 }

@@ -34,19 +34,20 @@ public class CommonAPIController {
     OvertimeStatusesService overtimeStatusesService;
 
     @RequestMapping( value = "/role",method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO')")
+//    @PreAuthorize("hasAuthority('BO') or hasAuthority('PO')")
+//    @PreAuthorize("hasAuthority('BO') or hasAuthority('PO')or hasAuthority('SM/AL') and hasAuthority('view_employee_basic')")
     public APIResponseDTO getRole() {
         return new APIResponseDTO(200,"Success!",roleService.findAll());
     }
 
     @RequestMapping( value = "/team",method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO')")
+//    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO')")
     public APIResponseDTO getTeam() {
         return new APIResponseDTO(200,"Success!",teamService.findAll());
     }
 
     @RequestMapping( value = "/type/employee",method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO')")
+//    @PreAuthorize("hasAuthority('HR') or hasAuthority('PO')")
     public APIResponseDTO getEmployeeType() {
         return new APIResponseDTO(200,"Success!",employeeTypeService.findAll());
     }
