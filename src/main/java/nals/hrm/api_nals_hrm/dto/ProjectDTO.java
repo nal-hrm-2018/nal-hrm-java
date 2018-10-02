@@ -15,6 +15,8 @@ public class ProjectDTO {
 
     private String endDate;
 
+    private String namePO;
+
     private Status status;
 
     public int getTotalMember() {
@@ -55,6 +57,14 @@ public class ProjectDTO {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getNamePO() {
+        return namePO;
+    }
+
+    public void setNamePO(String namePO) {
+        this.namePO = namePO;
     }
 
     public Status getStatus() {

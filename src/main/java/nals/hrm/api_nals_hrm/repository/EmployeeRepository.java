@@ -27,10 +27,44 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 
     @Query(value = "SELECT * FROM employees  INNER JOIN processes ON processes.employee_id = employees.id\n" +
             "WHERE processes.project_id = ?1 \n" +
-            "AND processes.check_project_exit = 1 AND processes.delete_flag = 0 AND employees.delete_flag = 0", nativeQuery = true)
+            "AND processes.check_project_exit = 0 AND processes.delete_flag = 0 AND employees.delete_flag = 0", nativeQuery = true)
     List<Employee> findAllNotExit(String id);
 
     //all employee or vendor can login
     //if workStatus = 0
     Employee findByEmailAndDeleteFlagAndWorkStatus(String username, int deleteFlag, int workStatus);
+
+    List<Employee> findByIsEmployeeAndWorkStatusAndDeleteFlag(int isEmployee, int workStatus, int deleteFlag);
+
+    @Query(value = "SELECT COUNT(*) FROM employees INNER JOIN employee_types\n" +
+            "ON employees.employee_type_id = employee_types.id\n" +
+            "WHERE employees.is_employee = 1\n" +
+            "AND employees.work_status = 0\n" +
+            "AND employees.delete_flag = 0\n" +
+            "AND employee_types.delete_flag = 0\n" +
+            "AND MONTH(NOW()) = MONTH(employees.startwork_date)\n" +
+            "AND YEAR(NOW()) = YEAR(employees.startwork_date)\n" +
+            "AND (employee_types.name != \"Internship\" AND employee_types.name = \"PartTime\")", nativeQuery = true)
+    int newEmployee();
+
+
+    @Query(value = "SELECT COUNT(*) FROM employees INNER JOIN employee_types\n" +
+            "ON employees.employee_type_id = employee_types.id\n" +
+            "WHERE employees.is_employee = 1\n" +
+            "AND employees.work_status = 0\n" +
+            "AND employees.delete_flag = 0\n" +
+            "AND employee_types.delete_flag = 0\n" +
+            "AND MONTH(NOW()) = MONTH(employees.birthday)\n" +
+            "AND (employee_types.name != \"Internship\" AND employee_types.name != \"PartTime\")", nativeQuery = true)
+    int birthdays();
+
+    @Query(value = "SELECT COUNT(*) FROM employees INNER JOIN employee_types\n" +
+            "ON employees.employee_type_id = employee_types.id\n" +
+            "WHERE employees.is_employee = 1\n" +
+            "AND employees.delete_flag = 0\n" +
+            "AND employee_types.delete_flag = 0\n" +
+            "AND MONTH(NOW()) = MONTH(employees.endwork_date)\n" +
+            "AND YEAR(NOW()) = YEAR(employees.endwork_date)\n" +
+            "AND (employee_types.name != \"Internship\" AND employee_types.name != \"PartTime\")", nativeQuery = true)
+    int employeeQuit();
 }

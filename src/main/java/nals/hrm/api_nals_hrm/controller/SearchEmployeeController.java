@@ -19,7 +19,7 @@ public class SearchEmployeeController {
     EmployeeService employeeService;
 
     @RequestMapping( value = "/manage/employee/search",params = { "keyword","page", "pageSize"}, method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('search_employee')")
+    @PreAuthorize("hasAuthority('BO') or hasAuthority('PO') or hasAuthority('SM/AL') and hasAuthority('search_employee')")
     public APIResponseDTO getBasic(@RequestParam("keyword")  String keyword, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
         return new APIResponseDTO(200,"Success!",employeeService.findByEmailContainingOrNameEmployeeContainingAndIsEmployeeAndDeleteFlag(keyword,keyword,1,1,page,pageSize));
     }

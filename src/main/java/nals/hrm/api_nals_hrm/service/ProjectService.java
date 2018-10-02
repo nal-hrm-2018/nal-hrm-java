@@ -47,7 +47,7 @@ public class ProjectService {
     private ModelMapper modelMapper;
 
 
-    //all project about exit or not exit
+    //all project (exit or not exit) by id
     public ListDTO getListProjectByIdEmployee(int idEmployee, Optional<Integer> page, Optional<Integer> pageSize) {
         try {
             ArrayList<Object> result = new ArrayList<>();//arrayList save all information the project of employee
@@ -58,10 +58,12 @@ public class ProjectService {
             //find processes the projects of employee
             //This means that all the projects that the employee has joined
             //paging result
-            List<Processes> processesList = processesRepository.findByEmployeeIdAndDeleteFlag(idEmployee, 0,PageRequest.of(evalPage, evalPageSize));
+            List<Processes> processesList = processesRepository.findByEmployeeIdAndDeleteFlag(
+                    idEmployee, 0,PageRequest.of(evalPage, evalPageSize));
             EmployeeProjectDTO projectDTO;
             for (Processes processes : processesList) {
-                projectDTO = new EmployeeProjectDTO(projectRepository.findByIdProjectAndDeleteFlag(processes.getProjectId(),0), processes);
+                projectDTO = new EmployeeProjectDTO(projectRepository.findByIdProjectAndDeleteFlag(
+                        processes.getProjectId(),0), processes);
                 result.add(projectDTO);
             }
             return new ListDTO(processesRepository.findByEmployeeIdAndDeleteFlag(idEmployee,0).size(), result);
@@ -78,18 +80,74 @@ public class ProjectService {
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
 
         //find employee by token
-        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
+        Employee employeePO = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(
+                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
 
         //get list project(in processes) manage role PO
         //project not end
-        ArrayList<Project> projectRolePO = projectRepository.findProjectProcessesAndNotEnd(employee.getIdEmployee(),roleRepository.findByNameRole("PO").getIdRole(),1,0, PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Project> projectRolePO = projectRepository.findProjectProcessesAndNotEnd(
+                employeePO.getIdEmployee(),roleRepository.findByNameRole("PO").getIdRole(),
+                0,0, PageRequest.of(evalPage, evalPageSize));
         ArrayList<Object> result = new ArrayList<>();
         ProjectDTO projectDTO = new ProjectDTO();
         for (Project objProject: projectRolePO) {
             projectDTO = modelMapper.map(objProject,projectDTO.getClass());
             projectDTO.setTotalMember(objProject.getEmployeeList().size());
+            projectDTO.setNamePO(employeePO.getNameEmployee());
             result.add(projectDTO);
         }
-        return new ListDTO(projectRepository.findProjectProcessesAndNotEnd(employee.getIdEmployee(),roleRepository.findByNameRole("PO").getIdRole(),1,0),result);
+        return new ListDTO(projectRepository.findProjectProcessesAndNotEnd(employeePO.getIdEmployee(),
+                roleRepository.findByNameRole("PO").getIdRole(),0,0),result);
+    }
+
+    public List<ProjectDTO> getListJoiningProjects(HttpServletRequest req) {
+        //find employee by token
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(
+                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
+
+        List<Processes> listJoiningProjects = processesRepository.findListJoiningProject(
+                employee.getIdEmployee());
+
+        ArrayList<ProjectDTO> result = new ArrayList<>();
+        ProjectDTO projectDTO = new ProjectDTO();
+        List<Processes> processesList;
+        Employee employeePO;
+
+        for (Processes objProcesses : listJoiningProjects){
+            projectDTO = modelMapper.map(objProcesses.getProject(), projectDTO.getClass());
+            projectDTO.setTotalMember(objProcesses.getProject().getEmployeeList().size());
+            //tim PO cua du an
+            processesList = processesRepository.findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(objProcesses.getProjectId(), 0, 4, 0);
+//            employeePO = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(processesList.get(0).getEmployeeId(), 1, 0);
+            employeePO = processesList.get(0).getEmployee();
+            if(employeePO.getNameEmployee() != null){
+                projectDTO.setNamePO(employeePO.getNameEmployee());
+            }
+            result.add(projectDTO);
+        }
+        return result;
+    }
+
+    public List<ProjectDTO> projectCompanyDashboard() {
+
+        //list project dang dien ra cua cong ty
+        List<Project> projectList = projectRepository.projectCompany();
+        ArrayList<ProjectDTO> result = new ArrayList<>();
+        ProjectDTO projectDTO = new ProjectDTO();
+        List<Processes> processesList;
+        Employee employeePO;
+        for (Project objProject : projectList){
+            projectDTO = modelMapper.map(objProject, projectDTO.getClass());
+            projectDTO.setTotalMember(objProject.getEmployeeList().size());
+            //tim PO cua du an
+            processesList = processesRepository.findByProjectIdAndCheckProjectExitAndRoleIdAndDeleteFlag(objProject.getIdProject(), 0, 4, 0);
+//            employeePO = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(processesList.get(0).getEmployeeId(), 1, 0);
+            employeePO = processesList.get(0).getEmployee();
+            if(employeePO.getNameEmployee() != null){
+                projectDTO.setNamePO(employeePO.getNameEmployee());
+            }
+            result.add(projectDTO);
+        }
+        return result;
     }
 }

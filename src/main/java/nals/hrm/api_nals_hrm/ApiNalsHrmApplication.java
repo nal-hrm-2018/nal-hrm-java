@@ -17,10 +17,10 @@ import java.util.TimeZone;
         Jsr310JpaConverters.class
 })
 public class ApiNalsHrmApplication extends SpringBootServletInitializer {
-    @PostConstruct
-    void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("ICT"));
-    }
+//    @PostConstruct
+//    void init() {
+//        TimeZone.setDefault(TimeZone.getTimeZone("ICT"));
+//    }
 
     @Bean
     public ModelMapper modelMapper() {

@@ -28,12 +28,11 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
 
     ArrayList<Absence> findByDeleteFlag(int deleteFlag);
 
-    List<Absence> findByEmployeeIdAndDeleteFlagAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, String startDate, String endDate);
 
     @Query(value = "SELECT * FROM absences " +
             " WHERE YEAR(from_date) = ?1 AND delete_flag = 0" +
             " ORDER BY updated_at DESC ", nativeQuery = true)
-    ArrayList<Absence> findByYear(int fromYear, PageRequest of);
+    ArrayList<Absence> findByYear(int fromYear, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM absences " +
             " WHERE YEAR(from_date) = ?1 AND delete_flag = 0" +
@@ -44,7 +43,7 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
             " WHERE MONTH(from_date) = ?1" +
             " AND YEAR(from_date) = ?2 AND delete_flag = 0" +
             " ORDER BY updated_at DESC ", nativeQuery = true)
-    ArrayList<Absence> findByMonthAndYear(int fromMonth, int fromYear,PageRequest of);
+    ArrayList<Absence> findByMonthAndYear(int fromMonth, int fromYear, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM absences " +
             " WHERE MONTH(from_date) = ?1" +
@@ -60,11 +59,25 @@ public interface AbsenceRepository extends JpaRepository<Absence, Integer> {
             "ORDER BY updated_at DESC", nativeQuery = true)
     List<Absence> findAbsenceByDate(int idEmployee, String startDateProject, String endDateProject);
 
+
+    @Query(value = "SELECT * FROM absences\n" +
+            "WHERE employee_id IN (?3)\n" +
+            "AND delete_flag = 0\n" +
+            "AND ((to_date >= ?1 AND to_date <= ?2 ) OR (from_date >= ?1))\n" +
+            "ORDER BY updated_at DESC", nativeQuery = true)
+    List<Absence> findAbsenceProject(String startDateProject, String endDateProject, ArrayList<Integer> listIdEmp);
+
+
     @Query(value = "SELECT * FROM absences INNER JOIN absence_types ON absences.absence_type_id = absence_types.id\n" +
             "WHERE absences.employee_id = ?1 AND absence_types.name = ?2 AND YEAR(absences.from_date) = ?3 AND absences.delete_flag = 0", nativeQuery = true)
     ArrayList<Absence> listLeave(int idEmployee, String typeLeave, int year);
 
     ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(int idEmployee, int i, int idTypeAbsence, String s, String s1);
 
-//    ArrayList<Absence> findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateNotLessThanEqualAndToDateNotGreaterThanEqual(int idEmployee, int i, int idTypeAbsence, String s, String s1);
+    @Query(value = "SELECT * FROM absences\n" +
+            "WHERE employee_id IN (?3)\n" +
+            "AND delete_flag = 0\n" +
+            "AND ((to_date >= ?1 AND to_date <= ?2 ) OR (from_date >= ?1))\n" +
+            "ORDER BY updated_at DESC", nativeQuery = true)
+    List<Absence> findAbsenceProject(String startDateProject, String endDateProject, ArrayList<Integer> listIdEmp, Pageable pageable);
 }

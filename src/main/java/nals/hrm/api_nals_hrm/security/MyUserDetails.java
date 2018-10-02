@@ -43,13 +43,14 @@ public class MyUserDetails implements UserDetailsService {
     grantedAuthorities.add(new SimpleGrantedAuthority(role.getNameRole()));
 
     List<Permission> listPermissions = employee.getPermissions();
-//    Log
     for (Permission objPermission: listPermissions) {
       grantedAuthorities.add(new SimpleGrantedAuthority(objPermission.getNamePermission()));
     }
 
-//    return new org.springframework.security.core.userdetails.User(
-//            employee.getEmail(), employee.getPassword(), grantedAuthorities);
+    if (employee.getIsManager() == 1){
+      grantedAuthorities.add(new SimpleGrantedAuthority("CEO"));
+    }
+
 
     return org.springframework.security.core.userdetails.User//
         .withUsername(username)//

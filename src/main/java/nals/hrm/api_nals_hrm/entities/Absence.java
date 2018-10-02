@@ -60,9 +60,6 @@ public class Absence implements Serializable {
     @JoinColumn(name = "absence_time_id", insertable = false, updatable = false)
     private AbsenceTime absenceTime;
 
-
-
-
     public Absence() {
     }
 

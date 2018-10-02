@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api")
-public class EditAbsenceEmployeeController {
+public class EditAbsenceController {
     @Autowired
     AbsenceService absenceService;
 
     @RequestMapping( value = "/manage/absence/edit/{id}", method = RequestMethod.PUT )
-    @PreAuthorize("hasAuthority('edit_absence_employee')")
+    @PreAuthorize("hasAuthority('BO') and hasAuthority('edit_absence_employee')")
     public APIResponseDTO editAbsence(@PathVariable("id") int id, @ApiParam @RequestBody Absence absence) {
         return new APIResponseDTO(200,"Success!",absenceService.editAbsence(id, absence));
     }

@@ -17,6 +17,7 @@ public class AbsenceDTO{
     private String createdAt;
     private AbsenceType absenceType;
     private AbsenceTime absenceTime;
+    private double numberDayAbsence;
 
     public AbsenceDTO() {
     }
@@ -115,5 +116,13 @@ public class AbsenceDTO{
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public double getNumberDayAbsence() {
+        return numberDayAbsence;
+    }
+
+    public void setNumberDayAbsence(double numberDayAbsence) {
+        this.numberDayAbsence = numberDayAbsence;
     }
 }
