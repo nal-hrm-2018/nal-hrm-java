@@ -33,7 +33,7 @@ public class HolidayDefault implements Serializable {
 //    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "day_type_id", insertable = false, updatable = false)
-    private DayTypes dateTypes;
+    private DayTypes dayTypes;
 
     public int getIdHoliday() {
         return idHoliday;
@@ -75,12 +75,12 @@ public class HolidayDefault implements Serializable {
         this.dayTypeId = dayTypeId;
     }
 
-    public DayTypes getDateTypes() {
-        return dateTypes;
+    public DayTypes getDayTypes() {
+        return dayTypes;
     }
 
-    public void setDateTypes(DayTypes dateTypes) {
-        this.dateTypes = dateTypes;
+    public void setDayTypes(DayTypes dayTypes) {
+        this.dayTypes = dayTypes;
     }
 
     public int getDeleteFlag() {
