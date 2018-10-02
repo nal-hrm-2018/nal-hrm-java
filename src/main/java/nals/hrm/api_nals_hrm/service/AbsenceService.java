@@ -383,21 +383,22 @@ public class AbsenceService {
             case 1:
             case 2:
             case 3:
-            case 4:
-            case 5:
                 allowAbsence = 12;
                 break;
-            case 6:
+            case 4:
                 allowAbsence = 13;
                 break;
-            case 7:
+            case 5:
                 allowAbsence = 14;
                 break;
-            case 8:
+            case 6:
                 allowAbsence = 15;
                 break;
-            default:
+            case 7:
                 allowAbsence = 16;
+                break;
+            default:
+                allowAbsence = 17;
         }
 
         //neu thoi gian hien tai sau  sau ngày 31/3

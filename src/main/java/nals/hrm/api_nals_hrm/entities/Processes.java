@@ -64,6 +64,12 @@ public class Processes implements Serializable {
     @JoinColumn(name="project_id", insertable = false, updatable = false)
     private Project project;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="employee_id", insertable = false, updatable = false)
+    private Employee employee;
+
+
     public int getIdProcesses() {
         return idProcesses;
     }
@@ -182,5 +188,13 @@ public class Processes implements Serializable {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

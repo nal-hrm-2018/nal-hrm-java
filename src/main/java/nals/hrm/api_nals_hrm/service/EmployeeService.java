@@ -2,11 +2,9 @@ package nals.hrm.api_nals_hrm.service;
 
 
 import nals.hrm.api_nals_hrm.define.Define;
-import nals.hrm.api_nals_hrm.dto.GenderDTO;
-import nals.hrm.api_nals_hrm.dto.ListDTO;
-import nals.hrm.api_nals_hrm.dto.MaritalStatusDTO;
-import nals.hrm.api_nals_hrm.dto.ProfileDTO;
+import nals.hrm.api_nals_hrm.dto.*;
 import nals.hrm.api_nals_hrm.entities.Employee;
+import nals.hrm.api_nals_hrm.entities.EmployeeType;
 import nals.hrm.api_nals_hrm.exception.CustomException;
 import nals.hrm.api_nals_hrm.repository.EmployeeRepository;
 import nals.hrm.api_nals_hrm.repository.EmployeeTypeRepository;
@@ -33,6 +31,8 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private EmployeeTypeRepository employeeTypeRepository;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -151,6 +151,49 @@ public class EmployeeService {
     }
 
 
+    public EmployeeDashboardDTO employeeInformationDashboard() {
+        int totalEmployee;
+        int official = 0;
+        int probation = 0;
+        int internship = 0;
+        int partTime = 0;
+        String employeeTypeName;
+
+        List<Employee> employeeList = employeeRepository.findByIsEmployeeAndWorkStatusAndDeleteFlag(1, 0, 0);
+        for(Employee objEmployee : employeeList){
+            if(objEmployee.getEmployeeTypeId() != null){
+                employeeTypeName = objEmployee.getEmployeeType().getNameEmployeeType();
+                switch (employeeTypeName){
+                    case "Internship":
+                        internship += 1;
+                        break;
+                    case "Probationary":
+                        probation += 1;
+                        break;
+                    case "FullTime":
+                        official += 1;
+                        break;
+                    case "PartTime":
+                        partTime += 1;
+                        break;
+                }
+            }
+
+        }
+        totalEmployee = employeeList.size();
+        return new EmployeeDashboardDTO(totalEmployee, official, probation, internship, partTime);
+    }
+
+    public EventDashboardDTO eventDashboard() {
+        int newEmployees = 0;
+        int birthdays = 0;
+        int employeesQuit = 0;
+
+        newEmployees = employeeRepository.newEmployee();
+        birthdays = employeeRepository.birthdays();
+        employeesQuit = employeeRepository.employeeQuit();
+        return new EventDashboardDTO(newEmployees, birthdays, employeesQuit);
+    }
 }
 
 
