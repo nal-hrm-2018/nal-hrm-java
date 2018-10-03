@@ -67,10 +67,12 @@ public class AbsenceService {
     AbsenceTypeRepository absenceTypeRepository;
 
 
-    public ListAbsenceDTO getListAbsenceEmployeeByToken(HttpServletRequest req, Optional<Integer> page, Optional<Integer> pageSize) {
+    public ListAbsenceDTO getListAbsenceEmployeeByToken(HttpServletRequest req,
+                                                        Optional<Integer> page, Optional<Integer> pageSize) {
 
         //find employee by token
-        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
+        Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(
+                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
 
         return getListAbsenceByIdEmployee(employee.getIdEmployee(), page, pageSize);
     }
@@ -94,11 +96,13 @@ public class AbsenceService {
 
                 //find employee submit form absence
                 //find by token login
-                Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
+                Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(
+                        jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
 
                 //check form duplicate
 
-                List<Absence> absenceDuplicate = absenceRepository.findAbsenceByDate(employee.getIdEmployee(), absence.getFromDate(), absence.getToDate());
+                List<Absence> absenceDuplicate = absenceRepository.findAbsenceByDate(
+                        employee.getIdEmployee(), absence.getFromDate(), absence.getToDate());
                 if (absenceDuplicate.size() > 0) {
                     throw new CustomException("Duplicate form", 400);
                 }
@@ -149,7 +153,8 @@ public class AbsenceService {
                 //nếu k thuộc 1 project nào email được default send to CEO
 
                 //tim nhung project dang dien ra ma member do tham gia :o
-                List<Processes> processesList = processesRepository.findByEmployeeIdAndCheckProjectExitAndDeleteFlag(employee.getIdEmployee(), 1, 0);
+                List<Processes> processesList = processesRepository.findByEmployeeIdAndCheckProjectExitAndDeleteFlag(
+                        employee.getIdEmployee(), 1, 0);
                 if (processesList.size() > 0) {
                     List<Processes> processesByRole; //find list project processes by role, idProject
                     Processes processesPO;
@@ -194,7 +199,7 @@ public class AbsenceService {
                 throw new CustomException("Can't submit form absence!", 400);
             }
         } catch (ParseException e) {
-            throw new CustomException("Error server", 500);
+            throw new CustomException("Error data", 400);
         }
 
     }
@@ -211,7 +216,8 @@ public class AbsenceService {
             fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(absenceEdit.getFromDate());
             toDate = new SimpleDateFormat("yyyy-MM-dd").parse(absenceEdit.getToDate());
 
-            List<Absence> absenceListDuplicate = absenceRepository.findAbsenceByDate(absenceOld.getEmployeeId(), absenceEdit.getFromDate(), absenceEdit.getFromDate());
+            List<Absence> absenceListDuplicate = absenceRepository.findAbsenceByDate(
+                    absenceOld.getEmployeeId(), absenceEdit.getFromDate(), absenceEdit.getFromDate());
             for (Absence objAbsence : absenceListDuplicate) {
                 if (objAbsence.getIdAbsences() != id) {
                     //ton tai 1 đơn khac don dang sua
@@ -233,13 +239,15 @@ public class AbsenceService {
             absenceEdit.setUpdateAt(strNow);
 
             //if time edit < 30 day(equal fromDate or equal createAt) =>can edit absence
-            if (DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absenceOld.getFromDate()), now) <= 30 || DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absenceOld.getCreatedAt()), now) <= 30) {
+            if (DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(
+                    absenceOld.getFromDate()), now) <= 30 ||
+                    DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absenceOld.getCreatedAt()), now) <= 30) {
 
                 //don khong duoc sua thanh 2 nam khac nhau
-                //hoac 2 thang chuyen tiep 6 7
+                //hoac 2 thang chuyen tiep 3 4
                 if ((fromDate.getYear() != toDate.getYear())
-                        || (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= 6
-                        && Integer.parseInt(new SimpleDateFormat("MM").format(toDate)) >= 7)) {
+                        || (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= Define.monthChangeRemainAbsence
+                        && Integer.parseInt(new SimpleDateFormat("MM").format(toDate)) >= (Define.monthChangeRemainAbsence + 1))) {
                     //can't edit
                     throw new CustomException("Can't edit!", 400);
 
@@ -256,7 +264,7 @@ public class AbsenceService {
             }
 
         } catch (ParseException e) {
-            throw new CustomException("Error server", 500);
+            throw new CustomException("Error data", 400);
         }
 
     }
@@ -266,7 +274,8 @@ public class AbsenceService {
         Absence absence = absenceRepository.findByIdAbsencesAndDeleteFlag(idAbsence, 0);
         Date now = new Date();
         try {
-            if (DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate()), now) <= 30 || DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absence.getCreatedAt()), now) <= 30) {
+            if (DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absence.getFromDate()), now) <= 30 ||
+                    DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(absence.getCreatedAt()), now) <= 30) {
                 absence.setDeleteFlag(1);
                 absenceRepository.save(absence);
                 return "Delete absence success!";
@@ -274,7 +283,7 @@ public class AbsenceService {
                 throw new CustomException("Can't delete!", 400);
             }
         } catch (ParseException e) {
-            throw new CustomException("Error server!", 500);
+            throw new CustomException("Error data!", 400);
         }
 
     }
@@ -282,7 +291,8 @@ public class AbsenceService {
     public ListDTO getListAbsenceHR(Optional<Integer> page, Optional<Integer> pageSize) {
         int evalPageSize = pageSize.orElse(Define.initialPageSize);
         int evalPage = (page.orElse(0) < 1) ? Define.initialPage : page.get() - 1;
-        ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlagOrderByUpdateAtDesc(0, PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Absence> listAbsence = absenceRepository.findByDeleteFlagOrderByUpdateAtDesc(
+                0, PageRequest.of(evalPage, evalPageSize));
 
         ArrayList<Object> listResult = new ArrayList<>();
         mapListAbsence(listAbsence, listResult);
@@ -299,7 +309,8 @@ public class AbsenceService {
 
         //all absence of employee all year
         //paging result
-        ArrayList<Absence> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagOrderByUpdateAtDesc(employee.getIdEmployee(), 0, PageRequest.of(evalPage, evalPageSize));
+        ArrayList<Absence> absenceList = absenceRepository.findByEmployeeIdAndDeleteFlagOrderByUpdateAtDesc(
+                employee.getIdEmployee(), 0, PageRequest.of(evalPage, evalPageSize));
 
 
         ArrayList<Object> result = new ArrayList<>();
@@ -343,7 +354,7 @@ public class AbsenceService {
             try {
                 maternityLeave += DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(obj.getFromDate()), new SimpleDateFormat("yyyy-MM-dd").parse(obj.getToDate())) + 1;
             } catch (ParseException e) {
-                throw new CustomException("Error server", 500);
+                throw new CustomException("Error data", 400);
             }
         }
 
@@ -368,53 +379,59 @@ public class AbsenceService {
         try {
             startWorkDate = new SimpleDateFormat("yyyy-MM-dd").parse(strStartWorkDate);
         } catch (ParseException e) {
-            throw new CustomException("Error server", 500);
+            throw new CustomException("Error data", 400);
         }
 
+        if (employee.getEmployeeType().getNameEmployeeType().equals("FullTime") || employee.getEmployeeType().getNameEmployeeType().equals("Probationary")) {
+            //so nam da lam viec cua nhan vien
+            int timeWork = Integer.parseInt(new SimpleDateFormat("yyyy").format(now)) -
+                    Integer.parseInt(new SimpleDateFormat("yyyy").format(startWorkDate));
 
-        //so nam da lam viec cua nhan vien
-        int timeWork = Integer.parseInt(new SimpleDateFormat("yyyy").format(now)) -
-                Integer.parseInt(new SimpleDateFormat("yyyy").format(startWorkDate));
-
-        switch (timeWork) {
-            case 0:
-                allowAbsence = 12 - Integer.parseInt(new SimpleDateFormat("MM").format(startWorkDate));
-                break;
-            case 1:
-            case 2:
-            case 3:
-                allowAbsence = 12;
-                break;
-            case 4:
-                allowAbsence = 13;
-                break;
-            case 5:
-                allowAbsence = 14;
-                break;
-            case 6:
-                allowAbsence = 15;
-                break;
-            case 7:
-                allowAbsence = 16;
-                break;
-            default:
-                allowAbsence = 17;
+            switch (timeWork) {
+                case 0:
+                    allowAbsence = 12 - Integer.parseInt(new SimpleDateFormat("MM").format(startWorkDate));
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    allowAbsence = 12;
+                    break;
+                case 4:
+                    allowAbsence = 13;
+                    break;
+                case 5:
+                    allowAbsence = 14;
+                    break;
+                case 6:
+                    allowAbsence = 15;
+                    break;
+                case 7:
+                    allowAbsence = 16;
+                    break;
+                default:
+                    allowAbsence = 17;
+            }
+        }else{
+            allowAbsence = 0;
         }
 
-        //neu thoi gian hien tai sau  sau ngày 31/3
-        String strDateChangeRemain = yearNow + "-03-31";
+        //thoi gian thay doi ngay nghi
+        String strDateChangeRemain = yearNow + Define.dateChangeRemainAbsence;
         Date dateChangeRemain;
         try {
             dateChangeRemain = new SimpleDateFormat("yyyy-MM-dd").parse(strDateChangeRemain);
         } catch (ParseException e) {
-            throw new CustomException("Error server", 500);
+            throw new CustomException("Error data", 400);
         }
 
         //find id of type absence = "annual_leave"
         int idTypeAbsence = absenceTypeRepository.findByNameAbsenceType("annual_leave").getIdAbsenceType();
 
         //tinh so ngay nghi phep hang nam tu 1/1 - >31/3
-        ArrayList<Absence> listAbsenceFromToTypeAnnualLeave = absenceRepository.findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(employee.getIdEmployee(), 0, idTypeAbsence, yearNow + "-01-01", yearNow + "-03-31");
+        ArrayList<Absence> listAbsenceFromToTypeAnnualLeave =
+                absenceRepository.findByEmployeeIdAndDeleteFlagAndAbsenceTypeIdAndFromDateGreaterThanEqualAndToDateLessThanEqualOrderByFromDateDesc(
+                employee.getIdEmployee(), 0, idTypeAbsence, yearNow + Define.timeYearFromChangeAddAbsence,
+                        yearNow + Define.timeMonthToChangeAddAbsence);
 
         //so ngay nghi phep hang nam truoc 1/4
         double before4 = checkAbsenceDayInvalid(listAbsenceFromToTypeAnnualLeave);
@@ -452,15 +469,14 @@ public class AbsenceService {
             }
 
         } else {
-            if (remainingAbsenceDays > before4) {
-
+            if (employee.getRemainingAbsenceDays() > before4) {
                 //chua nghi het ~ chua su dung ngay allowAbsence
-                remainingAbsenceDays = remainingAbsenceDays - before4;
+                remainingAbsenceDays = employee.getRemainingAbsenceDays() - before4;
                 if (after4 > allowAbsence) {
                     //so ngay dang ky nghi sau thang 4 vuot muc cho phep
                     //chuyen ngay vuot muc thanh khong luong
                     unpaidLeave = unpaidLeave + after4 - allowAbsence;
-                    totalRemain = remainingAbsenceDays - before4;
+                    totalRemain = remainingAbsenceDays;
                     annualLeave = allowAbsence + before4;
                 } else {
                     totalRemain = allowAbsence + remainingAbsenceDays - after4;
@@ -468,11 +484,11 @@ public class AbsenceService {
 
             } else {
                 remainingAbsenceDays = 0;
-                if(annualLeave - employee.getRemainingAbsenceDays() > allowAbsence){
+                if (annualLeave - employee.getRemainingAbsenceDays() > allowAbsence) {
                     unpaidLeave = unpaidLeave + annualLeave - employee.getRemainingAbsenceDays() - allowAbsence;
                     annualLeave = allowAbsence + employee.getRemainingAbsenceDays();
-                }else{
-                    totalRemain = allowAbsence + remainingAbsenceDays - annualLeave;
+                } else {
+                    totalRemain = allowAbsence + employee.getRemainingAbsenceDays() - annualLeave;
                 }
 
             }
@@ -499,7 +515,8 @@ public class AbsenceService {
 
         //xác định xem có đúng project mà employee đó làm PO hay k?
 
-        Employee employeePO = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
+        Employee employeePO = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(
+                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)), 0, 0);
 
         Processes obj = processesRepository.findByEmployeeIdAndProjectIdAndRoleIdAndCheckProjectExitAndDeleteFlag(
                 employeePO.getIdEmployee(), idProject, rolePO, 0, 0);
@@ -535,13 +552,15 @@ public class AbsenceService {
 
         //get list absence of objEmp
         //when project start to now
-        absenceList = absenceRepository.findAbsenceProject(startDateProject, endDateProject, listIdEmp, PageRequest.of(evalPage, evalPageSize));
+        absenceList = absenceRepository.findAbsenceProject(
+                startDateProject, endDateProject, listIdEmp, PageRequest.of(evalPage, evalPageSize));
 
         for (Absence objAbs : absenceList) {
             absenceDTO = modelMapper.map(objAbs, absenceDTO.getClass());
             //find nameEmployee
             //if name != null=> return name else return ""
-            employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(objAbs.getEmployeeId(), 1, 0);
+            employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(
+                    objAbs.getEmployeeId(), 1, 0);
             nameEmployee = employee != null ? employee.getNameEmployee() : "";
             absenceDTO.setIdEmployee(objAbs.getEmployeeId());
             absenceDTO.setNameEmployee(nameEmployee);
@@ -554,6 +573,7 @@ public class AbsenceService {
                     throw new CustomException("Error data", 400);
                 }
             } else {
+
                 absenceDTO.setNumberDayAbsence(dateValidate(objAbs));
             }
             listResult.add(absenceDTO);
@@ -584,7 +604,7 @@ public class AbsenceService {
             mapListAbsence(listAbsence, listResult);
             return new ListDTO(total, listResult);
         } catch (Exception e) {
-            throw new CustomException("Error server", 500);
+            throw new CustomException("Error data", 400);
         }
 
     }
@@ -597,7 +617,8 @@ public class AbsenceService {
             absenceDTO = modelMapper.map(objAbsence, absenceDTO.getClass());
             //find nameEmployee
             //if name != null=> return name else return ""
-            employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(objAbsence.getEmployeeId(), 1, 0);
+            employee = employeeRepository.findByIdEmployeeAndIsEmployeeAndDeleteFlag(
+                    objAbsence.getEmployeeId(), 1, 0);
             nameEmployee = employee != null ? employee.getNameEmployee() : "";
             absenceDTO.setIdEmployee(objAbsence.getEmployeeId());
             absenceDTO.setNameEmployee(nameEmployee);
@@ -605,7 +626,7 @@ public class AbsenceService {
                 try {
                     absenceDTO.setNumberDayAbsence(DateDiff.dateDiff(new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getFromDate()), new SimpleDateFormat("yyyy-MM-dd").parse(objAbsence.getToDate())) + 1);
                 } catch (ParseException e) {
-                    throw new CustomException("Error server", 500);
+                    throw new CustomException("Error data", 400);
                 }
             } else {
                 absenceDTO.setNumberDayAbsence(dateValidate(objAbsence));
@@ -623,14 +644,14 @@ public class AbsenceService {
         int year = 0;
         year = Integer.parseInt(new SimpleDateFormat("yyyy").format(fromDate));
         absence.setFromDate(absence.getFromDate());
-        if (fromDate.getYear() != toDate.getYear() || (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= 6 && Integer.parseInt(new SimpleDateFormat("MM").format(toDate)) >= 7)) {
+        if (fromDate.getYear() != toDate.getYear() || (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= Define.monthChangeRemainAbsence && Integer.parseInt(new SimpleDateFormat("MM").format(toDate)) >= (Define.monthChangeRemainAbsence +1))) {
             //chia làm 2 đơn để save vào database
-            if (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= 6 && Integer.parseInt(new SimpleDateFormat("MM").format(toDate)) >= 7) {
-                //đơn từ from - year-06-30
-                absence.setToDate(year + "-06-30");
+            if (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= Define.monthChangeRemainAbsence && Integer.parseInt(new SimpleDateFormat("MM").format(toDate)) >= (Define.monthChangeRemainAbsence +1)) {
+                //đơn từ from - year-03-31
+                absence.setToDate(year + Define.timeMonthToChangeAddAbsence);
             } else {
                 //đơn thứ nhất từ fromDate - 31/12/fromYear
-                absence.setToDate(year + "-12-31");
+                absence.setToDate(year + Define.timeYearToChangeAddAbsence);
             }
 
             absenceRepository.save(absence);
@@ -648,12 +669,12 @@ public class AbsenceService {
 
             year = Integer.parseInt(new SimpleDateFormat("yyyy").format(toDate));
             //đơn thứ 2 từ 1/1/toYear - toDate
-            if (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= 6 && Integer.parseInt(new SimpleDateFormat("MM").format(toDate)) >= 7) {
-                //đơn từ from - year-06-31
-                absenceForm2.setFromDate(year + "-07-01");
+            if (Integer.parseInt(new SimpleDateFormat("MM").format(fromDate)) <= Define.monthChangeRemainAbsence && Integer.parseInt(new SimpleDateFormat("MM").format(toDate)) >= (Define.monthChangeRemainAbsence + 1)) {
+                //from : year-04-01
+                absenceForm2.setFromDate(year + Define.timeMonthFromChangeAddAbsence);
             } else {
-                //đơn thứ nhất từ fromDate - 31/12/fromYear
-                absenceForm2.setFromDate(year + "-01-01");
+                //from: year-01-01
+                absenceForm2.setFromDate(year + Define.timeYearFromChangeAddAbsence);
             }
 
             absenceForm2.setToDate(new SimpleDateFormat("yyyy-MM-dd").format(toDate));
@@ -728,7 +749,7 @@ public class AbsenceService {
             }
 
         } catch (ParseException e) {
-            throw new CustomException("Error server", 500);
+            throw new CustomException("Error data", 400);
         }
         return leave;
     }
@@ -742,7 +763,7 @@ public class AbsenceService {
             sendEmail.setSubject(subject);
             sendEmail.setText(content, true);
         } catch (MessagingException e) {
-            throw new CustomException("Error server!", 500);
+            throw new CustomException("Error data!", 400);
         }
 
         javaMailSender.send(message);
