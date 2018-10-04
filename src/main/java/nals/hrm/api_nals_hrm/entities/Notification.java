@@ -30,11 +30,11 @@ public class Notification implements Serializable {
     private String endDate;
 
 //    @JsonIgnore
-    @Column(name = "create_at")
+    @Column(name = "created_at")
     private String createdAt;
 
 //    @JsonIgnore
-    @Column(name = "update_at")
+    @Column(name = "updated_at")
     private String updateAt;
 
     @JsonIgnore

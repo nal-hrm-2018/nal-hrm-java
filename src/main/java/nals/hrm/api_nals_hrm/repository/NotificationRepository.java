@@ -11,7 +11,7 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
 
     @Query(value = "SELECT * FROM notification\n" +
-            "WHERE delete_flag = 0 AND (end_date IS NULL OR end_date >= NOW())\n" +
+            "WHERE delete_flag = 0 AND (end_date IS NULL OR DATE(end_date) >= DATE(NOW()))\n" +
             "ORDER BY update_at DESC", nativeQuery = true)
     List<Notification> findNotification();
 }
