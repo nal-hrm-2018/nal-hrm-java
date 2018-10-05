@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class EventDashboardController {
-    @Autowired
-    EmployeeService employeeService;
+  @Autowired
+  EmployeeService employeeService;
 
-    @RequestMapping( value = "/bo/dashboard/event", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('BO')")
-    public APIResponseDTO eventDashboard() {
-        return new APIResponseDTO(200,"Success!", employeeService.eventDashboard());
-    }
+  @RequestMapping(value = "/bo/dashboard/event", method = RequestMethod.GET)
+  @PreAuthorize("hasAuthority('BO')")
+  public APIResponseDTO eventDashboard() {
+    return new APIResponseDTO(200, "Success!", employeeService.eventDashboard());
+  }
 
 }

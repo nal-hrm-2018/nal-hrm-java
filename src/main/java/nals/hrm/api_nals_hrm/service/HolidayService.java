@@ -16,19 +16,19 @@ import java.util.List;
 @Transactional
 public class HolidayService {
 
-    @Autowired
-    HolidayRepository holidayRepository;
+  @Autowired
+  HolidayRepository holidayRepository;
 
-    @Autowired
-    HolidayDefaultRepository holidayDefaultRepository;
+  @Autowired
+  HolidayDefaultRepository holidayDefaultRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+  @Autowired
+  private ModelMapper modelMapper;
 
-    public List<Holiday> getListHoliday() {
-        List<Holiday> holidays = holidayRepository.findHoliday();
-        List<HolidayDefault> holidayDefaults = holidayDefaultRepository.findHolidayDefault();
-        holidays.addAll(modelMapper.map(holidayDefaults, holidays.getClass()));
-        return holidays;
-    }
+  public List<Holiday> getListHoliday() {
+    List<Holiday> holidays = holidayRepository.findHoliday();
+    List<HolidayDefault> holidayDefaults = holidayDefaultRepository.findHolidayDefault();
+    holidays.addAll(modelMapper.map(holidayDefaults, holidays.getClass()));
+    return holidays;
+  }
 }

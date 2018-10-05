@@ -8,9 +8,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
-import javax.annotation.PostConstruct;
-import java.util.TimeZone;
-
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
         ApiNalsHrmApplication.class,
@@ -22,12 +19,12 @@ public class ApiNalsHrmApplication extends SpringBootServletInitializer {
 //        TimeZone.setDefault(TimeZone.getTimeZone("ICT"));
 //    }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(ApiNalsHrmApplication.class, args);
+  }
 
-    public static void main(String[] args) {
-        SpringApplication.run(ApiNalsHrmApplication.class, args);
-    }
+  @Bean
+  public ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
 }

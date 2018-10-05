@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DayTypesRepository extends CrudRepository<DayTypes, Integer> {
 
-    List<DayTypes> findAll();
+  List<DayTypes> findAll();
 
-    DayTypes findByNameDayTypeAndDeleteFlag(String holiday, int i);
+  DayTypes findByNameDayTypeAndDeleteFlag(String holiday, int i);
 }

@@ -16,15 +16,15 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class ListProjectManageRolePOController {
 
-    @Autowired
-    ProcessesService processesService;
+  @Autowired
+  ProcessesService processesService;
 
-    @Autowired
-    ProjectService projectService;
+  @Autowired
+  ProjectService projectService;
 
-    @RequestMapping( value = "/manage/absence/po",params = { "page", "pageSize" }, method = RequestMethod.GET )
-    public APIResponseDTO getListProjectManageRolePO(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
-        return new APIResponseDTO(200,"Success!",projectService.findProjectProcessesManageRolePO(req,page,pageSize));
-    }
+  @RequestMapping(value = "/manage/absence/po", params = {"page", "pageSize"}, method = RequestMethod.GET)
+  public APIResponseDTO getListProjectManageRolePO(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize") Optional<Integer> pageSize) {
+    return new APIResponseDTO(200, "Success!", projectService.findProjectProcessesManageRolePO(req, page, pageSize));
+  }
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface OvertimeStatusesRepository extends PagingAndSortingRepository<OvertimeStatuses, Integer> {
 
-    List<OvertimeStatuses> findAll();
+  List<OvertimeStatuses> findAll();
 
-    OvertimeStatuses findByName(String not_yet);
+  OvertimeStatuses findByName(String not_yet);
 }

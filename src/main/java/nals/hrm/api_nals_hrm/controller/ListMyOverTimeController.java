@@ -15,11 +15,11 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class ListMyOverTimeController {
 
-    @Autowired
-    OvertimeService overtimeService;
+  @Autowired
+  OvertimeService overtimeService;
 
-    @RequestMapping( value = "/overtime", params = { "page", "pageSize" }, method = RequestMethod.GET )
-    public APIResponseDTO getListOvertimeByToken(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
-        return new APIResponseDTO(200,"Success!",overtimeService.getListOvertimeByToken(req,page,pageSize));
-    }
+  @RequestMapping(value = "/overtime", params = {"page", "pageSize"}, method = RequestMethod.GET)
+  public APIResponseDTO getListOvertimeByToken(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize") Optional<Integer> pageSize) {
+    return new APIResponseDTO(200, "Success!", overtimeService.getListOvertimeByToken(req, page, pageSize));
+  }
 }

@@ -9,9 +9,9 @@ import java.util.List;
 @Repository
 public interface AbsenceTypeRepository extends CrudRepository<AbsenceType, Integer> {
 
-    List<AbsenceType> findTop6ByNameAbsenceTypeNotNull();
+  List<AbsenceType> findTop6ByNameAbsenceTypeNotNull();
 
-    AbsenceType findByIdAbsenceType(int absenceTypeId);
+  AbsenceType findByIdAbsenceType(int absenceTypeId);
 
-    AbsenceType findByNameAbsenceType(String annual_leave);
+  AbsenceType findByNameAbsenceType(String annual_leave);
 }

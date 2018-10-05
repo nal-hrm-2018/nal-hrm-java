@@ -12,10 +12,10 @@ import java.util.List;
 @Transactional
 public class DayTypesService {
 
-    @Autowired
-    DayTypesRepository dayTypesRepository;
+  @Autowired
+  DayTypesRepository dayTypesRepository;
 
-    public List<DayTypes> findAll() {
-        return dayTypesRepository.findAll();
-    }
+  public List<DayTypes> findAll() {
+    return dayTypesRepository.findAll();
+  }
 }

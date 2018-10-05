@@ -14,11 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/api")
 public class DeleteOvertimeController {
-    @Autowired
-    OvertimeService overtimeService;
+  @Autowired
+  OvertimeService overtimeService;
 
-    @RequestMapping( value = "/overtime/delete/{id}", method = RequestMethod.DELETE )
-    public APIResponseDTO deleteOvertime(@PathVariable("id") int id,  HttpServletRequest req) {
-        return new APIResponseDTO(200,"Success!", overtimeService.deleteOvertime(id, req));
-    }
+  @RequestMapping(value = "/overtime/delete/{id}", method = RequestMethod.DELETE)
+  public APIResponseDTO deleteOvertime(@PathVariable("id") int id, HttpServletRequest req) {
+    return new APIResponseDTO(200, "Success!", overtimeService.deleteOvertime(id, req));
+  }
 }

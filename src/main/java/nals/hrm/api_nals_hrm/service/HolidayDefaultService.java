@@ -12,10 +12,10 @@ import java.util.List;
 @Transactional
 public class HolidayDefaultService {
 
-    @Autowired
-    HolidayDefaultRepository holidayDefaultRepository;
+  @Autowired
+  HolidayDefaultRepository holidayDefaultRepository;
 
-    public List<HolidayDefault> getListHolidayDefault() {
-        return holidayDefaultRepository.findHolidayDefault();
-    }
+  public List<HolidayDefault> getListHolidayDefault() {
+    return holidayDefaultRepository.findHolidayDefault();
+  }
 }

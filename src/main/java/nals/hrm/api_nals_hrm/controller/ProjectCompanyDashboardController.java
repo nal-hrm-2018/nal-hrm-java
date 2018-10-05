@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class ProjectCompanyDashboardController {
-    @Autowired
-    ProjectService projectService;
+  @Autowired
+  ProjectService projectService;
 
-    @RequestMapping( value = "/dashboard/project-company", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('PO') or hasAuthority('SM/AL')")
-    public APIResponseDTO projectCompanyDashboard() {
-        return new APIResponseDTO(200,"Success!", projectService.projectCompanyDashboard());
-    }
+  @RequestMapping(value = "/dashboard/project-company", method = RequestMethod.GET)
+  @PreAuthorize("hasAuthority('PO') or hasAuthority('SM/AL')")
+  public APIResponseDTO projectCompanyDashboard() {
+    return new APIResponseDTO(200, "Success!", projectService.projectCompanyDashboard());
+  }
 
 }
