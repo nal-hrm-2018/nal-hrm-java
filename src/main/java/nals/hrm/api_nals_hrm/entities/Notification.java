@@ -10,9 +10,9 @@ import java.io.Serializable;
 public class Notification implements Serializable {
 
   @Id
-  @SequenceGenerator(name = "seq", sequenceName = "oracle_seq")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//  @SequenceGenerator(name = "seq", sequenceName = "oracle_seq")
+//  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
   @Column(name = "id")
   private int idNotification;
 
