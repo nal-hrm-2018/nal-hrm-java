@@ -5,7 +5,6 @@ import nals.hrm.api_nals_hrm.entities.Employee;
 import nals.hrm.api_nals_hrm.entities.Permission;
 import nals.hrm.api_nals_hrm.entities.Role;
 import nals.hrm.api_nals_hrm.repository.EmployeeRepository;
-import nals.hrm.api_nals_hrm.repository.PermissionRepository;
 import nals.hrm.api_nals_hrm.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +29,7 @@ public class MyUserDetails implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    final Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(username,0,0);
+    final Employee employee = employeeRepository.findByEmailAndDeleteFlagAndWorkStatus(username, 0, 0);
 
     if (employee == null) {
       throw new UsernameNotFoundException("User '" + username + "' not found");
@@ -43,24 +42,24 @@ public class MyUserDetails implements UserDetailsService {
     grantedAuthorities.add(new SimpleGrantedAuthority(role.getNameRole()));
 
     List<Permission> listPermissions = employee.getPermissions();
-    for (Permission objPermission: listPermissions) {
+    for (Permission objPermission : listPermissions) {
       grantedAuthorities.add(new SimpleGrantedAuthority(objPermission.getNamePermission()));
     }
 
-    if (employee.getIsManager() == 1){
+    if (employee.getIsManager() == 1) {
       grantedAuthorities.add(new SimpleGrantedAuthority("CEO"));
     }
 
 
     return org.springframework.security.core.userdetails.User//
-        .withUsername(username)//
-        .password(employee.getPassword())//
-        .authorities(grantedAuthorities)//
-        .accountExpired(false)//
-        .accountLocked(false)//
-        .credentialsExpired(false)//
-        .disabled(false)//
-        .build();
+            .withUsername(username)//
+            .password(employee.getPassword())//
+            .authorities(grantedAuthorities)//
+            .accountExpired(false)//
+            .accountLocked(false)//
+            .credentialsExpired(false)//
+            .disabled(false)//
+            .build();
   }
 
 }

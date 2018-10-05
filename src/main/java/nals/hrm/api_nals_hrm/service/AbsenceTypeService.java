@@ -13,10 +13,10 @@ import java.util.List;
 @Transactional
 public class AbsenceTypeService {
 
-    @Autowired
-    AbsenceTypeRepository absenceTypeRepository;
+  @Autowired
+  AbsenceTypeRepository absenceTypeRepository;
 
-    public List<AbsenceType> findAll() {
-        return absenceTypeRepository.findTop6ByNameAbsenceTypeNotNull();
-    }
+  public List<AbsenceType> findAll() {
+    return absenceTypeRepository.findTop6ByNameAbsenceTypeNotNull();
+  }
 }

@@ -1,7 +1,6 @@
 package nals.hrm.api_nals_hrm.controller;
 
 import nals.hrm.api_nals_hrm.dto.APIResponseDTO;
-import nals.hrm.api_nals_hrm.service.AbsenceService;
 import nals.hrm.api_nals_hrm.service.OvertimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,12 +16,12 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class ListOvertimeHRController {
 
-    @Autowired
-    OvertimeService overtimeService;
+  @Autowired
+  OvertimeService overtimeService;
 
-    @RequestMapping( value = "/manage/overtime/hr/list",params = { "page", "pageSize" }, method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('BO') or hasAuthority('CEO')")
-    public APIResponseDTO getListOvertimeEmployeeHR(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
-        return new APIResponseDTO(200,"Success!", overtimeService.getListOvertimeEmployeeHR(req, page,pageSize));
-    }
+  @RequestMapping(value = "/manage/overtime/hr/list", params = {"page", "pageSize"}, method = RequestMethod.GET)
+  @PreAuthorize("hasAuthority('BO') or hasAuthority('CEO')")
+  public APIResponseDTO getListOvertimeEmployeeHR(HttpServletRequest req, @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize") Optional<Integer> pageSize) {
+    return new APIResponseDTO(200, "Success!", overtimeService.getListOvertimeEmployeeHR(req, page, pageSize));
+  }
 }

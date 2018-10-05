@@ -9,19 +9,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
 public class ListAbsenceHRController {
 
-    @Autowired
-    AbsenceService absenceService;
+  @Autowired
+  AbsenceService absenceService;
 
-    @RequestMapping( value = "/manage/absence/list",params = { "page", "pageSize" }, method = RequestMethod.GET )
-    @PreAuthorize("hasAuthority('BO') and hasAuthority('view_employee_absence_history')")
-    public APIResponseDTO getListAbsenceHR(@RequestParam("page") Optional<Integer> page, @RequestParam("pageSize")  Optional<Integer> pageSize) {
-        return new APIResponseDTO(200,"Success!",absenceService.getListAbsenceHR(page,pageSize));
-    }
+  @RequestMapping(value = "/manage/absence/list", params = {"page", "pageSize"}, method = RequestMethod.GET)
+  @PreAuthorize("hasAuthority('BO') and hasAuthority('view_employee_absence_history')")
+  public APIResponseDTO getListAbsenceHR(@RequestParam("page") Optional<Integer> page, @RequestParam("pageSize") Optional<Integer> pageSize) {
+    return new APIResponseDTO(200, "Success!", absenceService.getListAbsenceHR(page, pageSize));
+  }
 }

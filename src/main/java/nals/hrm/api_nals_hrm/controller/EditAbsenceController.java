@@ -9,17 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping("/api")
 public class EditAbsenceController {
-    @Autowired
-    AbsenceService absenceService;
+  @Autowired
+  AbsenceService absenceService;
 
-    @RequestMapping( value = "/manage/absence/edit/{id}", method = RequestMethod.PUT )
-    @PreAuthorize("hasAuthority('BO') and hasAuthority('edit_absence_employee')")
-    public APIResponseDTO editAbsence(@PathVariable("id") int id, @ApiParam @RequestBody Absence absence) {
-        return new APIResponseDTO(200,"Success!",absenceService.editAbsence(id, absence));
-    }
+  @RequestMapping(value = "/manage/absence/edit/{id}", method = RequestMethod.PUT)
+  @PreAuthorize("hasAuthority('BO') and hasAuthority('edit_absence_employee')")
+  public APIResponseDTO editAbsence(@PathVariable("id") int id, @ApiParam @RequestBody Absence absence) {
+    return new APIResponseDTO(200, "Success!", absenceService.editAbsence(id, absence));
+  }
 }

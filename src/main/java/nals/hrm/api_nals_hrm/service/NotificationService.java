@@ -13,11 +13,11 @@ import java.util.List;
 @Transactional
 public class NotificationService {
 
-    @Autowired
-    NotificationRepository notificationRepository;
+  @Autowired
+  NotificationRepository notificationRepository;
 
 
-    public List<Notification> listNotification() {
-        return notificationRepository.findNotification();
-    }
+  public List<Notification> listNotification() {
+    return notificationRepository.findNotification();
+  }
 }

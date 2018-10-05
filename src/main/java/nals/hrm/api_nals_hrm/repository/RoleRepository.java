@@ -7,9 +7,9 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface RoleRepository extends CrudRepository<Role, Integer> {
-    Role findByIdRole(int idRole);
+  Role findByIdRole(int idRole);
 
-    List<Role> findAll();
+  List<Role> findAll();
 
-    Role findByNameRole(String nameRole);
+  Role findByNameRole(String nameRole);
 }

@@ -13,32 +13,32 @@ import java.util.List;
 @Transactional
 public class ContractualHistoryService {
 
-    @Autowired
-    ContractualHistoryRepository contractualHistoryRepository;
+  @Autowired
+  ContractualHistoryRepository contractualHistoryRepository;
 
-    public ExpiringContractsDTO expiringContracts() {
-        int internship = 0;
-        int probation = 0;
-        int oneYear = 0;
-        int threeYear = 0;
-        List<ContractualHistory> contractualHistoryList = contractualHistoryRepository.findExpiringContracts();
-        for(ContractualHistory contractualHistory : contractualHistoryList){
-            switch (contractualHistory.getContractualTypes().getName()){
-                case "Internship":
-                    internship += 1;
-                    break;
-                case "Probationary":
-                    probation += 1;
-                    break;
-                case "One-year":
-                    oneYear += 1;
-                    break;
-                case "Three-year":
-                    threeYear += 1;
-                    break;
+  public ExpiringContractsDTO expiringContracts() {
+    int internship = 0;
+    int probation = 0;
+    int oneYear = 0;
+    int threeYear = 0;
+    List<ContractualHistory> contractualHistoryList = contractualHistoryRepository.findExpiringContracts();
+    for (ContractualHistory contractualHistory : contractualHistoryList) {
+      switch (contractualHistory.getContractualTypes().getName()) {
+        case "Internship":
+          internship += 1;
+          break;
+        case "Probationary":
+          probation += 1;
+          break;
+        case "One-year":
+          oneYear += 1;
+          break;
+        case "Three-year":
+          threeYear += 1;
+          break;
 
-            }
-        }
-        return new ExpiringContractsDTO(internship, probation, oneYear, threeYear);
+      }
     }
+    return new ExpiringContractsDTO(internship, probation, oneYear, threeYear);
+  }
 }

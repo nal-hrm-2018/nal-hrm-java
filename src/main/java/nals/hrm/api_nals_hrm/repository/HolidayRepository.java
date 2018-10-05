@@ -5,13 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Objects;
 
 public interface HolidayRepository extends CrudRepository<Holiday, Integer> {
-    Holiday findByDateHolidayAndDeleteFlag(String strFrom,int deleteFlag);
+  Holiday findByDateHolidayAndDeleteFlag(String strFrom, int deleteFlag);
 
-    @Query(value = "SELECT * FROM holidays\n" +
-            "WHERE delete_flag = 0\n" +
-            "AND year(holidays.date) = year(NOW())", nativeQuery = true)
-    List<Holiday> findHoliday();
+  @Query(value = "SELECT * FROM holidays\n" +
+          "WHERE delete_flag = 0\n" +
+          "AND year(holidays.date) = year(NOW())", nativeQuery = true)
+  List<Holiday> findHoliday();
 }

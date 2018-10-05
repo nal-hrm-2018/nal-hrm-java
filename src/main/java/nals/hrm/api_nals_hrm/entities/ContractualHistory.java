@@ -7,108 +7,108 @@ import javax.persistence.*;
 @Entity
 @Table(name = "contractual_history")
 public class ContractualHistory {
-    @Id
-    @SequenceGenerator(name="seq",sequenceName="oracle_seq")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
+  @Id
+  @SequenceGenerator(name = "seq", sequenceName = "oracle_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
-    private int id;
+  @Column(name = "id")
+  private int id;
 
-    @Column(name = "employee_id")
-    private int employeeId;
+  @Column(name = "employee_id")
+  private int employeeId;
 
-    @Column(name = "contractual_type_id")
-    private int contractualTypeId;
+  @Column(name = "contractual_type_id")
+  private int contractualTypeId;
 
-    @Column(name = "start_date")
-    private String startDate;
+  @Column(name = "start_date")
+  private String startDate;
 
-    @Column(name = "end_date")
-    private String endDate;
+  @Column(name = "end_date")
+  private String endDate;
 
-    @Column(name = "created_at")
-    private String createdAt;
+  @Column(name = "created_at")
+  private String createdAt;
 
-    @Column(name = "updated_at")
-    private String updatedAt;
+  @Column(name = "updated_at")
+  private String updatedAt;
 
-    @JsonIgnore
-    @Column(name = "delete_flag")
-    private int deleteFlag;
+  @JsonIgnore
+  @Column(name = "delete_flag")
+  private int deleteFlag;
 
-    @ManyToOne
-    @JoinColumn(name = "contractual_type_id", insertable = false, updatable = false)
-    private ContractualTypes contractualTypes;
+  @ManyToOne
+  @JoinColumn(name = "contractual_type_id", insertable = false, updatable = false)
+  private ContractualTypes contractualTypes;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public int getEmployeeId() {
-        return employeeId;
-    }
+  public int getEmployeeId() {
+    return employeeId;
+  }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
-    }
+  public void setEmployeeId(int employeeId) {
+    this.employeeId = employeeId;
+  }
 
-    public int getContractualTypeId() {
-        return contractualTypeId;
-    }
+  public int getContractualTypeId() {
+    return contractualTypeId;
+  }
 
-    public void setContractualTypeId(int contractualTypeId) {
-        this.contractualTypeId = contractualTypeId;
-    }
+  public void setContractualTypeId(int contractualTypeId) {
+    this.contractualTypeId = contractualTypeId;
+  }
 
-    public String getStartDate() {
-        return startDate;
-    }
+  public String getStartDate() {
+    return startDate;
+  }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
+  public void setStartDate(String startDate) {
+    this.startDate = startDate;
+  }
 
-    public String getEndDate() {
-        return endDate;
-    }
+  public String getEndDate() {
+    return endDate;
+  }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
+  public String getCreatedAt() {
+    return createdAt;
+  }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
+  public void setCreatedAt(String createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
+  public String getUpdatedAt() {
+    return updatedAt;
+  }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+  public void setUpdatedAt(String updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
-    public int getDeleteFlag() {
-        return deleteFlag;
-    }
+  public int getDeleteFlag() {
+    return deleteFlag;
+  }
 
-    public void setDeleteFlag(int deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
+  public void setDeleteFlag(int deleteFlag) {
+    this.deleteFlag = deleteFlag;
+  }
 
-    public ContractualTypes getContractualTypes() {
-        return contractualTypes;
-    }
+  public ContractualTypes getContractualTypes() {
+    return contractualTypes;
+  }
 
-    public void setContractualTypes(ContractualTypes contractualTypes) {
-        this.contractualTypes = contractualTypes;
-    }
+  public void setContractualTypes(ContractualTypes contractualTypes) {
+    this.contractualTypes = contractualTypes;
+  }
 }

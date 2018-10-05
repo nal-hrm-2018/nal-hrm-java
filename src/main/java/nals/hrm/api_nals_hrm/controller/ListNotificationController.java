@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ListNotificationController {
 
-    @Autowired
-    NotificationService notificationService;
+  @Autowired
+  NotificationService notificationService;
 
-    @RequestMapping( value = "/dashboard/notification", method = RequestMethod.GET)
-    public APIResponseDTO getListNotification(){
-        return new APIResponseDTO(200,"Success!", notificationService.listNotification());
-    }
+  @RequestMapping(value = "/dashboard/notification", method = RequestMethod.GET)
+  public APIResponseDTO getListNotification() {
+    return new APIResponseDTO(200, "Success!", notificationService.listNotification());
+  }
 
 }

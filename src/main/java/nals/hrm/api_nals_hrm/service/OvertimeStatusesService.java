@@ -12,11 +12,11 @@ import java.util.List;
 @Transactional
 public class OvertimeStatusesService {
 
-    @Autowired
-    OvertimeStatusesRepository overtimeStatusesRepository;
+  @Autowired
+  OvertimeStatusesRepository overtimeStatusesRepository;
 
-    public List<OvertimeStatuses> findAll() {
-        return overtimeStatusesRepository.findAll();
+  public List<OvertimeStatuses> findAll() {
+    return overtimeStatusesRepository.findAll();
 
-    }
+  }
 }

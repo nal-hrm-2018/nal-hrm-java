@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface EmployeeTypeRepository extends CrudRepository<EmployeeType, Integer> {
 
-    List<EmployeeType> findAll();
+  List<EmployeeType> findAll();
 
 
-    List<EmployeeType> findByDeleteFlagEmployeeType(int deleteFlagEmployeeType);
+  List<EmployeeType> findByDeleteFlagEmployeeType(int deleteFlagEmployeeType);
 }
