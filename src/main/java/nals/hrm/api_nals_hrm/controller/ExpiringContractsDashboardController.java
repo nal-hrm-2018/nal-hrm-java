@@ -16,7 +16,7 @@ public class ExpiringContractsDashboardController {
   ContractualHistoryService contractualHistoryService;
 
   @RequestMapping(value = "/dashboard/expiring-contracts", method = RequestMethod.GET)
-  @PreAuthorize("hasAuthority('BO')")
+  @PreAuthorize("hasAuthority('BO') or hasAuthority('CEO')")
   public APIResponseDTO ExpiringContracts() {
     return new APIResponseDTO(200, "Success!", contractualHistoryService.expiringContracts());
   }
