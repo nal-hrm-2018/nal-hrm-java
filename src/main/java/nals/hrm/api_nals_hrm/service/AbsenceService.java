@@ -135,7 +135,7 @@ public class AbsenceService {
 
         absence.setEmployeeId(employee.getIdEmployee());
 
-        String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+        String strNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
         absence.setCreatedAt(strNow);
         absence.setUpdateAt(strNow);
 
@@ -217,7 +217,7 @@ public class AbsenceService {
       }
 
       Date now = new Date();
-      String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+      String strNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
 
       //set employeeId of absence absenceEdit
       //can't change employeeId

@@ -1,6 +1,7 @@
 package nals.hrm.api_nals_hrm.service;
 
 
+import nals.hrm.api_nals_hrm.dto.ListDTO;
 import nals.hrm.api_nals_hrm.entities.Notification;
 import nals.hrm.api_nals_hrm.exception.CustomException;
 import nals.hrm.api_nals_hrm.repository.NotificationRepository;
@@ -27,7 +28,7 @@ public class NotificationService {
   public String addNotification(Notification notification) {
     notification.setNotificationTypeId(1);
     Date now = new Date();
-    String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+    String strNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
     notification.setCreatedAt(strNow);
     notification.setUpdateAt(strNow);
     notificationRepository.save(notification);
@@ -44,7 +45,7 @@ public class NotificationService {
     notificationOld.setContent(notification.getContent());
     notificationOld.setEndDate(notification.getEndDate());
     Date now = new Date();
-    String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+    String strNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
 
     notificationOld.setUpdateAt(strNow);
 
@@ -61,4 +62,5 @@ public class NotificationService {
     notificationRepository.save(notification);
     return "delete success!";
   }
+
 }
