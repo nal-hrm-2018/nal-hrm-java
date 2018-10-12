@@ -16,5 +16,7 @@ public class Define {
   public static final String timeYearToChangeAddAbsence = "-12-31";
   public static final String timeYearFromChangeAddAbsence = "-01-01";
 
+  public static final String emailDefault = "nals_pmo@nal.com";
+
 
 }

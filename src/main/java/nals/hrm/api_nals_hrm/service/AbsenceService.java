@@ -72,7 +72,7 @@ public class AbsenceService {
     Date toDate;
     Date now = new Date();
     //this email default of CEO
-    String email = "nguyenthithanhtuyen.dr@gmail.com";
+    String email = Define.emailDefault;
     String subject = "Đơn xin nghỉ phép";
     String content = "";
 
