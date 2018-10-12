@@ -206,23 +206,23 @@ public class OvertimeService {
     Date endTime;
 
     try {
-      startTime = new SimpleDateFormat("hh:mm").parse(overtimeDTO.getStartTime());
-      endTime = new SimpleDateFormat("hh:mm").parse(overtimeDTO.getEndTime());
+      startTime = new SimpleDateFormat("HH:mm").parse(overtimeDTO.getStartTime());
+      endTime = new SimpleDateFormat("HH:mm").parse(overtimeDTO.getEndTime());
 
     } catch (ParseException e) {
       throw new CustomException("data error", 400);
     }
 
-    float numberEnd = endTime.getHours() + (float) endTime.getMinutes() / 60;
-    float numberStart = startTime.getHours() + (float) startTime.getMinutes() / 60;
+    float numberEnd = endTime.getHours() * 60 + endTime.getMinutes();
+    float numberStart = startTime.getHours() * 60 + startTime.getMinutes();
 
-    if (endTime.before(startTime) || ((numberEnd - numberStart) < overtimeDTO.getTotalTime())) {
+    if (endTime.before(startTime) || ((numberEnd - numberStart) < overtimeDTO.getTotalTime() * 60)) {
       throw new CustomException("data error", 400);
     }
 
     Date now = new Date();
 
-    String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+    String strNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
     Processes processes;
     if (overtimeDTO.getIdProject() != null) {
       processes = processesRepository.findByProjectIdAndEmployeeIdAndCheckProjectExitAndDeleteFlag(overtimeDTO.getIdProject(), employee.getIdEmployee(), 0, 0);
@@ -270,23 +270,23 @@ public class OvertimeService {
     Date startTime;
     Date endTime;
     try {
-      startTime = new SimpleDateFormat("hh:mm").parse(overtimeDTO.getStartTime());
-      endTime = new SimpleDateFormat("hh:mm").parse(overtimeDTO.getEndTime());
+      startTime = new SimpleDateFormat("HH:mm").parse(overtimeDTO.getStartTime());
+      endTime = new SimpleDateFormat("HH:mm").parse(overtimeDTO.getEndTime());
 
     } catch (ParseException e) {
       throw new CustomException("data error", 400);
     }
 
-    float numberEnd = endTime.getHours() + (float) endTime.getMinutes() / 60;
-    float numberStart = startTime.getHours() + (float) startTime.getMinutes() / 60;
+    float numberEnd = endTime.getHours() * 60 + endTime.getMinutes();
+    float numberStart = startTime.getHours() * 60 + startTime.getMinutes();
 
-    if (endTime.before(startTime) || ((numberEnd - numberStart) < overtimeDTO.getTotalTime())) {
+    if (endTime.before(startTime) || ((numberEnd - numberStart) < overtimeDTO.getTotalTime() * 60)) {
       throw new CustomException("data error", 400);
     }
 
     Date now = new Date();
 
-    String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+    String strNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
     Processes processes;
     if (overtimeDTO.getIdProject() != null) {
       processes = processesRepository.findByProjectIdAndEmployeeIdAndCheckProjectExitAndDeleteFlag(overtimeDTO.getIdProject(), employee.getIdEmployee(), 0, 0);
@@ -344,11 +344,11 @@ public class OvertimeService {
         Date startTime;
         Date endTime;
         try {
-          startTime = new SimpleDateFormat("hh:mm").parse(overtimeOld.getStartTime());
-          endTime = new SimpleDateFormat("hh:mm").parse(overtimeOld.getEndTime());
-          float numberEnd = endTime.getHours() + (float) endTime.getMinutes() / 60;
-          float numberStart = startTime.getHours() + (float) startTime.getMinutes() / 60;
-          if ((numberEnd - numberStart) < overtime.getCorrectTotalTime()) {
+          startTime = new SimpleDateFormat("HH:mm").parse(overtimeOld.getStartTime());
+          endTime = new SimpleDateFormat("HH:mm").parse(overtimeOld.getEndTime());
+          float numberEnd = endTime.getHours() * 60 + endTime.getMinutes();
+          float numberStart = startTime.getHours() * 60 + startTime.getMinutes();
+          if ((numberEnd - numberStart) < overtime.getCorrectTotalTime() * 60) {
             throw new CustomException("data error", 400);
           }
         } catch (ParseException e) {
@@ -364,7 +364,7 @@ public class OvertimeService {
       overtimeOld.setCorrectTotalTime(overtimeOld.getTotalTime());
     }
     Date now = new Date();
-    String strNow = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+    String strNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
     overtimeOld.setUpdatedAt(strNow);
 
     overtimeRepository.save(overtimeOld);

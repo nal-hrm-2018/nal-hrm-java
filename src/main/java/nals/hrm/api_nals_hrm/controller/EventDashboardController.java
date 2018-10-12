@@ -15,7 +15,7 @@ public class EventDashboardController {
   EmployeeService employeeService;
 
   @RequestMapping(value = "/bo/dashboard/event", method = RequestMethod.GET)
-  @PreAuthorize("hasAuthority('BO')")
+  @PreAuthorize("hasAuthority('BO') or hasAuthority('CEO')")
   public APIResponseDTO eventDashboard() {
     return new APIResponseDTO(200, "Success!", employeeService.eventDashboard());
   }

@@ -16,8 +16,9 @@ public interface ContractualHistoryRepository extends JpaRepository<ContractualH
           "WHERE employees.delete_flag = 0\n" +
           "AND contractual_history.delete_flag = 0\n" +
           "AND employees.is_employee = 1\n" +
-          "AND YEAR(NOW()) = YEAR(end_date)\n" +
-          "AND MONTH(NOW()) = MONTH(end_date)\n" +
+          "AND contractual_type.delete_flag = 0\n" +
+          "AND YEAR(NOW()) = YEAR(contractual_history.end_date)\n" +
+          "AND MONTH(NOW()) = MONTH(contractual_history.end_date)\n" +
           "AND (contractual_type.name != \"Indefinite\" AND contractual_type.name != \"Part-time\")", nativeQuery = true)
   List<ContractualHistory> findExpiringContracts();
 }

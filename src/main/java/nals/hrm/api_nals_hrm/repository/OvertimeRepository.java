@@ -28,19 +28,19 @@ public interface OvertimeRepository extends PagingAndSortingRepository<Overtime,
           "WHERE processes.project_id = ?1 \n" +
           "AND overtime.employee_id != ?2 AND overtime.delete_flag = 0 AND processes.delete_flag = 0\n" +
           "AND processes.check_project_exit = 0\n" +
-          "ORDER BY overtime.overtime_status_id ASC, overtime.updated_at DESC", nativeQuery = true)
+          "ORDER BY overtime.updated_at DESC, overtime.overtime_status_id ASC", nativeQuery = true)
   ArrayList<Overtime> findOTByIdProject(String idProject, int idEmployee, Pageable pageable);
 
   @Query(value = "SELECT * FROM overtime LEFT OUTER JOIN processes ON overtime.process_id = processes.id\n" +
           "WHERE (overtime.process_id IS NULL OR (processes.role_id = 4 AND processes.check_project_exit = 0 AND processes.delete_flag = 0)) \n" +
           "AND overtime.delete_flag = 0 \n" +
-          "ORDER BY overtime.overtime_status_id ASC, overtime.updated_at DESC", nativeQuery = true)
+          "ORDER BY overtime.updated_at DESC, overtime.overtime_status_id ASC", nativeQuery = true)
   ArrayList<Overtime> findOTCEO(Pageable pageable);
 
   @Query(value = "SELECT * FROM overtime LEFT OUTER JOIN processes ON overtime.process_id = processes.id\n" +
           "WHERE (overtime.process_id IS NULL OR (processes.role_id = 4 AND processes.check_project_exit = 0 AND processes.delete_flag = 0)) \n" +
           "AND overtime.delete_flag = 0 \n" +
-          "ORDER BY overtime.overtime_status_id ASC, overtime.updated_at DESC", nativeQuery = true)
+          "ORDER BY overtime.updated_at DESC, overtime.overtime_status_id ASC ", nativeQuery = true)
   ArrayList<Overtime> findOTCEO();
 
   @Query(value = "SELECT * FROM overtime INNER JOIN overtime_statuses ON overtime.overtime_status_id = overtime_statuses.id\n" +
@@ -88,7 +88,7 @@ public interface OvertimeRepository extends PagingAndSortingRepository<Overtime,
           "ON processes.project_id = projects.id WHERE projects.name LIKE %?1% \n" +
           "AND projects.delete_flag = 0 AND processes.delete_flag = 0))\n" +
           "AND ((overtime.process_id IS NULL OR (processes.role_id = 4 AND processes.check_project_exit = 0 AND processes.delete_flag = 0)) AND overtime.delete_flag = 0)\n" +
-          "ORDER BY overtime.overtime_status_id ASC, overtime.updated_at DESC", nativeQuery = true)
+          "ORDER BY overtime.updated_at DESC, overtime.overtime_status_id ASC", nativeQuery = true)
   ArrayList<Overtime> searchOTCEO(String keyword, Pageable pageable);
 
   @Query(value = "SELECT * FROM overtime INNER JOIN employees ON overtime.employee_id = employees.id\n" +
@@ -100,7 +100,7 @@ public interface OvertimeRepository extends PagingAndSortingRepository<Overtime,
           "ON processes.project_id = projects.id WHERE projects.name LIKE %?1% \n" +
           "AND projects.delete_flag = 0 AND processes.delete_flag = 0))\n" +
           "AND ((overtime.process_id IS NULL OR (processes.role_id = 4 AND processes.check_project_exit = 0 AND processes.delete_flag = 0)) AND overtime.delete_flag = 0)\n" +
-          "ORDER BY overtime.overtime_status_id ASC, overtime.updated_at DESC", nativeQuery = true)
+          "ORDER BY overtime.updated_at DESC, overtime.overtime_status_id ASC", nativeQuery = true)
   ArrayList<Overtime> searchOTCEO(String keyword);
 
 

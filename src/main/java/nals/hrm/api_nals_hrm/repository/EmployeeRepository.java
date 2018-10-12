@@ -37,6 +37,7 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
   @Query(value = "SELECT COUNT(*) FROM employees\n" +
           "WHERE employees.work_status = 0\n" +
           "AND employees.delete_flag = 0\n" +
+          "AND employees.is_employee = 1\n"+
           "AND MONTH(NOW()) = MONTH(employees.startwork_date)\n" +
           "AND YEAR(NOW()) = YEAR(employees.startwork_date)", nativeQuery = true)
   int newEmployee();
@@ -45,11 +46,14 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
   @Query(value = "SELECT COUNT(*) FROM employees\n" +
           "WHERE employees.work_status = 0\n" +
           "AND employees.delete_flag = 0\n" +
+          "AND employees.is_employee = 1\n"+
           "AND MONTH(NOW()) = MONTH(employees.birthday)", nativeQuery = true)
   int birthdays();
 
   @Query(value = "SELECT COUNT(*) FROM employees\n" +
           "WHERE employees.delete_flag = 0 \n" +
+          "AND employees.work_status = 0\n"+
+          "AND employees.is_employee = 1\n"+
           "AND MONTH(NOW()) = MONTH(employees.endwork_date)\n" +
           "AND YEAR(NOW()) = YEAR(employees.endwork_date)", nativeQuery = true)
   int employeeQuit();
