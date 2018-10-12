@@ -8,85 +8,87 @@ import java.io.Serializable;
 @Entity
 @Table(name = "holidays_default")
 public class HolidayDefault implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
-    private int idHolidayDefault;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @Column(name = "id")
+  private int idHoliday;
 
-    @Column(name = "date")
-    private String dateHolidayDefault;
+  @Column(name = "date")
+  private String dateHoliday;
 
-    @Column(name = "name")
-    private String nameHolidayDefault;
+  @Column(name = "name")
+  private String nameHoliday;
 
-    @Column(name = "description")
-    private String description;
+  @Column(name = "description")
+  private String description;
 
-    @Column(name = "holiday_status_id")
-    private int holidayStatusId;
+  @JsonIgnore
+  @Column(name = "day_type_id")
+  private int dayTypeId;
 
-    @JsonIgnore
-    @Column(name = "delete_flag")
-    private int deleteFlag;
+  @JsonIgnore
+  @Column(name = "delete_flag")
+  private int deleteFlag;
 
-//    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "holiday_status_id", insertable = false, updatable = false)
-    private HolidayStatus holidayStatus;
+  //    @JsonIgnore
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "day_type_id", insertable = false, updatable = false)
+  private DayTypes dayTypes;
 
-    public int getIdHolidayDefault() {
-        return idHolidayDefault;
-    }
+  public int getIdHoliday() {
+    return idHoliday;
+  }
 
-    public void setIdHolidayDefault(int idHolidayDefault) {
-        this.idHolidayDefault = idHolidayDefault;
-    }
+  public void setIdHoliday(int idHoliday) {
+    this.idHoliday = idHoliday;
+  }
 
-    public String getDateHolidayDefault() {
-        return dateHolidayDefault;
-    }
+  public String getDateHoliday() {
+    return dateHoliday;
+  }
 
-    public void setDateHolidayDefault(String dateHolidayDefault) {
-        this.dateHolidayDefault = dateHolidayDefault;
-    }
+  public void setDateHoliday(String dateHoliday) {
+    this.dateHoliday = dateHoliday;
+  }
 
-    public String getNameHolidayDefault() {
-        return nameHolidayDefault;
-    }
+  public String getNameHoliday() {
+    return nameHoliday;
+  }
 
-    public void setNameHolidayDefault(String nameHolidayDefault) {
-        this.nameHolidayDefault = nameHolidayDefault;
-    }
+  public void setNameHoliday(String nameHoliday) {
+    this.nameHoliday = nameHoliday;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public int getHolidayStatusId() {
-        return holidayStatusId;
-    }
+  public int getDayTypeId() {
+    return dayTypeId;
+  }
 
-    public void setHolidayStatusId(int holidayStatusId) {
-        this.holidayStatusId = holidayStatusId;
-    }
+  public void setDayTypeId(int dayTypeId) {
+    this.dayTypeId = dayTypeId;
+  }
 
-    public int getDeleteFlag() {
-        return deleteFlag;
-    }
+  public DayTypes getDayTypes() {
+    return dayTypes;
+  }
 
-    public void setDeleteFlag(int deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
+  public void setDayTypes(DayTypes dayTypes) {
+    this.dayTypes = dayTypes;
+  }
 
-    public HolidayStatus getHolidayStatus() {
-        return holidayStatus;
-    }
+  public int getDeleteFlag() {
+    return deleteFlag;
+  }
 
-    public void setHolidayStatus(HolidayStatus holidayStatus) {
-        this.holidayStatus = holidayStatus;
-    }
+  public void setDeleteFlag(int deleteFlag) {
+    this.deleteFlag = deleteFlag;
+  }
+
 }

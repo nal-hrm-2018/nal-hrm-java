@@ -4,30 +4,30 @@ import nals.hrm.api_nals_hrm.entities.Processes;
 import nals.hrm.api_nals_hrm.entities.Project;
 
 public class EmployeeProjectDTO {
-   Project project;
-   Processes processes;
+  Project project;
+  Processes processes;
 
-    public EmployeeProjectDTO() {
-    }
+  public EmployeeProjectDTO() {
+  }
 
-    public EmployeeProjectDTO(Project project, Processes processes) {
-        this.project = project;
-        this.processes = processes;
-    }
+  public EmployeeProjectDTO(Project project, Processes processes) {
+    this.project = project;
+    this.processes = processes;
+  }
 
-    public Project getProject() {
-        return project;
-    }
+  public Project getProject() {
+    return project;
+  }
 
-    public void setProject(Project project) {
-        this.project = project;
-    }
+  public void setProject(Project project) {
+    this.project = project;
+  }
 
-    public Processes getProcesses() {
-        return processes;
-    }
+  public Processes getProcesses() {
+    return processes;
+  }
 
-    public void setProcesses(Processes processes) {
-        this.processes = processes;
-    }
+  public void setProcesses(Processes processes) {
+    this.processes = processes;
+  }
 }

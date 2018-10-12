@@ -17,18 +17,19 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class ListAbsenceProjectManageRolePOController {
 
-    @Autowired
-    ProcessesService processesService;
+  @Autowired
+  ProcessesService processesService;
 
-    @Autowired
-    ProjectService projectService;
+  @Autowired
+  ProjectService projectService;
 
-    @Autowired
-    AbsenceService absenceService;
+  @Autowired
+  AbsenceService absenceService;
 
-    @RequestMapping( value = "/manage/absence/po/project",params = {"id" }, method = RequestMethod.GET )
-    public APIResponseDTO getListAbsenceProjectManageRolePO(@RequestParam("id")  String id) {
-        return new APIResponseDTO(200,"Success!",absenceService.findAbsenceProjectProcessesManageRolePO(id));
-    }
+  @RequestMapping(value = "/manage/absence/po/project", params = {"id", "page", "pageSize"}, method = RequestMethod.GET)
+  public APIResponseDTO getListAbsenceProjectManageRolePO(@RequestParam("id") String id,
+                                                          @RequestParam("page") Optional<Integer> page, @RequestParam("pageSize") Optional<Integer> pageSize, HttpServletRequest req) {
+    return new APIResponseDTO(200, "Success!", absenceService.findAbsenceProjectManageRolePO(id, page, pageSize, req));
+  }
 
 }

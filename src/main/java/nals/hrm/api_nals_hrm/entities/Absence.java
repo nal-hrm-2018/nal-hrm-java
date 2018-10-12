@@ -10,198 +10,195 @@ import java.io.Serializable;
 @Table(name = "absences")
 public class Absence implements Serializable {
 
-    @Id
-    @SequenceGenerator(name="seq",sequenceName="oracle_seq")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
+  @Id
+  @SequenceGenerator(name = "seq", sequenceName = "oracle_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
-    private int idAbsences;
+  @Column(name = "id")
+  private int idAbsences;
 
-    @Column(name = "employee_id")
-    private int employeeId;
+  @Column(name = "employee_id")
+  private int employeeId;
 
-    //    @JsonIgnore
-    @Column(name = "absence_type_id")
-    private int absenceTypeId;
+  //    @JsonIgnore
+  @Column(name = "absence_type_id")
+  private int absenceTypeId;
 
-    @Column(name = "from_date")
-    private String fromDate;
+  @Column(name = "from_date")
+  private String fromDate;
 
-    @Column(name = "to_date")
-    private String toDate;
+  @Column(name = "to_date")
+  private String toDate;
 
-    @Column(name = "reason")
-    private String reason;
+  @Column(name = "reason")
+  private String reason;
 
-    @Column(name = "description")
-    private String description;
+  @Column(name = "description")
+  private String description;
 
-    @JsonIgnore
-    @Column(name = "delete_flag")
-    private int deleteFlag;
+  @JsonIgnore
+  @Column(name = "delete_flag")
+  private int deleteFlag;
 
-    //    @JsonIgnore
-    @Column(name = "absence_time_id")
-    private int absenceTimeId;
+  //    @JsonIgnore
+  @Column(name = "absence_time_id")
+  private int absenceTimeId;
 
-//    @JsonIgnore
-    @Column(name = "created_at")
-    private String createdAt;
+  //    @JsonIgnore
+  @Column(name = "created_at")
+  private String createdAt;
 
-    @JsonIgnore
-    @Column(name = "updated_at")
-    private String updateAt;
+  @JsonIgnore
+  @Column(name = "updated_at")
+  private String updateAt;
 
-    @ManyToOne
-    @JoinColumn(name = "absence_type_id", insertable = false, updatable = false)
-    private AbsenceType absenceType;
+  @ManyToOne
+  @JoinColumn(name = "absence_type_id", insertable = false, updatable = false)
+  private AbsenceType absenceType;
 
-    @ManyToOne
-    @JoinColumn(name = "absence_time_id", insertable = false, updatable = false)
-    private AbsenceTime absenceTime;
+  @ManyToOne
+  @JoinColumn(name = "absence_time_id", insertable = false, updatable = false)
+  private AbsenceTime absenceTime;
 
+  public Absence() {
+  }
 
+  public Absence(int idAbsences, String fromDate, String toDate, String reason,
+                 String description, AbsenceType absenceType, AbsenceTime absenceTime) {
+    this.idAbsences = idAbsences;
+    this.fromDate = fromDate;
+    this.toDate = toDate;
+    this.reason = reason;
+    this.description = description;
+    this.absenceType = absenceType;
+    this.absenceTime = absenceTime;
+  }
 
+  public Absence(int employeeId, int absenceTypeId, String fromDate, String toDate, String reason,
+                 String description, int absenceTimeId) {
+    this.employeeId = employeeId;
+    this.absenceTypeId = absenceTypeId;
+    this.fromDate = fromDate;
+    this.toDate = toDate;
+    this.reason = reason;
+    this.description = description;
+    this.absenceTimeId = absenceTimeId;
+  }
 
-    public Absence() {
-    }
+  public int getIdAbsences() {
+    return idAbsences;
+  }
 
-    public Absence(int idAbsences, String fromDate, String toDate, String reason,
-                   String description,AbsenceType absenceType, AbsenceTime absenceTime) {
-        this.idAbsences = idAbsences;
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-        this.reason = reason;
-        this.description = description;
-        this.absenceType = absenceType;
-        this.absenceTime = absenceTime;
-    }
+  public void setIdAbsences(int idAbsences) {
+    this.idAbsences = idAbsences;
+  }
 
-    public Absence(int employeeId, int absenceTypeId, String fromDate, String toDate, String reason,
-                   String description,int absenceTimeId) {
-        this.employeeId = employeeId;
-        this.absenceTypeId = absenceTypeId;
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-        this.reason = reason;
-        this.description = description;
-        this.absenceTimeId = absenceTimeId;
-    }
+  public int getEmployeeId() {
+    return employeeId;
+  }
 
-    public int getIdAbsences() {
-        return idAbsences;
-    }
+  public void setEmployeeId(int employeeId) {
+    this.employeeId = employeeId;
+  }
 
-    public void setIdAbsences(int idAbsences) {
-        this.idAbsences = idAbsences;
-    }
+  public int getAbsenceTypeId() {
+    return absenceTypeId;
+  }
 
-    public int getEmployeeId() {
-        return employeeId;
-    }
+  public void setAbsenceTypeId(int absenceTypeId) {
+    this.absenceTypeId = absenceTypeId;
+  }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
-    }
+  public String getFromDate() {
+    return fromDate;
+  }
 
-    public int getAbsenceTypeId() {
-        return absenceTypeId;
-    }
+  public void setFromDate(String fromDate) {
+    this.fromDate = fromDate;
+  }
 
-    public void setAbsenceTypeId(int absenceTypeId) {
-        this.absenceTypeId = absenceTypeId;
-    }
+  public String getToDate() {
+    return toDate;
+  }
 
-    public String getFromDate() {
-        return fromDate;
-    }
+  public void setToDate(String toDate) {
+    this.toDate = toDate;
+  }
 
-    public void setFromDate(String fromDate) {
-        this.fromDate = fromDate;
-    }
+  public String getReason() {
+    return reason;
+  }
 
-    public String getToDate() {
-        return toDate;
-    }
+  public void setReason(String reason) {
+    this.reason = reason;
+  }
 
-    public void setToDate(String toDate) {
-        this.toDate = toDate;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getReason() {
-        return reason;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
+  public int getDeleteFlag() {
+    return deleteFlag;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setDeleteFlag(int deleteFlag) {
+    this.deleteFlag = deleteFlag;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public AbsenceType getAbsenceType() {
+    return absenceType;
+  }
 
-    public int getDeleteFlag() {
-        return deleteFlag;
-    }
+  public void setAbsenceType(AbsenceType absenceType) {
+    this.absenceType = absenceType;
+  }
 
-    public void setDeleteFlag(int deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
+  public AbsenceTime getAbsenceTime() {
+    return absenceTime;
+  }
 
-    public AbsenceType getAbsenceType() {
-        return absenceType;
-    }
+  public void setAbsenceTime(AbsenceTime absenceTime) {
+    this.absenceTime = absenceTime;
+  }
 
-    public void setAbsenceType(AbsenceType absenceType) {
-        this.absenceType = absenceType;
-    }
+  public int getAbsenceTimeId() {
+    return absenceTimeId;
+  }
 
-    public AbsenceTime getAbsenceTime() {
-        return absenceTime;
-    }
+  public void setAbsenceTimeId(int absenceTimeId) {
+    this.absenceTimeId = absenceTimeId;
+  }
 
-    public void setAbsenceTime(AbsenceTime absenceTime) {
-        this.absenceTime = absenceTime;
-    }
+  public String getCreatedAt() {
+    return createdAt;
+  }
 
-    public int getAbsenceTimeId() {
-        return absenceTimeId;
-    }
+  public void setCreatedAt(String createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public void setAbsenceTimeId(int absenceTimeId) {
-        this.absenceTimeId = absenceTimeId;
-    }
+  public String getUpdateAt() {
+    return updateAt;
+  }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
+  public void setUpdateAt(String updateAt) {
+    this.updateAt = updateAt;
+  }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(String updateAt) {
-        this.updateAt = updateAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Absence{" +
-                "employeeId=" + employeeId +
-                ", absenceTypeId=" + absenceTypeId +
-                ", fromDate='" + fromDate + '\'' +
-                ", toDate='" + toDate + '\'' +
-                ", reason='" + reason + '\'' +
-                ", description='" + description + '\'' +
-                ", absenceTimeId=" + absenceTimeId +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Absence{" +
+            "employeeId=" + employeeId +
+            ", absenceTypeId=" + absenceTypeId +
+            ", fromDate='" + fromDate + '\'' +
+            ", toDate='" + toDate + '\'' +
+            ", reason='" + reason + '\'' +
+            ", description='" + description + '\'' +
+            ", absenceTimeId=" + absenceTimeId +
+            '}';
+  }
 }

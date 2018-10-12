@@ -12,10 +12,10 @@ import java.util.List;
 @Transactional
 public class EmployeeTypeService {
 
-    @Autowired
-    EmployeeTypeRepository employeeTypeRepository;
+  @Autowired
+  EmployeeTypeRepository employeeTypeRepository;
 
-    public List<EmployeeType> findAll() {
-        return employeeTypeRepository.findAll();
-    }
+  public List<EmployeeType> findAll() {
+    return employeeTypeRepository.findAll();
+  }
 }

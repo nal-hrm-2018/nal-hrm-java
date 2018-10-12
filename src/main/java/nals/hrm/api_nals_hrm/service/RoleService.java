@@ -11,14 +11,14 @@ import java.util.List;
 @Service
 @Transactional
 public class RoleService {
-    @Autowired
-    RoleRepository roleRepository;
+  @Autowired
+  RoleRepository roleRepository;
 
-    public Role findByIdRole(int idRole) {
-        return roleRepository.findByIdRole(idRole);
-    }
+  public Role findByIdRole(int idRole) {
+    return roleRepository.findByIdRole(idRole);
+  }
 
-    public List<Role> findAll() {
-        return  roleRepository.findAll();
-    }
+  public List<Role> findAll() {
+    return roleRepository.findAll();
+  }
 }

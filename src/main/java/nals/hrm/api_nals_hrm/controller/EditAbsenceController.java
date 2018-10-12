@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class DeleteAbsenceEmployeeController {
-    @Autowired
-    AbsenceService absenceService;
+public class EditAbsenceController {
+  @Autowired
+  AbsenceService absenceService;
 
-    @RequestMapping( value = "/manage/absence/delete/{id}", method = RequestMethod.DELETE )
-    @PreAuthorize("hasAuthority('cancel_emplyee_absence_history')")
-    public APIResponseDTO deleteAbsence(@PathVariable("id") int id) {
-        return new APIResponseDTO(200,"Success!",absenceService.deleteAbsence(id));
-    }
+  @RequestMapping(value = "/manage/absence/edit/{id}", method = RequestMethod.PUT)
+  @PreAuthorize("hasAuthority('BO') and hasAuthority('edit_absence_employee')")
+  public APIResponseDTO editAbsence(@PathVariable("id") int id, @ApiParam @RequestBody Absence absence) {
+    return new APIResponseDTO(200, "Success!", absenceService.editAbsence(id, absence));
+  }
 }

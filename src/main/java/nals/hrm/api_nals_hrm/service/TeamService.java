@@ -12,10 +12,10 @@ import java.util.List;
 @Transactional
 public class TeamService {
 
-    @Autowired
-    TeamRepository teamRepository;
+  @Autowired
+  TeamRepository teamRepository;
 
-    public List<Team> findAll() {
-        return teamRepository.findAll();
-    }
+  public List<Team> findAll() {
+    return teamRepository.findAll();
+  }
 }
