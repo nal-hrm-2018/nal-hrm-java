@@ -144,7 +144,7 @@ public class AbsenceService {
 
         //tim nhung project dang dien ra ma member do tham gia :o
         List<Processes> processesList = processesRepository.findByEmployeeIdAndCheckProjectExitAndDeleteFlag(
-                employee.getIdEmployee(), 1, 0);
+                employee.getIdEmployee(), 0, 0);
         if (processesList.size() > 0) {
           List<Processes> processesByRole; //find list project processes by role, idProject
           Processes processesPO;
